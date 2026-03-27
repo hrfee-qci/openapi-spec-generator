@@ -45,7 +45,7 @@ class WhereIn extends FilterDescriptor
                 ->schema(Schema::array()->items(Schema::string())->default(Example::create('empty')->value([])))
                 ->examples(...$examples)
                 ->style('form')
-                ->explode(false),
+                ->explode(true),
         ];
     }
 

@@ -34,7 +34,7 @@ class WhereIdIn extends FilterDescriptor
                 ->schema(Schema::array()->items(Schema::string())->default([]))
                 ->examples(Example::create('empty')->value([]), ...$examples)
                 ->style('form')
-                ->explode(false),
+                ->explode(true),
         ];
     }
 
