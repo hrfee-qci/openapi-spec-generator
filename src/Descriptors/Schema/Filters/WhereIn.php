@@ -31,6 +31,7 @@ class WhereIn extends FilterDescriptor
                 }
 
                 // @todo Watch out for ids?
+                if (is_array($f)) $f = implode(',', $f);
                 return Example::create($f)->value($f);
             })
             ->toArray();
