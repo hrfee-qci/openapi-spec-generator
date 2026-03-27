@@ -31,6 +31,7 @@ use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\Schema\PaginationDescriptor
 use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\Schema\SortablesDescriptor;
 use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\SchemaDescriptor;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Descriptor;
+use LaravelJsonApi\OpenApiSpec\Descriptors\Schema\Filters\WithDescription;
 use LaravelJsonApi\OpenApiSpec\Route;
 
 class Schema extends Descriptor implements PaginationDescriptor, SchemaDescriptor, SortablesDescriptor
@@ -48,34 +49,23 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     /**
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      */
-    public function fetch(
-        JASchema $schema,
-        string $objectId,
-        string $type,
-        string $name,
-    ): OASchema {
-        $resource = $this->generator
-            ->resources()
-            ->resource($schema::model());
+    public function fetch(JASchema $schema, string $objectId, string $type, string $name): OASchema
+    {
+        $resource = $this->generator->resources()->resource($schema::model());
 
         $fields = $this->fields($schema->fields(), $resource);
         $properties = [
-            OASchema::string('type')
-                ->title('type')
-                ->default($type),
-            OASchema::string('id')
-                ->example($resource->id()),
-            OASchema::object('attributes')
-                ->properties(...$fields->get('attributes')),
+            OASchema::string('type')->title('type')->default($type),
+            OASchema::string('id')->example($resource->id()),
+            OASchema::object('attributes')->properties(...$fields->get('attributes')),
         ];
 
         if ($fields->has('relationships')) {
-            $properties[] = OASchema::object('relationships')
-                ->properties(...$fields->get('relationships'));
+            $properties[] = OASchema::object('relationships')->properties(...$fields->get('relationships'));
         }
 
         return OASchema::object($objectId)
-            ->title('Resource/'.ucfirst($name).'/Fetch')
+            ->title('Resource/' . ucfirst($name) . '/Fetch')
             ->required('type', 'id', 'attributes')
             ->properties(...$properties);
     }
@@ -87,22 +77,17 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     {
         $objectId = SchemaBuilder::objectId($route);
 
-        $resource = $this->generator->resources()
-            ->resource($route->schema()::model());
+        $resource = $this->generator->resources()->resource($route->schema()::model());
 
         $fields = $this->fields($route->schema()->fields(), $resource);
 
         return OASchema::object($objectId)
-            ->title('Resource/'.ucfirst($route->name(true)).'/Store')
+            ->title('Resource/' . ucfirst($route->name(true)) . '/Store')
             ->required('type', 'attributes')
             ->properties(
-                OASchema::string('type')
-                    ->title('type')
-                    ->default($route->name()),
-                OASchema::object('attributes')
-                    ->properties(...$fields->get('attributes')),
-                OASchema::object('relationships')
-                    ->properties(...$fields->get('relationships') ?: [])
+                OASchema::string('type')->title('type')->default($route->name()),
+                OASchema::object('attributes')->properties(...$fields->get('attributes')),
+                OASchema::object('relationships')->properties(...$fields->get('relationships') ?: []),
             );
     }
 
@@ -112,23 +97,17 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     public function update(Route $route): OASchema
     {
         $objectId = SchemaBuilder::objectId($route);
-        $resource = $this->generator->resources()
-            ->resource($route->schema()::model());
+        $resource = $this->generator->resources()->resource($route->schema()::model());
 
         $fields = $this->fields($route->schema()->fields(), $resource);
 
         return OASchema::object($objectId)
-            ->title('Resource/'.ucfirst($route->name(true)).'/Update')
+            ->title('Resource/' . ucfirst($route->name(true)) . '/Update')
             ->properties(
-                OASchema::string('type')
-                    ->title('type')
-                    ->default($route->name()),
-                OASchema::string('id')
-                    ->example($resource->id()),
-                OASchema::object('attributes')
-                    ->properties(...$fields->get('attributes')),
-                OASchema::object('relationships')
-                    ->properties(...$fields->get('relationships') ?: [])
+                OASchema::string('type')->title('type')->default($route->name()),
+                OASchema::string('id')->example($resource->id()),
+                OASchema::object('attributes')->properties(...$fields->get('attributes')),
+                OASchema::object('relationships')->properties(...$fields->get('relationships') ?: []),
             )
             ->required('type', 'id', 'attributes');
     }
@@ -138,19 +117,17 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      */
     public function fetchRelationship(Route $route): OASchema
     {
-        if (! $route->isPolymorphic()) {
-            $resource = $this->generator->resources()
-                ->resource($route->inversSchema()::model());
+        if (!$route->isPolymorphic()) {
+            $resource = $this->generator->resources()->resource($route->inversSchema()::model());
         } else {
-            $resource = $this->generator->resources()
-                ->resource(Arr::first($route->inversSchemas())::model());
+            $resource = $this->generator->resources()->resource(Arr::first($route->inversSchemas())::model());
         }
 
         $inverseRelation = $route->relation() !== null ? $route->relation()->inverse() : null;
 
-        return $this->relationshipData($route->relation(), $resource,
-            $inverseRelation)
-            ->title('Resource/'.ucfirst($route->name(true)).'/Relationship/'.ucfirst($route->relationName()).'/Fetch');
+        return $this->relationshipData($route->relation(), $resource, $inverseRelation)->title(
+            'Resource/' . ucfirst($route->name(true)) . '/Relationship/' . ucfirst($route->relationName()) . '/Fetch',
+        );
     }
 
     /**
@@ -158,17 +135,17 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      */
     public function updateRelationship(Route $route): OASchema
     {
-        if (! $route->isPolymorphic()) {
-            $resource = $this->generator->resources()
-                ->resource($route->inversSchema()::model());
+        if (!$route->isPolymorphic()) {
+            $resource = $this->generator->resources()->resource($route->inversSchema()::model());
         } else {
-            $resource = $this->generator->resources()
-                ->resource(Arr::first($route->inversSchemas())::model());
+            $resource = $this->generator->resources()->resource(Arr::first($route->inversSchemas())::model());
         }
 
         $dataSchema = $this->getDataSchema($route, $resource);
 
-        return $dataSchema->title('Resource/'.ucfirst($route->name(true)).'/Relationship/'.ucfirst($route->relationName()).'/Update');
+        return $dataSchema->title(
+            'Resource/' . ucfirst($route->name(true)) . '/Relationship/' . ucfirst($route->relationName()) . '/Update',
+        );
     }
 
     /**
@@ -176,17 +153,17 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      */
     public function attachRelationship(Route $route): OASchema
     {
-        if (! $route->isPolymorphic()) {
-            $resource = $this->generator->resources()
-                ->resource($route->inversSchema()::model());
+        if (!$route->isPolymorphic()) {
+            $resource = $this->generator->resources()->resource($route->inversSchema()::model());
         } else {
-            $resource = $this->generator->resources()
-                ->resource(Arr::first($route->inversSchemas())::model());
+            $resource = $this->generator->resources()->resource(Arr::first($route->inversSchemas())::model());
         }
 
         $dataSchema = $this->getDataSchema($route, $resource);
 
-        return $dataSchema->title('Resource/'.ucfirst($route->name(true)).'/Relationship/'.ucfirst($route->relationName()).'/Attach');
+        return $dataSchema->title(
+            'Resource/' . ucfirst($route->name(true)) . '/Relationship/' . ucfirst($route->relationName()) . '/Attach',
+        );
     }
 
     /**
@@ -194,16 +171,16 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      */
     public function detachRelationship(Route $route): OASchema
     {
-        if (! $route->isPolymorphic()) {
-            $resource = $this->generator->resources()
-                ->resource($route->inversSchema()::model());
+        if (!$route->isPolymorphic()) {
+            $resource = $this->generator->resources()->resource($route->inversSchema()::model());
         } else {
-            $resource = $this->generator->resources()
-                ->resource(Arr::first($route->inversSchemas())::model());
+            $resource = $this->generator->resources()->resource(Arr::first($route->inversSchemas())::model());
         }
         $dataSchema = $this->getDataSchema($route, $resource);
 
-        return $dataSchema->title('Resource/'.ucfirst($route->name(true)).'/Relationship/'.ucfirst($route->relationName()).'/Detach');
+        return $dataSchema->title(
+            'Resource/' . ucfirst($route->name(true)) . '/Relationship/' . ucfirst($route->relationName()) . '/Detach',
+        );
     }
 
     /**
@@ -211,19 +188,22 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      *
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      */
-    public function fetchPolymorphicRelationship(
-        Route $route,
-        $objectId,
-    ): OASchema {
-        $resource = $this->generator->resources()
-            ->resource($route->schema()::model());
+    public function fetchPolymorphicRelationship(Route $route, $objectId): OASchema
+    {
+        $resource = $this->generator->resources()->resource($route->schema()::model());
 
         $inverseRelation = $route->relation() !== null ? $route->relation()->inverse() : null;
 
-        return $this->relationshipData($route->relation(), $resource,
-            $inverseRelation)
+        return $this
+            ->relationshipData($route->relation(), $resource, $inverseRelation)
             ->objectId($objectId)
-            ->title('Resource/'.ucfirst($route->name(true)).'/Relationship/'.ucfirst($route->relationName()).'/Fetch');
+            ->title(
+                'Resource/'
+                . ucfirst($route->name(true))
+                . '/Relationship/'
+                . ucfirst($route->relationName())
+                . '/Fetch',
+            );
     }
 
     /**
@@ -233,20 +213,19 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     public function sortables($route): array
     {
         $fields = collect($route->schema()->sortFields())
-            ->merge(collect($route->schema()->sortables())
-                ->map(function (Sortable $sortable) {
-                    return $sortable->sortField();
-                })->whereNotNull())
+            ->merge(collect($route->schema()->sortables())->map(function (Sortable $sortable) {
+                return $sortable->sortField();
+            })->whereNotNull())
             ->map(function (string $field) {
-                return [$field, '-'.$field];
-            })->flatten()->toArray();
+                return [$field, '-' . $field];
+            })
+            ->flatten()
+            ->toArray();
 
         return [
             Parameter::query('sort')
                 ->name('sort')
-                ->schema(OASchema::array()
-                    ->items(OASchema::string()->enum(...$fields))
-                )
+                ->schema(OASchema::array()->items(OASchema::string()->enum(...$fields)))
                 ->allowEmptyValue(false)
                 ->required(false),
         ];
@@ -304,11 +283,18 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     public function filters($route): array
     {
         return collect($route->schema()->filters())
-            ->map(function (Filter $filterInstance) use ($route
-            ) {
+            ->map(function (Filter $filterInstance) use ($route) {
                 $descriptor = $this->getDescriptor($filterInstance);
+                $descriptorInstance = new $descriptor($this->generator, $route, $filterInstance);
+                if ($this->hasManualDescription($filterInstance)) {
+                    $descriptorInstance = new WithDescription(
+                        $this->generator,
+                        $route,
+                        $filterInstance,
+                    )->withDescriptor($descriptorInstance);
+                }
 
-                return (new $descriptor($this->generator, $route, $filterInstance))->filter();
+                return $descriptorInstance->filter();
             })
             ->flatten()
             ->toArray();
@@ -317,46 +303,40 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     /**
      * @param  \LaravelJsonApi\Contracts\Schema\Field[]  $fields
      */
-    protected function fields(
-        array $fields,
-        JsonApiResource $resource,
-    ): Collection {
-        return collect($fields)
-            ->mapToGroups(function (Field $field) {
-                switch (true) {
-                    case $field instanceof AttributeContract:
-                        $key = 'attributes';
-                        break;
-                    case $field instanceof RelationContract:
-                        $key = 'relationships';
-                        break;
-                    default:
-                        $key = 'unknown';
-                }
+    protected function fields(array $fields, JsonApiResource $resource): Collection
+    {
+        return collect($fields)->mapToGroups(function (Field $field) {
+            switch (true) {
+                case $field instanceof AttributeContract:
+                    $key = 'attributes';
+                    break;
+                case $field instanceof RelationContract:
+                    $key = 'relationships';
+                    break;
+                default:
+                    $key = 'unknown';
+            }
 
-                return [$key => $field];
-            })
-            ->map(function ($fields, $type) use ($resource) {
-                switch ($type) {
-                    case 'attributes':
-                        return $this->attributes($fields, $resource);
-                    case 'relationships':
-                        return $this->relationships($fields, $resource);
-                    default:
-                        return null;
-                }
-            });
+            return [$key => $field];
+        })->map(function ($fields, $type) use ($resource) {
+            switch ($type) {
+                case 'attributes':
+                    return $this->attributes($fields, $resource);
+                case 'relationships':
+                    return $this->relationships($fields, $resource);
+                default:
+                    return null;
+            }
+        });
     }
 
     /**
      * @return Schema[]
      */
-    protected function attributes(
-        Collection $fields,
-        JsonApiResource $example,
-    ): array {
+    protected function attributes(Collection $fields, JsonApiResource $example): array
+    {
         return $fields
-            ->filter(fn ($field) => ! ($field instanceof ID))
+            ->filter(fn($field) => !$field instanceof ID)
             ->map(function (Field $field) use ($example) {
                 $fieldId = $field->name();
                 switch (true) {
@@ -396,20 +376,18 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                 }
 
                 return $schema;
-            })->toArray();
+            })
+            ->toArray();
     }
 
     /**
      * @todo Fix relation field names
      */
-    protected function relationships(
-        Collection $relationships,
-        JsonApiResource $example,
-    ): array {
-        return $relationships
-            ->map(function (RelationContract $relation) use ($example) {
-                return $this->relationship($relation, $example);
-            })->toArray();
+    protected function relationships(Collection $relationships, JsonApiResource $example): array
+    {
+        return $relationships->map(function (RelationContract $relation) use ($example) {
+            return $this->relationship($relation, $example);
+        })->toArray();
     }
 
     /**
@@ -429,11 +407,9 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         $dataSchema = $this->relationshipData($relation, $example, $type);
 
         if ($relation instanceof Eloquent\Fields\Relations\ToMany) {
-            $dataSchema = OASchema::array('data')
-                ->items($dataSchema);
+            $dataSchema = OASchema::array('data')->items($dataSchema);
         }
-        $schema = OASchema::object($fieldId)
-            ->title($relation->name());
+        $schema = OASchema::object($fieldId)->title($relation->name());
 
         if ($includeData) {
             return $schema->properties($dataSchema);
@@ -445,44 +421,32 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     /**
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      */
-    protected function relationshipData(
-        RelationContract $relation,
-        JsonApiResource $example,
-        string $type,
-    ): OASchema {
+    protected function relationshipData(RelationContract $relation, JsonApiResource $example, string $type): OASchema
+    {
         if ($relation instanceof PolymorphicRelation) {
             // @todo Add examples for each available type
             $dataSchema = OASchema::object('data')
                 ->title($relation->name())
                 ->required('type', 'id')
                 ->properties(
-                    OASchema::string('type')
-                        ->title('type')
-                        ->enum(...$relation->inverseTypes()),
-                    OASchema::string('id')
-                        ->title('id')
+                    OASchema::string('type')->title('type')->enum(...$relation->inverseTypes()),
+                    OASchema::string('id')->title('id'),
                 );
         } else {
             $dataSchema = OASchema::object('data')
                 ->title($relation->name())
                 ->required('type', 'id')
                 ->properties(
-                    OASchema::string('type')
-                        ->title('type')
-                        ->default($type),
-                    OASchema::string('id')
-                        ->title('id')
-                        ->example($example->id())
+                    OASchema::string('type')->title('type')->default($type),
+                    OASchema::string('id')->title('id')->example($example->id()),
                 );
         }
 
         return $dataSchema;
     }
 
-    public function relationshipLinks(
-        RelationContract $relation,
-        JsonApiResource $example,
-    ): OASchema {
+    public function relationshipLinks(RelationContract $relation, JsonApiResource $example): OASchema
+    {
         $name = Str::dasherize(Str::plural(Str::camel($relation->name())));
 
         /*
@@ -504,12 +468,8 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         return OASchema::object('links')
             ->readOnly(true)
             ->properties(
-                OASchema::string('related')
-                    ->title('related')
-                    ->example($relatedLink),
-                OASchema::string('self')
-                    ->title('self')
-                    ->example($selfLink),
+                OASchema::string('related')->title('related')->example($relatedLink),
+                OASchema::string('self')->title('self')->example($selfLink),
             );
     }
 
@@ -521,9 +481,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         ]);
 
         return [
-            OASchema::string('self')
-                ->title('self')
-                ->example($url),
+            OASchema::string('self')->title('self')->example($url),
         ];
     }
 
@@ -532,6 +490,9 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      */
     protected function getDescriptor(Filter $filter): string
     {
+        if (self::hasManualDescription($filter)) {
+            $filter = $filter->filter;
+        }
         foreach ($this->filterDescriptors as $filterClass => $descriptor) {
             if ($filter instanceof $filterClass) {
                 return $descriptor;
@@ -539,6 +500,11 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         }
 
         return Filters\DefaultDescriptor::class;
+    }
+
+    protected static function hasManualDescription(Filter $filter): bool
+    {
+        return $filter instanceof \LaravelJsonApi\OpenApiSpec\Filters\WithDescription;
     }
 
     /**
@@ -550,16 +516,10 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
 
         $relation = $route->relation();
 
-        $dataSchema = $this
-            ->relationshipData(
-                $relation,
-                $resource,
-                $inverseRelation
-            );
+        $dataSchema = $this->relationshipData($relation, $resource, $inverseRelation);
 
         if ($relation instanceof Eloquent\Fields\Relations\ToMany) {
-            $dataSchema = OASchema::array('data')
-                ->items($dataSchema);
+            $dataSchema = OASchema::array('data')->items($dataSchema);
         }
 
         return $dataSchema;

@@ -24,8 +24,7 @@ trait ResolvesActionTraitToDescriptor
                     return $trait->getMethods();
                 })
                 ->flatten()
-                ->mapWithKeys(
-                    fn (\ReflectionMethod $method) => [$method->name => $method])
+                ->mapWithKeys(fn(\ReflectionMethod $method) => [$method->name => $method])
                 ->get($method);
         } catch (\ReflectionException $exception) {
             return null;

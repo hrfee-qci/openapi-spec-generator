@@ -43,19 +43,15 @@ class OperationBuilder extends Builder
         Controllers\Actions\UpdateRelationship::class => Descriptors\Actions\Relationship\Update::class,
     ];
 
-    public function __construct(
-        Generator $generator,
-        ComponentsContainer $components,
-    ) {
+    public function __construct(Generator $generator, ComponentsContainer $components)
+    {
         parent::__construct($generator);
         $this->components = $components;
 
         $this->schemaBuilder = new SchemaBuilder($generator, $components);
         $this->parameterBuilder = new ParameterBuilder($generator);
-        $this->requestBodyBuilder = new RequestBodyBuilder($generator,
-            $this->schemaBuilder);
-        $this->responseBuilder = new ResponseBuilder($generator, $components,
-            $this->schemaBuilder);
+        $this->requestBodyBuilder = new RequestBodyBuilder($generator, $this->schemaBuilder);
+        $this->responseBuilder = new ResponseBuilder($generator, $components, $this->schemaBuilder);
     }
 
     public function build(SpecRoute $route): ?Operation
@@ -72,7 +68,7 @@ class OperationBuilder extends Builder
                 $this->requestBodyBuilder,
                 $this->responseBuilder,
                 $this->generator,
-                $route
+                $route,
             );
         }
 

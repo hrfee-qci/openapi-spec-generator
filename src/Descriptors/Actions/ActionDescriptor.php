@@ -67,7 +67,7 @@ abstract class ActionDescriptor implements ActionDescriptorContract
         return $operation
             ->operationId($this->route->id())
             ->responses(...$this->responses())
-            ->parameters(...$this->parameters())
+            ->parameters(...$this->parameters()) // problem
             ->requestBody($this->requestBody())
             ->description($this->description())
             ->summary($this->summary())
@@ -79,7 +79,7 @@ abstract class ActionDescriptor implements ActionDescriptorContract
         /** @var DescribesEndpoints $schema */
         $schema = $this->route->schema();
 
-        if (! $schema instanceof DescribesEndpoints) {
+        if (!$schema instanceof DescribesEndpoints) {
             return '';
         }
 

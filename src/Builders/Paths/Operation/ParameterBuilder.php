@@ -37,13 +37,13 @@ class ParameterBuilder extends Builder
          */
         if (isset($route->route()->defaults[\LaravelJsonApi\Laravel\Routing\Route::RESOURCE_ID_NAME])) {
             $id = $route->route()->defaults[\LaravelJsonApi\Laravel\Routing\Route::RESOURCE_ID_NAME];
-            $examples = collect($this->generator->resources()
-                ->resources($route->schema()::model()))
-                ->map(function ($resource) {
-                    $id = $resource->id();
+            $examples = collect(
+                $this->generator->resources()->resources($route->schema()::model()),
+            )->map(function ($resource) {
+                $id = $resource->id();
 
-                    return Example::create($id)->value($id);
-                })->toArray();
+                return Example::create($id)->value($id);
+            })->toArray();
 
             $parameters[] = Parameter::path($id)
                 ->name($id)
