@@ -27,7 +27,7 @@ class WhereIdIn extends FilterDescriptor
 
         return [
             Parameter::query()
-                ->name("filter[{$key}]")
+                ->name("filter[{$key}][]")
                 ->description($this->description())
                 ->required(false)
                 ->allowEmptyValue(false)
