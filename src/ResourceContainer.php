@@ -75,7 +75,7 @@ class ResourceContainer
         $schema = $this->server->schemas()->schemaForModel($model);
         $repository = $schema->repository();
 
-        if ($repository instanceof QueriesAll) {
+        /*if ($repository instanceof QueriesAll) {
             $this->resources[$model] = collect($repository->queryAll()->get())
                 ->map(function ($model) {
                     return $this->server->resources()->create($model);
@@ -83,10 +83,10 @@ class ResourceContainer
                 ->take(3);
 
             return;
-        }
+        }*/
 
         if (method_exists($model, 'all')) {
-            $resources = $model::all()->map(function ($model) {
+            $resources = $model::query()->take(100)->get()->map(function ($model) {
                 return $this->server->resources()->create($model);
             })->take(3);
 
