@@ -17,10 +17,8 @@ class PathsBuilder extends Builder
 
     protected OperationBuilder $operation;
 
-    public function __construct(
-        Generator $generator,
-        ComponentsContainer $components,
-    ) {
+    public function __construct(Generator $generator, ComponentsContainer $components)
+    {
         parent::__construct($generator);
         $this->components = $components;
         $this->operation = new OperationBuilder($generator, $components);
@@ -32,30 +30,23 @@ class PathsBuilder extends Builder
     public function build(): array
     {
         return collect(Route::getRoutes()->getRoutes())
-            ->filter(
-                fn (IlluminateRoute $route) => SpecRoute::belongsTo($route,
-                    $this->generator->server())
-            )
-            ->map(fn (IlluminateRoute $route) => new SpecRoute($this->generator->server(), $route))
+            ->filter(fn(IlluminateRoute $route) => SpecRoute::belongsTo($route, $this->generator->server()))
+            ->map(fn(IlluminateRoute $route) => new SpecRoute($this->generator->server(), $route))
             ->mapToGroups(function (SpecRoute $route) {
                 return [$route->uri() => $route];
             })
             ->map(function (Collection $routes, string $uri) {
-                $operations = $routes
-                    ->map(function (SpecRoute $route) {
-                        return $this->operation->build($route);
-                    })
-                    ->filter(fn ($val) => $val !== null);
+                $operations = $routes->map(function (SpecRoute $route) {
+                    return $this->operation->build($route);
+                })->filter(fn($val) => $val !== null);
 
                 if ($operations->isEmpty()) {
                     return null;
                 }
 
-                return PathItem::create()
-                    ->route($uri)
-                    ->operations(...$operations->toArray());
+                return PathItem::create()->route($uri)->operations(...$operations->toArray());
             })
-            ->filter(fn ($val) => $val !== null)
+            ->filter(fn($val) => $val !== null)
             ->toArray();
     }
 }

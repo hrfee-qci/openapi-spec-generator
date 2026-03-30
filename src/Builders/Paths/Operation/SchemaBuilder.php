@@ -17,10 +17,8 @@ class SchemaBuilder extends Builder
 {
     protected ComponentsContainer $components;
 
-    public function __construct(
-        Generator $generator,
-        ComponentsContainer $components,
-    ) {
+    public function __construct(Generator $generator, ComponentsContainer $components)
+    {
         parent::__construct($generator);
         $this->components = $components;
     }
@@ -67,52 +65,47 @@ class SchemaBuilder extends Builder
         }
 
         if ($method === 'showRelated' && $route->isPolymorphic()) {
-            $schemas = collect($route->inversSchemas())
-                ->map(function (JASchema $schema, string $name) use ($descriptor) {
-                    $objectId = "resources.$name.resource.fetch";
-                    if ($data = $this->components->getSchema($objectId)) {
-                        return $data;
-                    }
+            $schemas = collect($route->inversSchemas())->map(function (JASchema $schema, string $name) use (
+                $descriptor,
+            ) {
+                $objectId = "resources.$name.resource.fetch";
+                if ($data = $this->components->getSchema($objectId)) {
+                    return $data;
+                }
 
-                    return $this->components->addSchema(
-                        $descriptor->fetch(
-                            $schema,
-                            $objectId,
-                            $name,
-                            ucfirst(Str::singular($name))
-                        )
-                    );
-                });
+                return $this->components->addSchema($descriptor->fetch(
+                    $schema,
+                    $objectId,
+                    $name,
+                    ucfirst(Str::singular($name)),
+                ));
+            });
 
-            return OneOf::create($objectId)
-                ->schemas(...array_values($schemas->toArray()));
+            return OneOf::create($objectId)->schemas(...array_values($schemas->toArray()));
         }
 
         if ($method !== 'showRelated' && $route->isRelation()) {
             $schema = $descriptor->fetchRelationship($route);
         } else {
             switch ($method) {
-                case 'index':
-                case 'show':
-                case 'store':
-                case 'update':
-                    $schema = $descriptor->fetch(
-                        $route->schema(),
-                        $objectId,
-                        $route->resource(),
-                        $route->name(true)
-                    );
-                    break;
                 case 'showRelated':
                     $schema = $descriptor->fetch(
                         $route->inversSchema(),
                         $objectId,
                         $route->relation() !== null ? $route->relation()->inverse() : null,
-                        $route->inverseName(true)
+                        $route->inverseName(true),
                     );
                     break;
+                case 'index':
+                case 'show':
+                case 'store':
+                case 'update':
                 default:
-                    exit($method); // @todo Add proper Exception
+                    $schema = $descriptor->fetch($route->schema(), $objectId, $route->resource(), $route->name(true));
+                    break;
+
+                /*default:
+                 * throw new \Error("Unknown method '${method}'");*/
             }
         }
 
@@ -140,7 +133,7 @@ class SchemaBuilder extends Builder
                     $schema = $descriptor->detachRelationship($route);
                     break;
                 default:
-                    exit('Request '.$method); // @todo Add proper Exception
+                    exit('Request ' . $method); // @todo Add proper Exception
             }
         } else {
             switch ($method) {
@@ -151,17 +144,15 @@ class SchemaBuilder extends Builder
                     $schema = $descriptor->update($route);
                     break;
                 default:
-                    exit('Request '.$method); // @todo Add proper Exception
+                    exit('Request ' . $method); // @todo Add proper Exception
             }
         }
 
         return $schema->objectId($objectId);
     }
 
-    public static function objectId(
-        Route $route,
-        bool $isRequest = false,
-    ): string {
+    public static function objectId(Route $route, bool $isRequest = false): string
+    {
         if ($isRequest) {
             $method = $route->action();
 
@@ -188,8 +179,9 @@ class SchemaBuilder extends Builder
             $resource = $route->resource();
             $type = "related.{$route->relationName()}";
         } else {
-            $type = $route->isRelation() && $route->action() !== 'showRelated' ?
-              "relationship.{$route->relationName()}" : 'resource';
+            $type = $route->isRelation() && $route->action() !== 'showRelated'
+                ? "relationship.{$route->relationName()}"
+                : 'resource';
         }
 
         return "resources.$resource.$type.$method";

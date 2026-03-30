@@ -9,9 +9,11 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 use Illuminate\Support\Collection;
 use LaravelJsonApi\Laravel\Http\Controllers\Actions;
+use LaravelJsonApi\OpenApiSpec\Attributes\WithDescription;
 use LaravelJsonApi\OpenApiSpec\Builders\Builder;
 use LaravelJsonApi\OpenApiSpec\ComponentsContainer;
 use LaravelJsonApi\OpenApiSpec\Concerns\ResolvesActionTraitToDescriptor;
+use LaravelJsonApi\OpenApiSpec\Concerns\ResolvesDescriptionAttributeFromRoute;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Responses;
 use LaravelJsonApi\OpenApiSpec\Generator;
 use LaravelJsonApi\OpenApiSpec\Route;
@@ -20,6 +22,7 @@ use Neomerx\JsonApi\Contracts\Http\Headers\MediaTypeInterface;
 class ResponseBuilder extends Builder
 {
     use ResolvesActionTraitToDescriptor;
+    use ResolvesDescriptionAttributeFromRoute;
 
     protected ComponentsContainer $components;
 
@@ -42,11 +45,8 @@ class ResponseBuilder extends Builder
         Actions\UpdateRelationship::class => Responses\UpdateRelationship::class,
     ];
 
-    public function __construct(
-        Generator $generator,
-        ComponentsContainer $components,
-        SchemaBuilder $schemaBuilder,
-    ) {
+    public function __construct(Generator $generator, ComponentsContainer $components, SchemaBuilder $schemaBuilder)
+    {
         parent::__construct($generator);
         $this->components = $components;
         $this->schemaBuilder = $schemaBuilder;
@@ -67,23 +67,13 @@ class ResponseBuilder extends Builder
      *
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      */
-    public static function buildResponse(
-        SchemaContract $data,
-        ?Schema $meta = null,
-        ?Schema $links = null,
-    ): Schema {
-        $jsonapi = Schema::object('jsonapi')
-            ->properties(Schema::string('version')
-                ->title('version')
-                ->example('1.0')
-            );
+    public static function buildResponse(SchemaContract $data, ?Schema $meta = null, ?Schema $links = null): Schema
+    {
+        $jsonapi = Schema::object('jsonapi')->properties(Schema::string('version')->title('version')->example('1.0'));
 
-        $schemas = collect([$jsonapi, $data, $meta, $links])
-            ->whereNotNull()->toArray();
+        $schemas = collect([$jsonapi, $data, $meta, $links])->whereNotNull()->toArray();
 
-        return Schema::object()
-            ->properties(...$schemas)
-            ->required('jsonapi', 'data');
+        return Schema::object()->properties(...$schemas)->required('jsonapi', 'data');
     }
 
     /**
@@ -92,13 +82,12 @@ class ResponseBuilder extends Builder
     protected function getDescriptor(Route $route): ?Responses\ResponseDescriptor
     {
         $class = $this->descriptorClass($route);
+        if ($class === WithDescription::class) {
+            $description = $this->descriptionFromRoute($route);
+            $class = $description->getResponseClass();
+        }
         if (isset($this->descriptors[$class])) {
-            return new $this->descriptors[$class](
-                $this->generator,
-                $route,
-                $this->schemaBuilder,
-                $this->defaults,
-            );
+            return new $this->descriptors[$class]($this->generator, $route, $this->schemaBuilder, $this->defaults);
         }
 
         return null;
@@ -112,27 +101,24 @@ class ResponseBuilder extends Builder
         $this->jsonapi = $this->components->addSchema(
             Schema::object('helper.jsonapi')
                 ->title('Helper/JSONAPI')
-                ->properties(Schema::string('version')
-                    ->title('version')
-                    ->example('1.0')
-                )
-                ->required('version')
+                ->properties(Schema::string('version')->title('version')->example('1.0'))
+                ->required('version'),
         );
 
         $errors = $this->components->addSchema(
             Schema::array('helper.errors')
                 ->title('Helper/Errors')
-                ->items(Schema::object('error')
-                    ->title('Error')
-                    ->properties(
-                        Schema::string('detail'),
-                        Schema::string('status'),
-                        Schema::string('title'),
-                        Schema::object('source')
-                            ->properties(Schema::string('pointer'))
-                    )
-                    ->required('status', 'title')
-                )
+                ->items(
+                    Schema::object('error')
+                        ->title('Error')
+                        ->properties(
+                            Schema::string('detail'),
+                            Schema::string('status'),
+                            Schema::string('title'),
+                            Schema::object('source')->properties(Schema::string('pointer')),
+                        )
+                        ->required('status', 'title'),
+                ),
         );
         $errorBody = Schema::object()->properties($this->jsonapi, $errors);
         $this->defaults = collect([
@@ -154,8 +140,7 @@ class ResponseBuilder extends Builder
                                     'title' => 'Non-Compliant JSON:API Document',
                                 ],
                             ],
-                        ])
-                        )
+                        ])),
                 ),
             Response::unauthorized('401')
                 ->description('Unauthorized Action')
@@ -174,8 +159,7 @@ class ResponseBuilder extends Builder
                                     'detail' => 'Unauthenticated.',
                                 ],
                             ],
-                        ])
-                        )
+                        ])),
                 ),
             Response::notFound('404')
                 ->description('Content Not Found')
@@ -193,8 +177,7 @@ class ResponseBuilder extends Builder
                                     'status' => '404',
                                 ],
                             ],
-                        ])
-                        )
+                        ])),
                 ),
             Response::unprocessableEntity('422')
                 ->statusCode(422)
@@ -215,14 +198,12 @@ class ResponseBuilder extends Builder
                                     'status' => '422',
                                 ],
                             ],
-                        ])
-                        )
+                        ])),
                 ),
-        ])
-            ->mapWithKeys(function (Response $response) {
-                $ref = $this->components->addResponse($response);
+        ])->mapWithKeys(function (Response $response) {
+            $ref = $this->components->addResponse($response);
 
-                return [$response->objectId => $ref];
-            });
+            return [$response->objectId => $ref];
+        });
     }
 }

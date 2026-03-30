@@ -366,6 +366,8 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                     return $this->attributes($fields, $resource);
                 case 'relationships':
                     return $this->relationships($fields, $resource);
+                case 'actions':
+                    return $this->actions($fields, $resource);
                 default:
                     return null;
             }

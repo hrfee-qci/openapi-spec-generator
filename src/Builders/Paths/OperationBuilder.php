@@ -41,6 +41,8 @@ class OperationBuilder extends Builder
         Controllers\Actions\DetachRelationship::class => Descriptors\Actions\Relationship\Detach::class,
         Controllers\Actions\FetchRelationship::class => Descriptors\Actions\Relationship\Fetch::class,
         Controllers\Actions\UpdateRelationship::class => Descriptors\Actions\Relationship\Update::class,
+        \LaravelJsonApi\OpenApiSpec\Attributes\WithDescription::class =>
+            Descriptors\Actions\BasicFetchWithDescription::class,
     ];
 
     public function __construct(Generator $generator, ComponentsContainer $components)

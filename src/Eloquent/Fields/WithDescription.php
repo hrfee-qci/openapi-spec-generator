@@ -4,7 +4,6 @@ namespace LaravelJsonApi\OpenApiSpec\Eloquent\Fields;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model;
-use LaravelJsonApi\Eloquent\Contracts\Filter;
 use LaravelJsonApi\Eloquent\Fields\Attribute;
 
 // WithDescription proxies attributes and adds documentation, used for generating OpenAPI docs.
