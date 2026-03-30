@@ -24,6 +24,7 @@ use LaravelJsonApi\Eloquent\Fields\ID;
 use LaravelJsonApi\Eloquent\Fields\Map;
 use LaravelJsonApi\Eloquent\Fields\Number;
 use LaravelJsonApi\Eloquent\Pagination\CursorPagination;
+use LaravelJsonApi\Eloquent\Pagination\MultiPagination;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
 use LaravelJsonApi\NonEloquent\Fields\Attribute as NonEloquentAttribute;
 use LaravelJsonApi\OpenApiSpec\Builders\Paths\Operation\SchemaBuilder;
@@ -222,13 +223,20 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
             ->flatten()
             ->toArray();
 
-        return [
-            Parameter::query('sort')
-                ->name('sort')
-                ->schema(OASchema::array()->items(OASchema::string()->enum(...$fields)))
-                ->allowEmptyValue(false)
-                ->required(false),
-        ];
+        $pagination = $route->schema()->pagination();
+        if ($pagination instanceof CursorPagination)
+            return [];
+
+        $parameter = Parameter::query('sort')
+            ->name('sort')
+            ->schema(OASchema::array()->items(OASchema::string()->enum(...$fields)))
+            ->allowEmptyValue(false)
+            ->required(false);
+
+        if ($pagination instanceof MultiPagination) {
+            $parameter = $parameter->description('Disallowed if using cursor pagination.');
+        }
+        return [$parameter];
     }
 
     public function pagination(Route $route): array
@@ -268,6 +276,39 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                 Parameter::query('pageBefore')
                     ->name('page[before]')
                     ->description('The page offset for paginated results')
+                    ->required(false)
+                    ->allowEmptyValue(false)
+                    ->schema(OASchema::string()),
+            ];
+        }
+
+        if ($pagination instanceof MultiPagination) {
+            return [
+                Parameter::query('pageSize')
+                    ->name('page[size]')
+                    ->description('The number of items per page.')
+                    ->required(false)
+                    ->allowEmptyValue(false)
+                    ->schema(OASchema::integer()),
+                Parameter::query('pageNumber')
+                    ->name('page[number]')
+                    ->description('For standard pagination, the page number. Pass this to use standard pagination.')
+                    ->required(false)
+                    ->allowEmptyValue(false)
+                    ->schema(OASchema::integer()),
+                Parameter::query('pageAfter')
+                    ->name('page[after]')
+                    ->description(
+                        'For cursor pagination, show results with an ID after this. Pass this or `page[before]` to use cursor pagination.',
+                    )
+                    ->required(false)
+                    ->allowEmptyValue(false)
+                    ->schema(OASchema::string()),
+                Parameter::query('pageBefore')
+                    ->name('page[before]')
+                    ->description(
+                        'For cursor pagination, show results with an ID before this. Pass this or `page[after]` to use cursor pagination.',
+                    )
                     ->required(false)
                     ->allowEmptyValue(false)
                     ->schema(OASchema::string()),
