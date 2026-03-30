@@ -23,7 +23,6 @@ use LaravelJsonApi\Eloquent\Fields\Boolean;
 use LaravelJsonApi\Eloquent\Fields\ID;
 use LaravelJsonApi\Eloquent\Fields\Map;
 use LaravelJsonApi\Eloquent\Fields\Number;
-use LaravelJsonApi\OpenApiSpec\Eloquent\Fields\WithDescription as LaravelJsonApiWithDescription;
 use LaravelJsonApi\Eloquent\Pagination\CursorPagination;
 use LaravelJsonApi\Eloquent\Pagination\MultiPagination;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
@@ -33,7 +32,8 @@ use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\Schema\PaginationDescriptor
 use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\Schema\SortablesDescriptor;
 use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\SchemaDescriptor;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Descriptor;
-use LaravelJsonApi\OpenApiSpec\Descriptors\Schema\Filters\WithDescription;
+use LaravelJsonApi\OpenApiSpec\Descriptors\Schema\Filters\WithDescription as FilterWithDescription;
+use LaravelJsonApi\OpenApiSpec\Eloquent\Fields\WithDescription as FieldWithDescription;
 use LaravelJsonApi\OpenApiSpec\Route;
 
 class Schema extends Descriptor implements PaginationDescriptor, SchemaDescriptor, SortablesDescriptor
@@ -329,7 +329,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                 $descriptor = $this->getDescriptor($filterInstance);
                 $descriptorInstance = new $descriptor($this->generator, $route, $filterInstance);
                 if ($this->hasManualDescription($filterInstance)) {
-                    $descriptorInstance = new WithDescription(
+                    $descriptorInstance = new FilterWithDescription(
                         $this->generator,
                         $route,
                         $filterInstance,
@@ -381,10 +381,10 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
             ->filter(fn($field) => !$field instanceof ID)
             ->map(function (Field $field) use ($example) {
                 $fieldId = $field->name();
-                $parentField = null;
-                if ($field instanceof LaravelJsonApiWithDescription) {
-                    $parentField = $field;
-                    $field = $parentField->attr;
+                $descriptionField = null;
+                if ($field instanceof FieldWithDescription) {
+                    $descriptionField = $field;
+                    $field = $descriptionField->attr;
                 }
                 switch (true) {
                     case $field instanceof Boolean:
@@ -414,7 +414,12 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                         $schema = $schema->example($attributes[$column]);
                     }
                 } else {
-                    if (isset($example[$column])) {
+                    if ($descriptionField && $descriptionField->getDescription()) {
+                        $schema = $schema->description($descriptionField->getDescription());
+                    }
+                    if ($descriptionField && !empty($descriptionField->getExample())) {
+                        $schema = $schema->example($descriptionField->getExample());
+                    } else if (isset($example[$column])) {
                         $schema = $schema->example($example[$column]);
                     }
                     if ($field instanceof EloquentAttribute && $field->isReadOnly(null)) {
@@ -551,7 +556,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
 
     protected static function hasManualDescription(Filter $filter): bool
     {
-        return $filter instanceof \LaravelJsonApi\OpenApiSpec\Filters\WithDescription;
+        return $filter instanceof FilterWithDescription;
     }
 
     /**

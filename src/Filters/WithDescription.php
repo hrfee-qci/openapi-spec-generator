@@ -14,6 +14,7 @@ class WithDescription implements Filter
      * @param ?string|closure():string $description
      * @param ?mixed|array<mixed, mixed> $example
      * @param ?mixed $default
+     * @param ?Filter $filter
      */
     public function __construct(
         private ?string $description = null,
@@ -28,6 +29,7 @@ class WithDescription implements Filter
      * @param ?string $description
      * @param ?mixed|array<mixed, mixed> $example
      * @param ?mixed $default
+     * @param ?Filter $filter
      * @return self
      */
     public static function make(

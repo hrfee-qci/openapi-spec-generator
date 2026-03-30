@@ -3,23 +3,37 @@
 namespace LaravelJsonApi\OpenApiSpec\Eloquent\Fields;
 
 use Closure;
-use LaravelJsonApi\Contracts\Schema\Attribute;
+use Illuminate\Database\Eloquent\Model;
 use LaravelJsonApi\Eloquent\Contracts\Filter;
+use LaravelJsonApi\Eloquent\Fields\Attribute;
 
-// WithDescription proxies filters and adds documentation, used for generating OpenAPI docs.
+// WithDescription proxies attributes and adds documentation, used for generating OpenAPI docs.
 class WithDescription extends Attribute
 {
+    /*
+     * Generates an array to return from a *Schema::fields() method, given an array of arrays containing a field and optional description and example.
+     * @param array<int, array{ field: Attribute, description: string|null, example: mixed|null }|Attribute>
+     * @return array<int, Attribute>
+     */
+    public static function arrayFromFieldList(array $fields): array
+    {
+        return array_map(fn(mixed $row) => is_array($row) ? self::make(
+            description: $row['description'] ?? $row[1] ?? null,
+            example: $row['example'] ?? $row[2] ?? null,
+            attr: $row['field'] ?? $row[0],
+        ) : $row, $fields);
+    }
+
     /**
      * WithDescription constructor.
      *
      * @param ?string|closure():string $description
-     * @param ?mixed|array<mixed, mixed> $example
-     * @param ?mixed $default
+     * @param ?mixed $example
+     * @param ?Attribute $attr
      */
     public function __construct(
         private ?string $description = null,
         private mixed $example = null,
-        private mixed $default = null,
         public ?Attribute $attr = null,
     ) {}
 
@@ -27,21 +41,19 @@ class WithDescription extends Attribute
      * WithDescription.
      *
      * @param ?string $description
-     * @param ?mixed|array<mixed, mixed> $example
-     * @param ?mixed $default
+     * @param ?mixed $example
+     * @param ?Attribute $attr
      * @return self
      */
-    public static function make(
-        ?string $description = null,
-        mixed $example = null,
-        mixed $default = null,
-        ?Filter $filter = null,
-    ): self {
-        return new self($description, $example, $default, $filter);
+    public static function make(?string $description = null, mixed $example = null, ?Attribute $attr = null): self
+    {
+        return new self($description, $example, $attr);
     }
 
     /**
      * Adds a filter.
+     * @param Attribute $attr
+     * @return self
      */
     public function withAttribute(Attribute $attr): self
     {
@@ -62,35 +74,18 @@ class WithDescription extends Attribute
     }
 
     /**
-     * Gets examples, or an empty array if none set.
-     *
-     * @return array<mixed, mixed>
-     */
-    public function getExamples(): array
-    {
-        if (!$this->example)
-            return [];
-        $example = $this->example;
-        if ($this->example instanceof Closure)
-            $example = ($this->example)();
-        if (!is_array($example))
-            return [$example];
-        return $example;
-    }
-
-    /**
-     * Get the default value, or returns null if none set.
-     * return value depends on whatever was passed in originally.
+     * Gets example, or null if none set.
      *
      * @return mixed|null
      */
-    public function getDefault(): mixed
+    public function getExample(): mixed
     {
-        if (!$this->default)
-            return '';
-        if ($this->default instanceof Closure)
-            return ($this->default)();
-        return $this->default;
+        if (!$this->example)
+            return null;
+        $example = $this->example;
+        if ($this->example instanceof Closure)
+            $example = ($this->example)();
+        return $example;
     }
 
     public function isSingular(): bool
@@ -108,10 +103,151 @@ class WithDescription extends Attribute
         return $this->filter->key();
     }
 
-    function __call($method, $args)
+    protected function assertValue($value): void
     {
-        $out = call_user_func_array([$this->filter, $method], $args);
-        return $out;
+        $this->attr->assertValue($value);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function name(): string
+    {
+        return $this->attr->name();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function serializedFieldName(): string
+    {
+        return $this->attr->serializedFieldName();
+    }
+
+    /**
+     * @return string
+     */
+    public function column(): string
+    {
+        return $this->attr->column();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function columnsForField(): array
+    {
+        return $this->attr->columnsForField();
+    }
+
+    /**
+     * Customise the hydration of the model attribute.
+     *
+     * @param Closure $hydrator
+     * @return $this
+     */
+    public function fillUsing(Closure $hydrator): self
+    {
+        $this->attr = $this->attr->fillUsing($hydrator);
+        return $this;
+    }
+
+    /**
+     * Customise the extraction of the model attribute.
+     *
+     * @param Closure $extractor
+     * @return $this
+     */
+    public function extractUsing(Closure $extractor): self
+    {
+        $this->attr = $this->attr->extractUsing($extractor);
+        return $this;
+    }
+
+    /**
+     * Ignore mass-assignment and always fill the attribute.
+     *
+     * @return $this
+     */
+    public function unguarded(): self
+    {
+        $this->attr = $this->attr->unguarded();
+        return $this;
+    }
+
+    /**
+     * Use mass-assignment rules when filling the attribute.
+     *
+     * @return $this
+     */
+    public function guarded(): self
+    {
+        $this->attr = $this->attr->guarded();
+        return $this;
+    }
+
+    /**
+     * Customise deserialization of the value.
+     *
+     * @param Closure $deserializer
+     * @return $this
+     */
+    public function deserializeUsing(Closure $deserializer): self
+    {
+        $this->attr = $this->attr->deserializeUsing($deserializer);
+        return $this;
+    }
+
+    /**
+     * @param Closure $serializer
+     * @return $this
+     */
+    public function serializeUsing(Closure $serializer): self
+    {
+        $this->attr = $this->attr->serializeUsing($serializer);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function fill(Model $model, $value, array $validatedData): void
+    {
+        $this->attr->fill($model, $value, $validatedData);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sort($query, string $direction = 'asc')
+    {
+        return $this->attr->sort($query, $direction);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function serialize(object $model)
+    {
+        return $this->attr->serialize($model);
+    }
+
+    /**
+     * Convert the JSON value for this field.
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    protected function deserialize($value)
+    {
+        return $this->attr->deserialize($value);
+    }
+
+    /**
+     * @return string
+     */
+    private function guessColumn(): string
+    {
+        return $this->attr->guessColumn();
     }
 }
-
