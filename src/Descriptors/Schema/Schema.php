@@ -23,6 +23,7 @@ use LaravelJsonApi\Eloquent\Fields\Boolean;
 use LaravelJsonApi\Eloquent\Fields\ID;
 use LaravelJsonApi\Eloquent\Fields\Map;
 use LaravelJsonApi\Eloquent\Fields\Number;
+use LaravelJsonApi\OpenApiSpec\Eloquent\Fields\WithDescription as LaravelJsonApiWithDescription;
 use LaravelJsonApi\Eloquent\Pagination\CursorPagination;
 use LaravelJsonApi\Eloquent\Pagination\MultiPagination;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
@@ -380,6 +381,11 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
             ->filter(fn($field) => !$field instanceof ID)
             ->map(function (Field $field) use ($example) {
                 $fieldId = $field->name();
+                $parentField = null;
+                if ($field instanceof LaravelJsonApiWithDescription) {
+                    $parentField = $field;
+                    $field = $parentField->attr;
+                }
                 switch (true) {
                     case $field instanceof Boolean:
                         $fieldDataType = OASchema::boolean($fieldId);
