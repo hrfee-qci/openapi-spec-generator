@@ -84,7 +84,8 @@ class ResponseBuilder extends Builder
         $class = $this->descriptorClass($route);
         if ($class === WithDescription::class) {
             $description = $this->descriptionFromRoute($route);
-            $class = $description->getResponseClass();
+            $class = $description->getResponseClassOrSchema();
+            if ($class instanceof Schema) throw new \Error('FIXME: unused OASchema');
         }
         if (isset($this->descriptors[$class])) {
             return new $this->descriptors[$class]($this->generator, $route, $this->schemaBuilder, $this->defaults);

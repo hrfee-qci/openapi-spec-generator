@@ -3,6 +3,7 @@
 namespace LaravelJsonApi\OpenApiSpec\Attributes;
 
 use Closure;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 // WithDescription tags a route method with a description and example output if desired, used for generating OpenAPI docs.
 #[\Attribute]
@@ -11,11 +12,12 @@ class WithDescription
     /**
      * WithDescription constructor.
      *
+     * @param mixed|Schema $responseClassOrSchema
      * @param ?string|closure():string $description
      * @param ?mixed $example
      */
     public function __construct(
-        private mixed $responseClass,
+        private mixed $responseClassOrSchema,
         private ?string $description = null,
         private mixed $example = null,
     ) {}
@@ -59,8 +61,8 @@ class WithDescription
         return $example;
     }
 
-    public function getResponseClass(): mixed
+    public function getResponseClassOrSchema(): mixed
     {
-        return $this->responseClass;
+        return $this->responseClassOrSchema;
     }
 }

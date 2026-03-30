@@ -1,5 +1,5 @@
 {
-    "name": "hrfee/openapi-spec-generator",
+    "name": "hrfee-qci/openapi-spec-generator",
     "type": "library",
     "description": "Creates Open API spec for a Laravel JSON:API",
     "keywords": [
@@ -11,7 +11,7 @@
         "laravel",
         "json-api"
     ],
-    "homepage": "https://github.com/hrfee/openapi-spec-generator",
+    "homepage": "https://github.com/hrfee-qci/openapi-spec-generator",
     "license": "Apache-2.0",
     "authors": [
         {
