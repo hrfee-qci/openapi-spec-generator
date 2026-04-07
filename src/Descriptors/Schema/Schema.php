@@ -32,7 +32,8 @@ use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\Schema\PaginationDescriptor
 use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\Schema\SortablesDescriptor;
 use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\SchemaDescriptor;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Descriptor;
-use LaravelJsonApi\OpenApiSpec\Descriptors\Schema\Filters\WithDescription as FilterWithDescription;
+use LaravelJsonApi\OpenApiSpec\Filters\WithDescription as FilterWithDescription;
+use LaravelJsonApi\OpenApiSpec\Descriptors\Schema\Filters\WithDescription as FilterWithDescriptionDescriptor;
 use LaravelJsonApi\OpenApiSpec\Eloquent\Fields\WithDescription as FieldWithDescription;
 use LaravelJsonApi\OpenApiSpec\Route;
 
@@ -329,7 +330,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                 $descriptor = $this->getDescriptor($filterInstance);
                 $descriptorInstance = new $descriptor($this->generator, $route, $filterInstance);
                 if ($this->hasManualDescription($filterInstance)) {
-                    $descriptorInstance = new FilterWithDescription(
+                    $descriptorInstance = new FilterWithDescriptionDescriptor(
                         $this->generator,
                         $route,
                         $filterInstance,
