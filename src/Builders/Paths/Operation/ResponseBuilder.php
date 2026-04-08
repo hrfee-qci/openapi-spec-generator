@@ -15,6 +15,7 @@ use LaravelJsonApi\OpenApiSpec\ComponentsContainer;
 use LaravelJsonApi\OpenApiSpec\Concerns\ResolvesActionTraitToDescriptor;
 use LaravelJsonApi\OpenApiSpec\Concerns\ResolvesDescriptionAttributeFromRoute;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Responses;
+use LaravelJsonApi\OpenApiSpec\Descriptors\Responses\WithDescriptionAttribute;
 use LaravelJsonApi\OpenApiSpec\Generator;
 use LaravelJsonApi\OpenApiSpec\Route;
 use Neomerx\JsonApi\Contracts\Http\Headers\MediaTypeInterface;
@@ -84,8 +85,15 @@ class ResponseBuilder extends Builder
         $class = $this->descriptorClass($route);
         if ($class === WithDescription::class) {
             $description = $this->descriptionFromRoute($route);
-            $class = $description->getResponseClassOrSchema();
-            if ($class instanceof Schema) throw new \Error('FIXME: unused OASchema');
+            $class = $description->getResponseClassOrExample();
+            if (is_array($class))
+                return new WithDescriptionAttribute(
+                    $this->generator,
+                    $route,
+                    $this->schemaBuilder,
+                    $this->defaults,
+                    $class,
+                );
         }
         if (isset($this->descriptors[$class])) {
             return new $this->descriptors[$class]($this->generator, $route, $this->schemaBuilder, $this->defaults);

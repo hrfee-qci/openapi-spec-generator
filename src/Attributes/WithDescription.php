@@ -5,34 +5,20 @@ namespace LaravelJsonApi\OpenApiSpec\Attributes;
 use Closure;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
-// WithDescription tags a route method with a description and example output if desired, used for generating OpenAPI docs.
+// WithDescription tags a route method with a description and a response Schema or an example as an array, used for generating OpenAPI docs.
 #[\Attribute]
 class WithDescription
 {
     /**
      * WithDescription constructor.
      *
-     * @param mixed|Schema $responseClassOrSchema
+     * @param array|class-string<Schema>|closure():array $responseClassOrExample
      * @param ?string|closure():string $description
-     * @param ?mixed $example
      */
     public function __construct(
-        private mixed $responseClassOrSchema,
+        private mixed $responseClassOrExample,
         private ?string $description = null,
-        private mixed $example = null,
     ) {}
-
-    /**
-     * WithDescription.
-     *
-     * @param ?string $description
-     * @param ?mixed $example
-     * @return self
-     */
-    public static function make(?string $description = null, mixed $example = null, ?Attribute $attr = null): self
-    {
-        return new self($description, $example, $attr);
-    }
 
     /**
      * Get the description as a string, or returns null if none set.
@@ -46,23 +32,13 @@ class WithDescription
         return $this->description;
     }
 
-    /**
-     * Gets example, or null if none set.
-     *
-     * @return mixed|null
+    /* Returns the response class, or an example if provided instead.
+     * @return array|Schema
      */
-    public function getExample(): mixed
+    public function getResponseClassOrExample(): mixed
     {
-        if (!$this->example)
-            return null;
-        $example = $this->example;
-        if ($this->example instanceof Closure)
-            $example = ($this->example)();
-        return $example;
-    }
-
-    public function getResponseClassOrSchema(): mixed
-    {
-        return $this->responseClassOrSchema;
+        if ($this->responseClassOrExample instanceof Closure)
+            return ($this->responseClassOrExample)();
+        return $this->responseClassOrExample;
     }
 }
