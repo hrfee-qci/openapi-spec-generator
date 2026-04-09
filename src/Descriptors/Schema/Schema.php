@@ -420,6 +420,9 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                     if ($descriptionField && $descriptionField->getDescription()) {
                         $schema = $schema->description($descriptionField->getDescription());
                     }
+                    if ($descriptionField && $descriptionField->format) {
+                        $schema = $schema->format($descriptionField->format);
+                    }
                     if ($descriptionField && !empty($descriptionField->getExample())) {
                         $example = $descriptionField->getExample();
                         $schema = $schema->example($example);

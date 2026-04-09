@@ -14,7 +14,7 @@ class WithDescription extends Attribute
 {
     /*
      * Generates an array to return from a *Schema::fields() method, given an array of arrays containing a field and optional description and example.
-     * @param array<int, array{ field: Attribute, description: string|null, example: mixed|null }|Attribute>
+     * @param array<int, array{ field: Attribute, description: string|null, example: mixed|null, format: string|null}|Attribute> $fields
      * @return array<int, Attribute>
      */
     public static function arrayFromFieldList(array $fields): array
