@@ -3,8 +3,11 @@
 namespace LaravelJsonApi\OpenApiSpec\Eloquent\Fields;
 
 use Closure;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 use Illuminate\Database\Eloquent\Model;
+use LaravelJsonApi\Eloquent\Fields\ArrayList;
 use LaravelJsonApi\Eloquent\Fields\Attribute;
+use LaravelJsonApi\OpenApiSpec\Helpers\SchemaFromExample;
 
 // WithDescription proxies attributes and adds documentation, used for generating OpenAPI docs.
 class WithDescription extends Attribute
@@ -16,11 +19,13 @@ class WithDescription extends Attribute
      */
     public static function arrayFromFieldList(array $fields): array
     {
-        return array_map(fn(mixed $row) => is_array($row) ? self::make(
-            description: $row['description'] ?? $row[1] ?? null,
-            example: $row['example'] ?? $row[2] ?? null,
-            attr: $row['field'] ?? $row[0],
-        ) : $row, $fields);
+        return array_map(fn(mixed $row) => is_array($row)
+            ? self::make(
+                description: $row['description'] ?? $row[1] ?? null,
+                example: $row['example'] ?? $row[2] ?? null,
+                attr: $row['field'] ?? $row[0],
+            )
+            : $row, $fields);
     }
 
     /**
@@ -85,6 +90,22 @@ class WithDescription extends Attribute
         if ($this->example instanceof Closure)
             $example = ($this->example)();
         return $example;
+    }
+
+    /**
+     * Attempts to generate a sub-schema for the given schema (e.g. setting types for an array's items).
+     * @param Schema $schema
+     * @param mixed|null $example "if not passed, $this->getExample will be used."
+     * @return Schema
+     */
+    public function generateSubSchemaFromExample(
+        ?Schema $schema = null,
+        mixed $example = null,
+        mixed $key = null,
+    ): Schema {
+        $example ??= $this->getExample();
+
+        return SchemaFromExample::generate($schema, $example, $key);
     }
 
     public function isSingular(): bool

@@ -32,9 +32,9 @@ use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\Schema\PaginationDescriptor
 use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\Schema\SortablesDescriptor;
 use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\SchemaDescriptor;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Descriptor;
-use LaravelJsonApi\OpenApiSpec\Filters\WithDescription as FilterWithDescription;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Schema\Filters\WithDescription as FilterWithDescriptionDescriptor;
 use LaravelJsonApi\OpenApiSpec\Eloquent\Fields\WithDescription as FieldWithDescription;
+use LaravelJsonApi\OpenApiSpec\Filters\WithDescription as FilterWithDescription;
 use LaravelJsonApi\OpenApiSpec\Route;
 
 class Schema extends Descriptor implements PaginationDescriptor, SchemaDescriptor, SortablesDescriptor
@@ -421,7 +421,9 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                         $schema = $schema->description($descriptionField->getDescription());
                     }
                     if ($descriptionField && !empty($descriptionField->getExample())) {
-                        $schema = $schema->example($descriptionField->getExample());
+                        $example = $descriptionField->getExample();
+                        $schema = $schema->example($example);
+                        $schema = $descriptionField->generateSubSchemaFromExample($schema, $example, $fieldId);
                     } else if (isset($example[$column])) {
                         $schema = $schema->example($example[$column]);
                     }
