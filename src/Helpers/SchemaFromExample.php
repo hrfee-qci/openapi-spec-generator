@@ -9,7 +9,7 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 // SchemaFromExample attempts to generate a schema from an example given in a WithDescriptor field.
 class SchemaFromExample
 {
-    public static function generate(Schema $schema = null, mixed $example = null, mixed $key = null): Schema
+    public static function generate(Schema $schema = null, mixed $example = null, mixed $key = null, ?string $format = null): Schema
     {
         if ($schema === null) {
             if (is_int($example)) {
@@ -31,6 +31,7 @@ class SchemaFromExample
                 throw new Error("unknown datatype in example: $key => $example");
             }
         }
+        if ($format) $schema = $schema->format($format);
         if (is_array($example)) {
             $props = [];
             foreach ($example as $k => $v) {

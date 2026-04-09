@@ -42,6 +42,7 @@ class WithDescription extends FilterDescriptor
                 array_keys($examples),
             ));
         }
+        if ($this->filter->format) $parent = $parent->schema($parent->schema->format($this->filter->format));
         $parents[0] = $parent;
         return $parents;
     }

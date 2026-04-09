@@ -24,6 +24,7 @@ class WithDescription extends Attribute
                 description: $row['description'] ?? $row[1] ?? null,
                 example: $row['example'] ?? $row[2] ?? null,
                 attr: $row['field'] ?? $row[0],
+                format: $row['format'] ?? $row[3] ?? null,
             )
             : $row, $fields);
     }
@@ -34,11 +35,13 @@ class WithDescription extends Attribute
      * @param ?string|closure():string $description
      * @param ?mixed $example
      * @param ?Attribute $attr
+     * @param ?string $format "can be OpenAPI format (date(-time),password,byte,binary) or arbitrary."
      */
     public function __construct(
         private ?string $description = null,
         private mixed $example = null,
         public ?Attribute $attr = null,
+        public ?string $format = null,
     ) {}
 
     /**
@@ -47,11 +50,16 @@ class WithDescription extends Attribute
      * @param ?string $description
      * @param ?mixed $example
      * @param ?Attribute $attr
+     * @param ?string $format
      * @return self
      */
-    public static function make(?string $description = null, mixed $example = null, ?Attribute $attr = null): self
-    {
-        return new self($description, $example, $attr);
+    public static function make(
+        ?string $description = null,
+        mixed $example = null,
+        ?Attribute $attr = null,
+        ?string $format = null,
+    ): self {
+        return new self($description, $example, $attr, $format);
     }
 
     /**
@@ -105,7 +113,7 @@ class WithDescription extends Attribute
     ): Schema {
         $example ??= $this->getExample();
 
-        return SchemaFromExample::generate($schema, $example, $key);
+        return SchemaFromExample::generate($schema, $example, $key, $this->format);
     }
 
     public function isSingular(): bool
