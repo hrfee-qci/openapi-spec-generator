@@ -417,11 +417,16 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                         $schema = $schema->example($attributes[$column]);
                     }
                 } else {
-                    if ($descriptionField && $descriptionField->getDescription()) {
-                        $schema = $schema->description($descriptionField->getDescription());
-                    }
-                    if ($descriptionField && $descriptionField->format) {
-                        $schema = $schema->format($descriptionField->format);
+                    if ($descriptionField) {
+                        if ($descriptionField->getDescription()) {
+                            $schema = $schema->description($descriptionField->getDescription());
+                        }
+                        if ($descriptionField->getFormat()) {
+                            $schema = $schema->format($descriptionField->getFormat());
+                        }
+                        if ($descriptionField->getEnum()) {
+                            $schema = $schema->enum(...$descriptionField->getEnum());
+                        }
                     }
                     if ($descriptionField && !empty($descriptionField->getExample())) {
                         $example = $descriptionField->getExample();

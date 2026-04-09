@@ -1,0 +1,1255 @@
+PULL_REQUEST_TEMPLATE.md:<!--- Provide a general summary of your changes in the Title above -->
+PULL_REQUEST_TEMPLATE.md:- [ ] Bug fix (non-breaking change which fixes an issue)
+PULL_REQUEST_TEMPLATE.md:- [ ] New feature (non-breaking change which adds functionality)
+PULL_REQUEST_TEMPLATE.md:- [ ] Breaking change (fix or feature that would cause existing functionality to change)
+PULL_REQUEST_TEMPLATE.md:Please, please, please, don't send your pull request until all of the boxes are ticked. Once your pull request is created, it will trigger a build on our [continuous integration](http://www.phptherightway.com/#continuous-integration) server to make sure your [tests and code style pass](https://help.github.com/articles/about-required-status-checks/).
+PULL_REQUEST_TEMPLATE.md:- [ ] I have read the **[CONTRIBUTING](https://github.com/swisnl/openapi-spec-generator/blob/master/CONTRIBUTING.md)** document.
+PULL_REQUEST_TEMPLATE.md:- [ ] My pull request addresses exactly one patch/feature.
+PULL_REQUEST_TEMPLATE.md:- [ ] I have created a branch for this patch/feature.
+PULL_REQUEST_TEMPLATE.md:- [ ] Each individual commit in the pull request is meaningful.
+PULL_REQUEST_TEMPLATE.md:- [ ] I have added tests to cover my changes.
+PULL_REQUEST_TEMPLATE.md:- [ ] If my change requires a change to the documentation, I have updated it accordingly.
+phpunit.xml.dist:<?xml version="1.0" encoding="UTF-8"?>
+CODE_OF_CONDUCT.md:our community a harassment-free experience for everyone, regardless of age, body
+CODE_OF_CONDUCT.md:representing a project or community include using an official project e-mail
+CODE_OF_CONDUCT.md:available at [http://contributor-covenant.org/version/1/4][version]
+CODE_OF_CONDUCT.md:[homepage]: http://contributor-covenant.org
+CODE_OF_CONDUCT.md:[version]: http://contributor-covenant.org/version/1/4/
+CHANGELOG.md:All notable changes to `openapi-spec-generator` will be documented in this file.
+CHANGELOG.md:- Nothing
+CHANGELOG.md:## [0.8.0] - 2025-01-31
+CHANGELOG.md:- Add support for Laravel JSON:API v5 [#24](https://github.com/swisnl/openapi-spec-generator/pull/24)
+CHANGELOG.md:- Dropped PHP 8.0 support.
+CHANGELOG.md:## [0.7.0] - 2024-11-12
+CHANGELOG.md:- Add support for doc generation for non-eloquent resources [#18](https://github.com/swisnl/openapi-spec-generator/pull/18).
+CHANGELOG.md:- Dropped PHP 7 support.
+CHANGELOG.md:- Use filter column name instead of filter key to retrieve example data [#20](https://github.com/swisnl/openapi-spec-generator/pull/20).
+CHANGELOG.md:## [0.6.1] - 2024-05-15
+CHANGELOG.md:- Add support for Laravel JSON:API v4 and Laravel 11 [#19](https://github.com/swisnl/openapi-spec-generator/pull/19).
+CHANGELOG.md:## [0.6.0] - 2023-03-29
+CHANGELOG.md:- Add support for enums in filter examples.
+CHANGELOG.md:- A meaningful exception is thrown when you forget to seed the database [#11](https://github.com/swisnl/openapi-spec-generator/pull/11).
+CHANGELOG.md:- Fall back to a basic descriptor when no custom filter descriptor is found.
+CHANGELOG.md:- Use field column name to get example value.
+CHANGELOG.md:## [0.5.1] - 2023-03-07
+CHANGELOG.md:- Add support for Laravel JSON:API v3 and Laravel 10 [#9](https://github.com/swisnl/openapi-spec-generator/pull/9).
+CHANGELOG.md:## [0.5.0] - 2023-02-06
+CHANGELOG.md:- Allow customizing the storage disk to use [#6](https://github.com/swisnl/openapi-spec-generator/pull/6).
+CHANGELOG.md:- Add support for `Has`, `WhereNull` and `WhereNotNull` filters.
+CHANGELOG.md:- Use correct description for `WherePivotNotIn` filter.
+CHANGELOG.md:## [0.4.0] - 2022-02-24
+CHANGELOG.md:- Allow developers to add descriptions to endpoints [#2](https://github.com/swisnl/openapi-spec-generator/pull/2).
+CHANGELOG.md:- Require `laravel-json-api/laravel` version 2 [#2](https://github.com/swisnl/openapi-spec-generator/pull/2).
+CHANGELOG.md:- Fix a wrongly generated doc for to many relationships [#1](https://github.com/swisnl/openapi-spec-generator/pull/1).
+LICENSE.md:   worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+LICENSE.md:   worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+LICENSE.md:   cross-claim or counterclaim in a lawsuit) alleging that the Work
+LICENSE.md:   wherever such third-party notices normally appear. The contents
+LICENSE.md:   of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+LICENSE.md:      identification within third-party archives.
+LICENSE.md:       http://www.apache.org/licenses/LICENSE-2.0
+README.md:[![Latest Version on Packagist][ico-version]][link-packagist]
+README.md:[![Software License][ico-license]](LICENSE.md)
+README.md:[![Buy us a tree][ico-treeware]][link-treeware]
+README.md:[![Build Status][ico-github-actions]][link-github-actions]
+README.md:[![Total Downloads][ico-downloads]][link-downloads]
+README.md:[![Maintained by SWIS][ico-swis]][link-swis]
+README.md:- [x] Generate Schemas/Responses/Request/Errors for all default [Laravel JSON:API](https://laraveljsonapi.io/) routes
+README.md:- [x] Use a seeded database to generate examples
+README.md:- [ ] Customisation of the generation
+README.md:- [ ] Generation for custom actions
+README.md:- [ ] Generation for custom filters
+README.md:- [ ] Generation for anything custom
+README.md:- [ ] Generation for MorphTo relations (MorphToMany works)
+README.md:- [ ] Generation of Pagination Meta
+README.md:- [ ] Generation of Includes
+README.md:- [ ] Generation of Authentication/Authorization
+README.md:- [x] Command to generate to storage folder
+README.md:- [x] Get basic test suite running with GitHub Actions
+README.md:- [x] Add extra operation descriptions via config
+README.md:- [x] Add in tags & x-tagGroups (via config)
+README.md:- [x] Add tests (Use the dummy by laraveljsonapi to integrate all features)
+README.md:- [ ] Add custom actions
+README.md:- [x] Split schemas/requests/responses by action
+README.md:- [ ] Consider field attributes
+README.md:  - [x] bool readonly
+README.md:  - [x] bool hidden
+README.md:  - [ ] closure based readonly (create/update)
+README.md:  - [ ] closure based hidden
+README.md:- [x] List sortable fields
+README.md:- [ ] Fix includes and relations
+README.md:  - [x] Add relationship routes
+README.md:  - [ ] Add includes
+README.md:- [ ] Add authentication
+README.md:- [ ] Add custom queries/filters
+README.md:- [ ] Add a way to document custom actions
+README.md:- [ ] Tidy up the code!!
+README.md:- [x] Replace `cebe/php-openapi` with `goldspecdigital/oooas`
+README.md:- [x] Move to an architecture inspired by `vyuldashev/laravel-openapi`
+README.md:- [ ] Use php8 attributes on actions/classes to generate custom docs
+README.md:🙏 Based upon initial prototype by [martianatwork](https://github.com/martianatwork), [glennjacobs](https://github.com/glennjacobs) and [byte-it](https://github.com/byte-it).
+README.md:composer require swisnl/openapi-spec-generator
+README.md:php artisan vendor:publish --provider="LaravelJsonApi\OpenApiSpec\OpenApiServiceProvider"
+README.md:A quick way to preview your documentation is to use [`speccy serve` command](https://github.com/wework/speccy#serve-command).
+README.md:### [Laravel Stoplight Elements](https://github.com/JustSteveKing/laravel-stoplight-elements)
+README.md:> For this to work, you have to generate your spec in a public-available location, like the local 'public' disk available in Laravel applications:
+README.md:After [installing it](https://github.com/JustSteveKing/laravel-stoplight-elements#laravel-stoplight-elements), you should set its url config: `STOPLIGHT_OPENAPI_PATH`. For example, if you're using the 'public' disk:
+README.md:> Note: If you need a more dynamic way to get access to the spec URL (for example, in S3 you may need to use [temporary URLs](https://laravel.com/docs/filesystem#temporary-urls)), you can publish its Blade template and [replace some lines ](https://github.com/JustSteveKing/laravel-stoplight-elements/blob/2.0.0/resources/views/docs.blade.php#L14) to generate your own URI. Also, you may need to add an Fetch interceptor to integrate it with your authentication methods.
+README.md:Check [its configuration docs](https://github.com/JustSteveKing/laravel-stoplight-elements#configuration) for further options.
+README.md:### [Standalone Stoplight Elements Web Component](https://github.com/stoplightio/elements#web-component)
+README.md:This is useful when you need more advanced customizations in the routing system, integrate it in your existing Vue|React|Vanilla application, or publish it as a non-laravel static HTML site. But... you have to setup it manually. :sweat_smile:
+README.md:You can [follow the instructions](https://github.com/stoplightio/elements/blob/main/docs/getting-started/elements/html.md) to use the standalone Web Component, grab it into a blade template and armor your view.
+README.md:It has [advanced options](https://github.com/stoplightio/elements/blob/main/docs/getting-started/elements/elements-options.md), like `tryItCredentialPolicy="same-origin"` to use your cookie-based authentication (like [Sanctum](https://github.com/laravel/sanctum/)).
+README.md:Also, in your Blade view or Vue's app initializer, as this package uses [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) you can add interceptors to customize the "try it out" feature, like adding default headers for `Content-Type` and/or `Accept` to be `'application/vnd.api+json'` to your requests.
+README.md:- [Glenn Jacobs](https://github.com/glennjacobs)
+README.md:- [Johannes Kees](https://github.com/byte-it)
+README.md:- [Björn Brala](https://github.com/bbrala)
+README.md:- [Rien van Velzen](https://github.com/Rockheep)
+README.md:- [All Contributors][link-contributors]
+README.md:This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [**buy the world a tree**][link-treeware] to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
+README.md:[SWIS][link-swis] is a web agency from Leiden, the Netherlands. We love working with open source software.
+README.md:[ico-version]: https://img.shields.io/packagist/v/swisnl/openapi-spec-generator.svg?style=flat-square
+README.md:[ico-license]: https://img.shields.io/packagist/l/swisnl/openapi-spec-generator?style=flat-square
+README.md:[ico-treeware]: https://img.shields.io/badge/Treeware-%F0%9F%8C%B3-lightgreen.svg?style=flat-square
+README.md:[ico-github-actions]: https://img.shields.io/github/actions/workflow/status/swisnl/openapi-spec-generator/tests.yml?label=tests&branch=master&style=flat-square
+README.md:[ico-downloads]: https://img.shields.io/packagist/dt/swisnl/openapi-spec-generator.svg?style=flat-square
+README.md:[ico-swis]: https://img.shields.io/badge/%F0%9F%9A%80-maintained%20by%20SWIS-%230737A9.svg?style=flat-square
+README.md:[link-packagist]: https://packagist.org/packages/swisnl/openapi-spec-generator
+README.md:[link-github-actions]: https://github.com/swisnl/openapi-spec-generator/actions/workflows/tests.yml
+README.md:[link-downloads]: https://packagist.org/packages/swisnl/openapi-spec-generator
+README.md:[link-treeware]: https://plant.treeware.earth/swisnl/openapi-spec-generator
+README.md:[link-contributors]: ../../contributors
+README.md:[link-swis]: https://www.swis.nl
+ISSUE_TEMPLATE.md:<!-- Provide a general summary of the issue in the Title above -->
+src/ComponentsContainer.php:        $this->schemas[$schema->objectId] = $schema;
+src/ComponentsContainer.php:        return $this->ref($schema);
+src/ComponentsContainer.php:        return isset($this->schemas[$objectId]) ? $this->ref($this->schemas[$objectId]) : null;
+src/ComponentsContainer.php:        $this->requestBodies[$requestBody->objectId] = $requestBody;
+src/ComponentsContainer.php:        return $this->ref($requestBody);
+src/ComponentsContainer.php:        return $this->requestBodies[$objectId] ?? null;
+src/ComponentsContainer.php:        $this->parameters[$parameter->objectId] = $parameter;
+src/ComponentsContainer.php:        return $this->ref($parameter);
+src/ComponentsContainer.php:        return $this->parameters[$objectId] ?? null;
+src/ComponentsContainer.php:        $this->responses[$response->objectId] = $response;
+src/ComponentsContainer.php:        return Response::ref('#/components/responses/'.$response->objectId,
+src/ComponentsContainer.php:            $response->objectId)->statusCode($response->statusCode);
+src/ComponentsContainer.php:        return $this->responses[$objectId] ?? null;
+src/ComponentsContainer.php:        $schemas = collect($this->schemas)
+src/ComponentsContainer.php:            ->sortBy(fn (BaseObject $schema) => $schema->objectId)
+src/ComponentsContainer.php:            ->toArray();
+src/ComponentsContainer.php:            ->responses(...$this->responses)
+src/ComponentsContainer.php:            ->parameters(...$this->parameters)
+src/ComponentsContainer.php:            ->requestBodies(...$this->requestBodies)
+src/ComponentsContainer.php:            ->schemas(...array_values($schemas));
+src/ComponentsContainer.php:        return $object::ref($baseRef.$object->objectId,
+src/ComponentsContainer.php:            $object->objectId);
+src/Helpers/SchemaFromExample.php:                $schema = Schema::integer($key)->example($example);
+src/Helpers/SchemaFromExample.php:                $schema = Schema::number($key)->example($example);
+src/Helpers/SchemaFromExample.php:                $schema = Schema::string($key)->example($example);
+src/Helpers/SchemaFromExample.php:                $schema = Schema::string($key)->format(Schema::FORMAT_DATE_TIME)->example($example);
+src/Helpers/SchemaFromExample.php:                    $schema = Schema::array($key)->example($example);
+src/Helpers/SchemaFromExample.php:        if ($format) $schema = $schema->format($format);
+src/Helpers/SchemaFromExample.php:                $schema = $schema->properties(...$props);
+src/Helpers/SchemaFromExample.php:                    $schema = $schema->items($prop);
+src/Helpers/SchemaFromExample.php:    /** Returns whether or not an array is a hash map (i.e. has non-integer keys).
+src/Attributes/WithDescription.php:     * @param array|class-string<Schema>|closure():array $responseClassOrExample
+src/Attributes/WithDescription.php:        if ($this->description instanceof Closure)
+src/Attributes/WithDescription.php:            return ($this->description)();
+src/Attributes/WithDescription.php:        return $this->description;
+src/Attributes/WithDescription.php:        if ($this->responseClassOrExample instanceof Closure)
+src/Attributes/WithDescription.php:            return ($this->responseClassOrExample)();
+src/Attributes/WithDescription.php:        return $this->responseClassOrExample;
+src/Facades/GeneratorFacade.php:        return 'openapi-generator';
+tests/Support/Controllers/Controller.php: * http://www.apache.org/licenses/LICENSE-2.0
+src/ResourceContainer.php:        $this->server = $server;
+src/ResourceContainer.php:        $fqn = $this->getFQN($model);
+src/ResourceContainer.php:        if (! isset($this->resources[$fqn])) {
+src/ResourceContainer.php:            $this->loadResources($fqn);
+src/ResourceContainer.php:        $resource = $this->resources[$fqn]->first();
+src/ResourceContainer.php:        $fqn = $this->getFQN($model);
+src/ResourceContainer.php:        if (! isset($this->resource[$fqn])) {
+src/ResourceContainer.php:            $this->loadResources($fqn);
+src/ResourceContainer.php:        $resources = $this->resources[$fqn]->toArray();
+src/ResourceContainer.php:        $schema = $this->server->schemas()->schemaForModel($model);
+src/ResourceContainer.php:        $repository = $schema->repository();
+src/ResourceContainer.php:            $this->resources[$model] = collect($repository->queryAll()->get())
+src/ResourceContainer.php:                ->map(function ($model) {
+src/ResourceContainer.php:                    return $this->server->resources()->create($model);
+src/ResourceContainer.php:                ->take(3);
+src/ResourceContainer.php:            $resources = $model::query()->take(100)->get()->map(function ($model) {
+src/ResourceContainer.php:                return $this->server->resources()->create($model);
+src/ResourceContainer.php:            })->take(3);
+src/ResourceContainer.php:            $this->resources[$model] = $resources;
+src/Concerns/ResolvesDescriptionAttributeFromRoute.php:        [$class, $method] = $route->controllerCallable();
+src/Concerns/ResolvesDescriptionAttributeFromRoute.php:            $methodReflection = $reflection->getMethod($method);
+src/Concerns/ResolvesDescriptionAttributeFromRoute.php:            $attrs = $methodReflection->getAttributes(WithDescription::class);
+src/Concerns/ResolvesDescriptionAttributeFromRoute.php:                return $attrs[0]->newInstance();
+src/Commands/GenerateCommand.php:        $serverKey = $this->argument('serverKey');
+src/Commands/GenerateCommand.php:        $format = $this->argument('format');
+src/Commands/GenerateCommand.php:        $this->info('Generating Open API spec...');
+src/Commands/GenerateCommand.php:            $this->error('Validation failed');
+src/Commands/GenerateCommand.php:            $this->line('Errors:');
+src/Commands/GenerateCommand.php:            collect($exception->getErrors())
+src/Commands/GenerateCommand.php:                ->map(function ($val) {
+src/Commands/GenerateCommand.php:                    return collect($val)->map(function ($val, $key) {
+src/Commands/GenerateCommand.php:                    })->join("\n");
+src/Commands/GenerateCommand.php:                })->each(function ($string) {
+src/Commands/GenerateCommand.php:                    $this->line($string);
+src/Commands/GenerateCommand.php:                    $this->line("\n");
+src/Commands/GenerateCommand.php:        $filePath = str_replace(base_path().'/', '', $storageDisk->path($fileName));
+src/Commands/GenerateCommand.php:        $this->line('Complete! '.$filePath);
+src/Commands/GenerateCommand.php:        $this->newLine();
+src/Commands/GenerateCommand.php:        $this->line('Run the following to see your API docs');
+src/Commands/GenerateCommand.php:        $this->info('speccy serve '.$filePath);
+src/Commands/GenerateCommand.php:        $this->newLine();
+src/Builders/PathsBuilder.php:        $this->components = $components;
+src/Builders/PathsBuilder.php:        $this->operation = new OperationBuilder($generator, $components);
+src/Builders/PathsBuilder.php:        return collect(Route::getRoutes()->getRoutes())
+src/Builders/PathsBuilder.php:            ->filter(fn(IlluminateRoute $route) => SpecRoute::belongsTo($route, $this->generator->server()))
+src/Builders/PathsBuilder.php:            ->map(fn(IlluminateRoute $route) => new SpecRoute($this->generator->server(), $route))
+src/Builders/PathsBuilder.php:            ->mapToGroups(function (SpecRoute $route) {
+src/Builders/PathsBuilder.php:                return [$route->uri() => $route];
+src/Builders/PathsBuilder.php:            ->map(function (Collection $routes, string $uri) {
+src/Builders/PathsBuilder.php:                $operations = $routes->map(function (SpecRoute $route) {
+src/Builders/PathsBuilder.php:                    return $this->operation->build($route);
+src/Builders/PathsBuilder.php:                })->filter(fn($val) => $val !== null);
+src/Builders/PathsBuilder.php:                if ($operations->isEmpty()) {
+src/Builders/PathsBuilder.php:                return PathItem::create()->route($uri)->operations(...$operations->toArray());
+src/Builders/PathsBuilder.php:            ->filter(fn($val) => $val !== null)
+src/Builders/PathsBuilder.php:            ->toArray();
+src/Concerns/ResolvesActionTraitToDescriptor.php:        [$class, $method] = $route->controllerCallable();
+src/Concerns/ResolvesActionTraitToDescriptor.php:            $methodReflection = $reflection->getMethod($method);
+src/Concerns/ResolvesActionTraitToDescriptor.php:            if ($methodReflection->getDeclaringClass()->name !== $reflection->name) {
+src/Concerns/ResolvesActionTraitToDescriptor.php:                $reflection = $methodReflection->getDeclaringClass();
+src/Concerns/ResolvesActionTraitToDescriptor.php:            $traitMethod = collect($reflection->getTraits())
+src/Concerns/ResolvesActionTraitToDescriptor.php:                ->map(function (\ReflectionClass $trait) {
+src/Concerns/ResolvesActionTraitToDescriptor.php:                    return $trait->getMethods();
+src/Concerns/ResolvesActionTraitToDescriptor.php:                ->flatten()
+src/Concerns/ResolvesActionTraitToDescriptor.php:                ->mapWithKeys(fn(\ReflectionMethod $method) => [$method->name => $method])
+src/Concerns/ResolvesActionTraitToDescriptor.php:                ->get($method);
+src/Concerns/ResolvesActionTraitToDescriptor.php:                $attrs = $methodReflection->getAttributes(WithDescription::class);
+src/Concerns/ResolvesActionTraitToDescriptor.php:                    // $attr = $attrs[0]->newInstance();
+src/Concerns/ResolvesActionTraitToDescriptor.php:        return $traitMethod !== null ? $traitMethod->getDeclaringClass()->name : null;
+src/Generator.php:        $this->key = $key;
+src/Generator.php:        $this->server = new $apiServer($appResolver, $this->key);
+src/Generator.php:        $this->infoBuilder = new InfoBuilder($this);
+src/Generator.php:        $this->serverBuilder = new ServerBuilder($this);
+src/Generator.php:        $this->components = new ComponentsContainer;
+src/Generator.php:        $this->resources = new ResourceContainer($this->server);
+src/Generator.php:        $this->pathsBuilder = new PathsBuilder($this, $this->components);
+src/Generator.php:            ->openapi(OpenApi::OPENAPI_3_0_2)
+src/Generator.php:            ->info($this->infoBuilder->build())
+src/Generator.php:            ->servers(...$this->serverBuilder->build())
+src/Generator.php:            ->paths(...array_values($this->pathsBuilder->build()))
+src/Generator.php:            ->components($this->components()->components());
+src/Generator.php:        return $this->key;
+src/Generator.php:        return $this->server;
+src/Generator.php:        return $this->components;
+src/Generator.php:        return $this->resources;
+src/Route.php:        $this->server = $server;
+src/Route.php:        $this->route = $route;
+src/Route.php:        $segments = explode('.', $this->route->getName());
+src/Route.php:            array_search($this->server->name(), $segments) + 1
+src/Route.php:        $this->operationId = collect($segments)->join('.');
+src/Route.php:            throw new \LogicException('Unable to handle action structure '.$route->getName());
+src/Route.php:        $this->resource = $resource;
+src/Route.php:        $this->schema = $this->server->schemas()->schemaFor($resource);
+src/Route.php:        if ($action !== null && $relation === null && $this->schema->isRelationship($action)) {
+src/Route.php:            $this->relation = $action;
+src/Route.php:            $this->action = 'showRelated';
+src/Route.php:            $this->relation = $relation;
+src/Route.php:            $this->action = $action;
+src/Route.php:        $this->setUriForRoute();
+src/Route.php:        [$controller, $method] = explode('@', $this->route->getActionName(), 2);
+src/Route.php:        $this->controller = $controller;
+src/Route.php:        $this->method = $method;
+src/Route.php:        return collect($this->route->methods())
+src/Route.php:            ->filter(fn ($method) => $method !== 'HEAD')
+src/Route.php:            ->first();
+src/Route.php:        return $this->schema;
+src/Route.php:        return $this->route;
+src/Route.php:        return [$this->controller, $this->method];
+src/Route.php:        return $this->operationId;
+src/Route.php:        return $this->uri;
+src/Route.php:        return $this->relation;
+src/Route.php:        $relation = $this->relation ? $this->schema()
+src/Route.php:            ->relationship($this->relation) : null;
+src/Route.php:        return $this->relation !== null;
+src/Route.php:        return $this->relation() instanceof PolymorphicRelation;
+src/Route.php:        return $this->relation() !== null ? $this->relation()->inverse() : null;
+src/Route.php:        if ($this->isRelation()) {
+src/Route.php:            if ($this->relation() instanceof PolymorphicRelation) {
+src/Route.php:            return $this->server->schemas()
+src/Route.php:                ->schemaFor($this->relation() !== null ? $this->relation()->inverse() : null);
+src/Route.php:        if ($this->isRelation()) {
+src/Route.php:            $relation = $this->relation();
+src/Route.php:                foreach ($relation->inverseTypes() as $type) {
+src/Route.php:                    $schemas[$type] = $this->server->schemas()
+src/Route.php:                        ->schemaFor($type);
+src/Route.php:                $schemas[$relation->inverse()] = $this->server->schemas()
+src/Route.php:                    ->schemaFor($relation->inverse());
+src/Route.php:        $relation = $this->relation() !== null ? $this->relation()->inverse() : null;
+src/Route.php:            return Str::singular($this->resource);
+src/Route.php:        return $this->resource;
+src/Route.php:        return $this->resource;
+src/Route.php:        return $this->action;
+src/Route.php:            $route->getName(),
+src/Route.php:            $server->name(),
+src/Route.php:            $this->server->url(),
+src/Route.php:        $this->uri = str_replace(
+src/Route.php:            '/'.$this->route->uri(),
+src/Builders/Paths/Operation/ParameterBuilder.php:        $schemaDescriptor = new Schema($this->generator);
+src/Builders/Paths/Operation/ParameterBuilder.php:        if ($route->action() === 'index') {
+src/Builders/Paths/Operation/ParameterBuilder.php:                ...$schemaDescriptor->pagination($route),
+src/Builders/Paths/Operation/ParameterBuilder.php:                ...$schemaDescriptor->sortables($route),
+src/Builders/Paths/Operation/ParameterBuilder.php:                ...$schemaDescriptor->filters($route),
+src/Builders/Paths/Operation/ParameterBuilder.php:        if (isset($route->route()->defaults[\LaravelJsonApi\Laravel\Routing\Route::RESOURCE_ID_NAME])) {
+src/Builders/Paths/Operation/ParameterBuilder.php:            $id = $route->route()->defaults[\LaravelJsonApi\Laravel\Routing\Route::RESOURCE_ID_NAME];
+src/Builders/Paths/Operation/ParameterBuilder.php:                $this->generator->resources()->resources($route->schema()::model()),
+src/Builders/Paths/Operation/ParameterBuilder.php:            )->map(function ($resource) {
+src/Builders/Paths/Operation/ParameterBuilder.php:                $id = $resource->id();
+src/Builders/Paths/Operation/ParameterBuilder.php:                return Example::create($id)->value($id);
+src/Builders/Paths/Operation/ParameterBuilder.php:            })->toArray();
+src/Builders/Paths/Operation/ParameterBuilder.php:                ->name($id)
+src/Builders/Paths/Operation/ParameterBuilder.php:                ->required(true)
+src/Builders/Paths/Operation/ParameterBuilder.php:                ->allowEmptyValue(false)
+src/Builders/Paths/Operation/ParameterBuilder.php:                ->examples(...$examples)
+src/Builders/Paths/Operation/ParameterBuilder.php:                ->schema(OASchema::string());
+tests/Support/Controllers/Api/V1/PostController.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Controllers/Api/V1/PostController.php:        $this->authorize('deleteAll', Post::class);
+tests/Support/Controllers/Api/V1/PostController.php:        Post::query()->forceDelete();
+tests/Support/Controllers/Api/V1/PostController.php:        $this->authorize('update', $post);
+tests/Support/Controllers/Api/V1/PostController.php:        abort_if($post->published_at, 403, 'Post is already published.');
+tests/Support/Controllers/Api/V1/PostController.php:        $post->update(['published_at' => now()]);
+tests/Support/Controllers/Api/V1/PostController.php:            ->repository()
+tests/Support/Controllers/Api/V1/PostController.php:            ->queryOne($post)
+tests/Support/Controllers/Api/V1/PostController.php:            ->withRequest($query)
+tests/Support/Controllers/Api/V1/PostController.php:            ->first();
+src/Builders/Paths/Operation/SchemaBuilder.php:        $this->components = $components;
+src/Builders/Paths/Operation/SchemaBuilder.php:        if ($data = $this->components->getSchema($objectId)) {
+src/Builders/Paths/Operation/SchemaBuilder.php:        $descriptor = new SchemaDescriptor($this->generator);
+src/Builders/Paths/Operation/SchemaBuilder.php:            $schema = $this->buildRequestSchema($route, $descriptor, $objectId);
+src/Builders/Paths/Operation/SchemaBuilder.php:            $schema = $this->buildResponseSchema($route, $descriptor, $objectId);
+src/Builders/Paths/Operation/SchemaBuilder.php:        return $this->components->addSchema($schema);
+src/Builders/Paths/Operation/SchemaBuilder.php:        $method = $route->action();
+src/Builders/Paths/Operation/SchemaBuilder.php:        if ($data = $this->components->getSchema($objectId)) {
+src/Builders/Paths/Operation/SchemaBuilder.php:        if ($method === 'showRelated' && $route->isPolymorphic()) {
+src/Builders/Paths/Operation/SchemaBuilder.php:            $schemas = collect($route->inversSchemas())->map(function (JASchema $schema, string $name) use (
+src/Builders/Paths/Operation/SchemaBuilder.php:                if ($data = $this->components->getSchema($objectId)) {
+src/Builders/Paths/Operation/SchemaBuilder.php:                return $this->components->addSchema($descriptor->fetch(
+src/Builders/Paths/Operation/SchemaBuilder.php:            return OneOf::create($objectId)->schemas(...array_values($schemas->toArray()));
+src/Builders/Paths/Operation/SchemaBuilder.php:        if ($method !== 'showRelated' && $route->isRelation()) {
+src/Builders/Paths/Operation/SchemaBuilder.php:            $schema = $descriptor->fetchRelationship($route);
+src/Builders/Paths/Operation/SchemaBuilder.php:                    $schema = $descriptor->fetch(
+src/Builders/Paths/Operation/SchemaBuilder.php:                        $route->inversSchema(),
+src/Builders/Paths/Operation/SchemaBuilder.php:                        $route->relation() !== null ? $route->relation()->inverse() : null,
+src/Builders/Paths/Operation/SchemaBuilder.php:                        $route->inverseName(true),
+src/Builders/Paths/Operation/SchemaBuilder.php:                    $schema = $descriptor->fetch($route->schema(), $objectId, $route->resource(), $route->name(true));
+src/Builders/Paths/Operation/SchemaBuilder.php:        return $schema->objectId($objectId);
+src/Builders/Paths/Operation/SchemaBuilder.php:        $method = $route->action();
+src/Builders/Paths/Operation/SchemaBuilder.php:        if ($route->isRelation()) {
+src/Builders/Paths/Operation/SchemaBuilder.php:                    $schema = $descriptor->updateRelationship($route);
+src/Builders/Paths/Operation/SchemaBuilder.php:                    $schema = $descriptor->attachRelationship($route);
+src/Builders/Paths/Operation/SchemaBuilder.php:                    $schema = $descriptor->detachRelationship($route);
+src/Builders/Paths/Operation/SchemaBuilder.php:                    $schema = $descriptor->store($route);
+src/Builders/Paths/Operation/SchemaBuilder.php:                    $schema = $descriptor->update($route);
+src/Builders/Paths/Operation/SchemaBuilder.php:        return $schema->objectId($objectId);
+src/Builders/Paths/Operation/SchemaBuilder.php:            $method = $route->action();
+src/Builders/Paths/Operation/SchemaBuilder.php:            $resource = $route->resource();
+src/Builders/Paths/Operation/SchemaBuilder.php:            switch ($route->action()) {
+src/Builders/Paths/Operation/SchemaBuilder.php:                    $method = $route->action();
+src/Builders/Paths/Operation/SchemaBuilder.php:            $resource = $route->action() === 'showRelated' ? $route->relation()->inverse() : $route->resource();
+src/Builders/Paths/Operation/SchemaBuilder.php:        if ($route->isPolymorphic() && $route->action() === 'showRelated') {
+src/Builders/Paths/Operation/SchemaBuilder.php:            $resource = $route->resource();
+src/Builders/Paths/Operation/SchemaBuilder.php:            $type = "related.{$route->relationName()}";
+src/Builders/Paths/Operation/SchemaBuilder.php:            $type = $route->isRelation() && $route->action() !== 'showRelated'
+src/Builders/Paths/Operation/SchemaBuilder.php:                ? "relationship.{$route->relationName()}"
+src/Filters/WithDescription.php:     * @param ?string $format "can be OpenAPI format (date(-time),password,byte,binary) or arbitrary."
+src/Filters/WithDescription.php:        $this->filter = $filter;
+src/Filters/WithDescription.php:        if ($this->description instanceof Closure)
+src/Filters/WithDescription.php:            return ($this->description)();
+src/Filters/WithDescription.php:        return $this->description;
+src/Filters/WithDescription.php:        if (!$this->example)
+src/Filters/WithDescription.php:        $example = $this->example;
+src/Filters/WithDescription.php:        if ($this->example instanceof Closure)
+src/Filters/WithDescription.php:            $example = ($this->example)();
+src/Filters/WithDescription.php:        if (!$this->default)
+src/Filters/WithDescription.php:        if ($this->default instanceof Closure)
+src/Filters/WithDescription.php:            return ($this->default)();
+src/Filters/WithDescription.php:        return $this->default;
+src/Filters/WithDescription.php:        return $this->filter->isSingular();
+src/Filters/WithDescription.php:        return $this->filter->apply($query, $value);
+src/Filters/WithDescription.php:        return $this->filter->key();
+src/Filters/WithDescription.php:        $out = call_user_func_array([$this->filter, $method], $args);
+tests/Support/Controllers/Api/V1/VideoController.php: * http://www.apache.org/licenses/LICENSE-2.0
+src/Builders/Paths/Operation/ResponseBuilder.php:        $this->components = $components;
+src/Builders/Paths/Operation/ResponseBuilder.php:        $this->schemaBuilder = $schemaBuilder;
+src/Builders/Paths/Operation/ResponseBuilder.php:        $this->addDefaults();
+src/Builders/Paths/Operation/ResponseBuilder.php:        return $this->getDescriptor($route)->response();
+src/Builders/Paths/Operation/ResponseBuilder.php:        $jsonapi = Schema::object('jsonapi')->properties(Schema::string('version')->title('version')->example('1.0'));
+src/Builders/Paths/Operation/ResponseBuilder.php:        $schemas = collect([$jsonapi, $data, $meta, $links])->whereNotNull()->toArray();
+src/Builders/Paths/Operation/ResponseBuilder.php:        return Schema::object()->properties(...$schemas)->required('jsonapi', 'data');
+src/Builders/Paths/Operation/ResponseBuilder.php:        $class = $this->descriptorClass($route);
+src/Builders/Paths/Operation/ResponseBuilder.php:            $description = $this->descriptionFromRoute($route);
+src/Builders/Paths/Operation/ResponseBuilder.php:            $class = $description->getResponseClassOrExample();
+src/Builders/Paths/Operation/ResponseBuilder.php:                    $this->generator,
+src/Builders/Paths/Operation/ResponseBuilder.php:                    $this->schemaBuilder,
+src/Builders/Paths/Operation/ResponseBuilder.php:                    $this->defaults,
+src/Builders/Paths/Operation/ResponseBuilder.php:        if (isset($this->descriptors[$class])) {
+src/Builders/Paths/Operation/ResponseBuilder.php:            return new $this->descriptors[$class]($this->generator, $route, $this->schemaBuilder, $this->defaults);
+src/Builders/Paths/Operation/ResponseBuilder.php:        $this->jsonapi = $this->components->addSchema(
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->title('Helper/JSONAPI')
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->properties(Schema::string('version')->title('version')->example('1.0'))
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->required('version'),
+src/Builders/Paths/Operation/ResponseBuilder.php:        $errors = $this->components->addSchema(
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->title('Helper/Errors')
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->items(
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->title('Error')
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->properties(
+src/Builders/Paths/Operation/ResponseBuilder.php:                            Schema::object('source')->properties(Schema::string('pointer')),
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->required('status', 'title'),
+src/Builders/Paths/Operation/ResponseBuilder.php:        $errorBody = Schema::object()->properties($this->jsonapi, $errors);
+src/Builders/Paths/Operation/ResponseBuilder.php:        $this->defaults = collect([
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->description('Bad request')
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->content(
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->schema($errorBody)
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->examples(Example::create('-')->value([
+src/Builders/Paths/Operation/ResponseBuilder.php:                                    'title' => 'Non-Compliant JSON:API Document',
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->description('Unauthorized Action')
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->content(
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->schema($errorBody)
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->examples(Example::create('-')->value([
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->description('Content Not Found')
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->content(
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->schema($errorBody)
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->examples(Example::create('-')->value([
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->statusCode(422)
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->description('Unprocessable Entity')
+src/Builders/Paths/Operation/ResponseBuilder.php:                ->content(
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->schema($errorBody)
+src/Builders/Paths/Operation/ResponseBuilder.php:                        ->examples(Example::create('-')->value([
+src/Builders/Paths/Operation/ResponseBuilder.php:        ])->mapWithKeys(function (Response $response) {
+src/Builders/Paths/Operation/ResponseBuilder.php:            $ref = $this->components->addResponse($response);
+src/Builders/Paths/Operation/ResponseBuilder.php:            return [$response->objectId => $ref];
+src/OpenApiServiceProvider.php:        if ($this->app->runningInConsole()) {
+src/OpenApiServiceProvider.php:            $this->publishes([
+src/OpenApiServiceProvider.php:            /*$this->publishes([
+src/OpenApiServiceProvider.php:            $this->commands([
+src/OpenApiServiceProvider.php:        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'openapi');
+src/OpenApiServiceProvider.php:        $this->app->singleton('openapi-generator', function () {
+src/Builders/Paths/Operation/RequestBodyBuilder.php:        $this->schemaBuilder = $schemaBuilder;
+src/Builders/Paths/Operation/RequestBodyBuilder.php:        return $this->getDescriptor($route) !== null ? $this->getDescriptor($route)->request() : null;
+src/Builders/Paths/Operation/RequestBodyBuilder.php:        $class = $this->descriptorClass($route);
+src/Builders/Paths/Operation/RequestBodyBuilder.php:        if (isset($this->descriptors[$class])) {
+src/Builders/Paths/Operation/RequestBodyBuilder.php:            return new $this->descriptors[$class](
+src/Builders/Paths/Operation/RequestBodyBuilder.php:                $this->generator,
+src/Builders/Paths/Operation/RequestBodyBuilder.php:                $this->schemaBuilder
+src/Builders/Paths/OperationBuilder.php:        $this->components = $components;
+src/Builders/Paths/OperationBuilder.php:        $this->schemaBuilder = new SchemaBuilder($generator, $components);
+src/Builders/Paths/OperationBuilder.php:        $this->parameterBuilder = new ParameterBuilder($generator);
+src/Builders/Paths/OperationBuilder.php:        $this->requestBodyBuilder = new RequestBodyBuilder($generator, $this->schemaBuilder);
+src/Builders/Paths/OperationBuilder.php:        $this->responseBuilder = new ResponseBuilder($generator, $components, $this->schemaBuilder);
+src/Builders/Paths/OperationBuilder.php:        return $this->getDescriptor($route) !== null ? $this->getDescriptor($route)->action() : null;
+src/Builders/Paths/OperationBuilder.php:        $class = $this->descriptorClass($route);
+src/Builders/Paths/OperationBuilder.php:        if (isset($this->descriptors[$class])) {
+src/Builders/Paths/OperationBuilder.php:            return new $this->descriptors[$class](
+src/Builders/Paths/OperationBuilder.php:                $this->parameterBuilder,
+src/Builders/Paths/OperationBuilder.php:                $this->requestBodyBuilder,
+src/Builders/Paths/OperationBuilder.php:                $this->responseBuilder,
+src/Builders/Paths/OperationBuilder.php:                $this->generator,
+src/Builders/Builder.php:        $this->generator = $generator;
+src/Builders/InfoBuilder.php:        return (new Server($this->generator))->info();
+src/Descriptors/Responses/Destroy.php:            $this->noContent(),
+src/Descriptors/Responses/Destroy.php:            ...$this->defaults(),
+src/Descriptors/Responses/Destroy.php:        return $this->schemaBuilder->build($this->route);
+src/Builders/ServerBuilder.php:        return (new Server($this->generator))->servers();
+src/Descriptors/Responses/FetchRelation.php:            $this->ok(),
+src/Descriptors/Responses/FetchRelation.php:            ...$this->defaults(),
+src/Descriptors/Responses/FetchRelation.php:        if ($this->route->relation() instanceof ToMany) {
+src/Descriptors/Responses/FetchRelation.php:                ->items($this->schemaBuilder->build($this->route));
+src/Descriptors/Responses/FetchRelation.php:        return $this->schemaBuilder->build($this->route)->objectId('data');
+tests/Support/Entities/Site.php:        $site->setDomain($values['domain'] ?? null);
+tests/Support/Entities/Site.php:        $site->setName($values['name'] ?? null);
+tests/Support/Entities/Site.php:        $this->slug = $slug;
+tests/Support/Entities/Site.php:        return $this->slug;
+tests/Support/Entities/Site.php:        return $this->domain;
+tests/Support/Entities/Site.php:        $this->domain = $domain;
+tests/Support/Entities/Site.php:        return $this->name;
+tests/Support/Entities/Site.php:        $this->name = $name;
+tests/Support/Entities/Site.php:            $this->getDomain(),
+tests/Support/Entities/Site.php:            $this->getName(),
+src/Descriptors/Responses/ResponseDescriptor.php:        $this->route = $route;
+src/Descriptors/Responses/ResponseDescriptor.php:        $this->components = $this->generator->components();
+src/Descriptors/Responses/ResponseDescriptor.php:        $this->schemaBuilder = $schemaBuilder;
+src/Descriptors/Responses/ResponseDescriptor.php:        $this->defaults = $defaults;
+src/Descriptors/Responses/ResponseDescriptor.php:            ->description($this->description())
+src/Descriptors/Responses/ResponseDescriptor.php:            ->content(
+src/Descriptors/Responses/ResponseDescriptor.php:                    ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
+src/Descriptors/Responses/ResponseDescriptor.php:                    ->schema(ResponseBuilder::buildResponse($this->data(),
+src/Descriptors/Responses/ResponseDescriptor.php:                        $this->meta(), $this->links()))
+src/Descriptors/Responses/ResponseDescriptor.php:        return Response::create()->statusCode(204)->description('No Content');
+src/Descriptors/Responses/ResponseDescriptor.php:        if (! $this->hasId) {
+src/Descriptors/Responses/ResponseDescriptor.php:        if (! $this->validates) {
+src/Descriptors/Responses/ResponseDescriptor.php:        return $this->defaults->except($except)->toArray();
+src/Descriptors/Responses/ResponseDescriptor.php:        return ucfirst($this->route->action()).' '.$this->route->name();
+src/Descriptors/Responses/FetchMany.php:            $this->ok(),
+src/Descriptors/Responses/FetchMany.php:            ...$this->defaults(),
+src/Descriptors/Responses/FetchMany.php:        return Schema::array('data')->items($this->schemaBuilder->build($this->route));
+src/Descriptors/Descriptor.php:        $this->generator = $generator;
+tests/Support/Entities/SiteStorage.php:        $this->files = $files;
+tests/Support/Entities/SiteStorage.php:        $this->sites = json_decode($files->get('sites.json'), true);
+tests/Support/Entities/SiteStorage.php:        if (! isset($this->sites[$slug])) {
+tests/Support/Entities/SiteStorage.php:        return Site::fromArray($slug, $this->sites[$slug]);
+tests/Support/Entities/SiteStorage.php:        foreach ($this->sites as $slug => $values) {
+tests/Support/Entities/SiteStorage.php:        return iterator_to_array($this->cursor());
+tests/Support/Entities/SiteStorage.php:        $this->sites[$site->getSlug()] = $site->toArray();
+tests/Support/Entities/SiteStorage.php:        $this->write();
+tests/Support/Entities/SiteStorage.php:        unset($this->sites[$site->getSlug()]);
+tests/Support/Entities/SiteStorage.php:        $this->write();
+tests/Support/Entities/SiteStorage.php:        $this->files->put('sites.json', json_encode($this->sites));
+src/Descriptors/Server.php:            ->title(config("openapi.servers.{$this->generator->key()}.info.title"))
+src/Descriptors/Server.php:            ->description(config("openapi.servers.{$this->generator->key()}.info.description"))
+src/Descriptors/Server.php:            ->version(config("openapi.servers.{$this->generator->key()}.info.version"));
+src/Descriptors/Server.php:                ->url('{serverUrl}')
+src/Descriptors/Server.php:                ->variables(Objects\ServerVariable::create('serverUrl')
+src/Descriptors/Server.php:                    ->default($this->generator->server()->url())
+src/Descriptors/Responses/DetachRelationship.php:            $this->ok(),
+src/Descriptors/Responses/DetachRelationship.php:            ...$this->defaults(),
+src/Descriptors/Responses/DetachRelationship.php:        if ($this->route->relation() instanceof ToMany) {
+src/Descriptors/Responses/DetachRelationship.php:                ->items($this->schemaBuilder->build($this->route));
+src/Descriptors/Responses/DetachRelationship.php:        return $this->schemaBuilder->build($this->route)->objectId('data');
+src/Descriptors/Responses/FetchRelated.php:            $this->ok(),
+src/Descriptors/Responses/FetchRelated.php:            ...$this->defaults(),
+src/Descriptors/Responses/FetchRelated.php:        if ($this->route->relation() instanceof ToMany) {
+src/Descriptors/Responses/FetchRelated.php:                ->items($this->schemaBuilder->build($this->route));
+src/Descriptors/Responses/FetchRelated.php:        return $this->schemaBuilder->build($this->route)->objectId('data');
+src/Descriptors/Actions/Destroy.php:        return "Destroy one {$this->route->name(true)}";
+src/Descriptors/Requests/Update.php:            ->content(
+src/Descriptors/Requests/Update.php:                    ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
+src/Descriptors/Requests/Update.php:                    ->schema(
+src/Descriptors/Requests/Update.php:                        Schema::object()->properties(
+src/Descriptors/Requests/Update.php:                            $this->schemaBuilder->build($this->route, true)
+src/Descriptors/Requests/Update.php:                                ->objectId('data')
+src/Descriptors/Requests/Update.php:                            ->required('data')
+src/Descriptors/Actions/FetchMany.php:        return "Get all {$this->route->name()}";
+src/Descriptors/Responses/FetchOne.php:            $this->ok(),
+src/Descriptors/Responses/FetchOne.php:            ...$this->defaults(),
+src/Descriptors/Responses/FetchOne.php:        return $this->schemaBuilder->build($this->route)->objectId('data');
+src/Descriptors/Requests/RequestDescriptor.php:        $this->route = $route;
+src/Descriptors/Requests/RequestDescriptor.php:        $this->components = $this->generator->components();
+src/Descriptors/Requests/RequestDescriptor.php:        $this->schemaBuilder = $schemaBuilder;
+src/Descriptors/Requests/RequestDescriptor.php:            ->content(
+src/Descriptors/Requests/RequestDescriptor.php:                    ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
+src/Descriptors/Requests/RequestDescriptor.php:                    ->schema(
+src/Descriptors/Requests/RequestDescriptor.php:                        Schema::object()->properties(
+src/Descriptors/Requests/RequestDescriptor.php:                            $this->schemaBuilder->build($this->route, true)
+src/Descriptors/Requests/RequestDescriptor.php:                                ->objectId('data')
+src/Descriptors/Requests/RequestDescriptor.php:                            ->required('data')
+src/Eloquent/Fields/WithDescription.php:     * @param ?string $format "can be OpenAPI format (date(-time),password,byte,binary) or arbitrary."
+src/Eloquent/Fields/WithDescription.php:        $this->attr = $attr;
+src/Eloquent/Fields/WithDescription.php:        if ($this->description instanceof Closure)
+src/Eloquent/Fields/WithDescription.php:            return ($this->description)();
+src/Eloquent/Fields/WithDescription.php:        return $this->description;
+src/Eloquent/Fields/WithDescription.php:        if (!$this->example)
+src/Eloquent/Fields/WithDescription.php:        $example = $this->example;
+src/Eloquent/Fields/WithDescription.php:        if ($this->example instanceof Closure)
+src/Eloquent/Fields/WithDescription.php:            $example = ($this->example)();
+src/Eloquent/Fields/WithDescription.php:     * Attempts to generate a sub-schema for the given schema (e.g. setting types for an array's items).
+src/Eloquent/Fields/WithDescription.php:     * @param mixed|null $example "if not passed, $this->getExample will be used."
+src/Eloquent/Fields/WithDescription.php:        $example ??= $this->getExample();
+src/Eloquent/Fields/WithDescription.php:        return SchemaFromExample::generate($schema, $example, $key, $this->format);
+src/Eloquent/Fields/WithDescription.php:        return $this->filter->isSingular();
+src/Eloquent/Fields/WithDescription.php:        return $this->filter->apply($query, $value);
+src/Eloquent/Fields/WithDescription.php:        return $this->filter->key();
+src/Eloquent/Fields/WithDescription.php:        $this->attr->assertValue($value);
+src/Eloquent/Fields/WithDescription.php:        return $this->attr->name();
+src/Eloquent/Fields/WithDescription.php:        return $this->attr->serializedFieldName();
+src/Eloquent/Fields/WithDescription.php:        return $this->attr->column();
+src/Eloquent/Fields/WithDescription.php:        return $this->attr->columnsForField();
+src/Eloquent/Fields/WithDescription.php:        $this->attr = $this->attr->fillUsing($hydrator);
+src/Eloquent/Fields/WithDescription.php:        $this->attr = $this->attr->extractUsing($extractor);
+src/Eloquent/Fields/WithDescription.php:     * Ignore mass-assignment and always fill the attribute.
+src/Eloquent/Fields/WithDescription.php:        $this->attr = $this->attr->unguarded();
+src/Eloquent/Fields/WithDescription.php:     * Use mass-assignment rules when filling the attribute.
+src/Eloquent/Fields/WithDescription.php:        $this->attr = $this->attr->guarded();
+src/Eloquent/Fields/WithDescription.php:        $this->attr = $this->attr->deserializeUsing($deserializer);
+src/Eloquent/Fields/WithDescription.php:        $this->attr = $this->attr->serializeUsing($serializer);
+src/Eloquent/Fields/WithDescription.php:        $this->attr->fill($model, $value, $validatedData);
+src/Eloquent/Fields/WithDescription.php:        return $this->attr->sort($query, $direction);
+src/Eloquent/Fields/WithDescription.php:        return $this->attr->serialize($model);
+src/Eloquent/Fields/WithDescription.php:        return $this->attr->deserialize($value);
+src/Eloquent/Fields/WithDescription.php:        return $this->attr->guessColumn();
+composer.json:    "name": "hrfee-qci/openapi-spec-generator",
+composer.json:        "openapi-spec-generator",
+composer.json:        "openapi-spec",
+composer.json:        "json-api"
+composer.json:    "homepage": "https://github.com/hrfee-qci/openapi-spec-generator",
+composer.json:    "license": "Apache-2.0",
+composer.json:            "homepage": "https://github.com/byte-it",
+composer.json:            "email": "johannes@lets-byte.it"
+composer.json:        "justinrainbow/json-schema": "^5.2",
+composer.json:    "require-dev": {
+composer.json:        "ext-json": "*",
+composer.json:        "laravel-json-api/laravel": "^2.0|^3.0|^4.0|^5.0",
+composer.json:        "laravel-json-api/non-eloquent": "^2.0|^3.0|^v4.0",
+composer.json:        "laravel-json-api/hashids": "^3.2"
+composer.json:        "psr-4": {
+composer.json:    "autoload-dev": {
+composer.json:        "psr-4": {
+composer.json:        "test-coverage": "phpunit --coverage-html coverage",
+composer.json:        "check-style": "pint --test",
+composer.json:        "fix-style": "pint"
+composer.json:        "sort-packages": true
+src/Descriptors/Actions/Relationship/FetchRelated.php:        return "Show {$this->route->relationName()}";
+tests/Support/JsonApi/V1/Videos/VideoRequest.php: * http://www.apache.org/licenses/LICENSE-2.0
+CONTRIBUTING.md:We accept contributions via Pull Requests on [GitHub](https://github.com/swisnl/openapi-spec-generator).
+CONTRIBUTING.md:- **[PSR-2 Coding Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)** - Check the code style with ``$ composer check-style`` and fix it with ``$ composer fix-style``.
+CONTRIBUTING.md:- **Add tests!** - Your patch won't be accepted if it doesn't have tests.
+CONTRIBUTING.md:- **Document any change in behaviour** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.
+CONTRIBUTING.md:- **Consider our release cycle** - We try to follow [SemVer v2.0.0](http://semver.org/). Randomly breaking public APIs is not an option.
+CONTRIBUTING.md:- **Create feature branches** - Don't ask us to pull from your master branch.
+CONTRIBUTING.md:- **One pull request per feature** - If you want to do more than one thing, send multiple pull requests.
+CONTRIBUTING.md:- **Send coherent history** - Make sure each individual commit in your pull request is meaningful. If you had to make multiple intermediate commits while developing, please [squash them](http://www.git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) before submitting.
+tests/Support/JsonApi/V1/Videos/VideoSchema.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Videos/VideoSchema.php:            ID::make()->uuid()->clientIds(),
+tests/Support/JsonApi/V1/Videos/VideoSchema.php:            DateTime::make('createdAt')->sortable()->readOnly(),
+tests/Support/JsonApi/V1/Videos/VideoSchema.php:            Str::make('title')->sortable(),
+tests/Support/JsonApi/V1/Videos/VideoSchema.php:            DateTime::make('updatedAt')->sortable()->readOnly(),
+tests/Support/JsonApi/V1/Videos/VideoSchema.php:            WhereIdIn::make($this)->delimiter(','),
+tests/Support/JsonApi/V1/Videos/VideoSchema.php:        return PagePagination::make()->withoutNestedMeta();
+src/OpenApiGenerator.php:        $openapi = $generator->generate();
+src/OpenApiGenerator.php:        $openapi->validate();
+src/OpenApiGenerator.php:            $output = Yaml::dump($openapi->toArray());
+src/OpenApiGenerator.php:            $output = json_encode($openapi->toArray(), JSON_PRETTY_PRINT);
+src/OpenApiGenerator.php:        $storageDisk->put($fileName, $output);
+src/Descriptors/Responses/AttachRelationship.php:            $this->ok(),
+src/Descriptors/Responses/AttachRelationship.php:            ...$this->defaults(),
+src/Descriptors/Responses/AttachRelationship.php:        if ($this->route->relation() instanceof ToMany) {
+src/Descriptors/Responses/AttachRelationship.php:                ->items($this->schemaBuilder->build($this->route));
+src/Descriptors/Responses/AttachRelationship.php:        return $this->schemaBuilder->build($this->route)->objectId('data');
+tests/Support/JsonApi/V1/Tags/TagSchema.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Tags/TagSchema.php:            HashId::make()->alreadyHashed(),
+tests/Support/JsonApi/V1/Tags/TagSchema.php:            DateTime::make('createdAt')->sortable()->readOnly(),
+tests/Support/JsonApi/V1/Tags/TagSchema.php:            Str::make('name')->sortable(),
+tests/Support/JsonApi/V1/Tags/TagSchema.php:                ->cannotEagerLoad()
+tests/Support/JsonApi/V1/Tags/TagSchema.php:                ->readOnly(),
+tests/Support/JsonApi/V1/Tags/TagSchema.php:            DateTime::make('updatedAt')->sortable()->readOnly(),
+tests/Support/JsonApi/V1/Tags/TagSchema.php:                ->cannotEagerLoad()
+tests/Support/JsonApi/V1/Tags/TagSchema.php:                ->readOnly(),
+tests/Support/JsonApi/V1/Tags/TagSchema.php:            WhereIdIn::make($this)->delimiter(','),
+tests/Support/JsonApi/V1/Tags/TagSchema.php:        return PagePagination::make()->withoutNestedMeta();
+src/Descriptors/Responses/WithDescriptionAttribute.php:    /* Takes a user-provided example and returns it as a response.
+src/Descriptors/Responses/WithDescriptionAttribute.php:        $this->response = $response;
+src/Descriptors/Responses/WithDescriptionAttribute.php:            $this->ok(),
+src/Descriptors/Responses/WithDescriptionAttribute.php:            ...$this->defaults(),
+src/Descriptors/Responses/WithDescriptionAttribute.php:        return SchemaFromExample::generate(example: $this->response, key: 'data');
+src/Descriptors/Responses/UpdateRelationship.php:            $this->ok(),
+src/Descriptors/Responses/UpdateRelationship.php:            ...$this->defaults(),
+src/Descriptors/Responses/UpdateRelationship.php:        if ($this->route->relation() instanceof ToMany) {
+src/Descriptors/Responses/UpdateRelationship.php:                ->items($this->schemaBuilder->build($this->route));
+src/Descriptors/Responses/UpdateRelationship.php:        return $this->schemaBuilder->build($this->route)->objectId('data');
+src/Descriptors/Schema/Filters/FilterDescriptor.php:        $this->route = $route;
+src/Descriptors/Schema/Filters/FilterDescriptor.php:        $this->filter = $filter;
+src/Descriptors/Requests/Store.php:            ->content(
+src/Descriptors/Requests/Store.php:                    ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
+src/Descriptors/Requests/Store.php:                    ->schema(
+src/Descriptors/Requests/Store.php:                        Schema::object()->properties(
+src/Descriptors/Requests/Store.php:                            $this->schemaBuilder->build($this->route, true)->objectId('data')
+src/Descriptors/Requests/Store.php:                            ->required('data')
+src/Descriptors/Schema/Schema.php:        $resource = $this->generator->resources()->resource($schema::model());
+src/Descriptors/Schema/Schema.php:        $fields = $this->fields($schema->fields(), $resource);
+src/Descriptors/Schema/Schema.php:            OASchema::string('type')->title('type')->default($type),
+src/Descriptors/Schema/Schema.php:            OASchema::string('id')->example($resource->id()),
+src/Descriptors/Schema/Schema.php:            OASchema::object('attributes')->properties(...$fields->get('attributes')),
+src/Descriptors/Schema/Schema.php:        if ($fields->has('relationships')) {
+src/Descriptors/Schema/Schema.php:            $properties[] = OASchema::object('relationships')->properties(...$fields->get('relationships'));
+src/Descriptors/Schema/Schema.php:            ->title('Resource/' . ucfirst($name) . '/Fetch')
+src/Descriptors/Schema/Schema.php:            ->required('type', 'id', 'attributes')
+src/Descriptors/Schema/Schema.php:            ->properties(...$properties);
+src/Descriptors/Schema/Schema.php:        $resource = $this->generator->resources()->resource($route->schema()::model());
+src/Descriptors/Schema/Schema.php:        $fields = $this->fields($route->schema()->fields(), $resource);
+src/Descriptors/Schema/Schema.php:            ->title('Resource/' . ucfirst($route->name(true)) . '/Store')
+src/Descriptors/Schema/Schema.php:            ->required('type', 'attributes')
+src/Descriptors/Schema/Schema.php:            ->properties(
+src/Descriptors/Schema/Schema.php:                OASchema::string('type')->title('type')->default($route->name()),
+src/Descriptors/Schema/Schema.php:                OASchema::object('attributes')->properties(...$fields->get('attributes')),
+src/Descriptors/Schema/Schema.php:                OASchema::object('relationships')->properties(...$fields->get('relationships') ?: []),
+src/Descriptors/Schema/Schema.php:        $resource = $this->generator->resources()->resource($route->schema()::model());
+src/Descriptors/Schema/Schema.php:        $fields = $this->fields($route->schema()->fields(), $resource);
+src/Descriptors/Schema/Schema.php:            ->title('Resource/' . ucfirst($route->name(true)) . '/Update')
+src/Descriptors/Schema/Schema.php:            ->properties(
+src/Descriptors/Schema/Schema.php:                OASchema::string('type')->title('type')->default($route->name()),
+src/Descriptors/Schema/Schema.php:                OASchema::string('id')->example($resource->id()),
+src/Descriptors/Schema/Schema.php:                OASchema::object('attributes')->properties(...$fields->get('attributes')),
+src/Descriptors/Schema/Schema.php:                OASchema::object('relationships')->properties(...$fields->get('relationships') ?: []),
+src/Descriptors/Schema/Schema.php:            ->required('type', 'id', 'attributes');
+src/Descriptors/Schema/Schema.php:        if (!$route->isPolymorphic()) {
+src/Descriptors/Schema/Schema.php:            $resource = $this->generator->resources()->resource($route->inversSchema()::model());
+src/Descriptors/Schema/Schema.php:            $resource = $this->generator->resources()->resource(Arr::first($route->inversSchemas())::model());
+src/Descriptors/Schema/Schema.php:        $inverseRelation = $route->relation() !== null ? $route->relation()->inverse() : null;
+src/Descriptors/Schema/Schema.php:        return $this->relationshipData($route->relation(), $resource, $inverseRelation)->title(
+src/Descriptors/Schema/Schema.php:            'Resource/' . ucfirst($route->name(true)) . '/Relationship/' . ucfirst($route->relationName()) . '/Fetch',
+src/Descriptors/Schema/Schema.php:        if (!$route->isPolymorphic()) {
+src/Descriptors/Schema/Schema.php:            $resource = $this->generator->resources()->resource($route->inversSchema()::model());
+src/Descriptors/Schema/Schema.php:            $resource = $this->generator->resources()->resource(Arr::first($route->inversSchemas())::model());
+src/Descriptors/Schema/Schema.php:        $dataSchema = $this->getDataSchema($route, $resource);
+src/Descriptors/Schema/Schema.php:        return $dataSchema->title(
+src/Descriptors/Schema/Schema.php:            'Resource/' . ucfirst($route->name(true)) . '/Relationship/' . ucfirst($route->relationName()) . '/Update',
+src/Descriptors/Schema/Schema.php:        if (!$route->isPolymorphic()) {
+src/Descriptors/Schema/Schema.php:            $resource = $this->generator->resources()->resource($route->inversSchema()::model());
+src/Descriptors/Schema/Schema.php:            $resource = $this->generator->resources()->resource(Arr::first($route->inversSchemas())::model());
+src/Descriptors/Schema/Schema.php:        $dataSchema = $this->getDataSchema($route, $resource);
+src/Descriptors/Schema/Schema.php:        return $dataSchema->title(
+src/Descriptors/Schema/Schema.php:            'Resource/' . ucfirst($route->name(true)) . '/Relationship/' . ucfirst($route->relationName()) . '/Attach',
+src/Descriptors/Schema/Schema.php:        if (!$route->isPolymorphic()) {
+src/Descriptors/Schema/Schema.php:            $resource = $this->generator->resources()->resource($route->inversSchema()::model());
+src/Descriptors/Schema/Schema.php:            $resource = $this->generator->resources()->resource(Arr::first($route->inversSchemas())::model());
+src/Descriptors/Schema/Schema.php:        $dataSchema = $this->getDataSchema($route, $resource);
+src/Descriptors/Schema/Schema.php:        return $dataSchema->title(
+src/Descriptors/Schema/Schema.php:            'Resource/' . ucfirst($route->name(true)) . '/Relationship/' . ucfirst($route->relationName()) . '/Detach',
+src/Descriptors/Schema/Schema.php:        $resource = $this->generator->resources()->resource($route->schema()::model());
+src/Descriptors/Schema/Schema.php:        $inverseRelation = $route->relation() !== null ? $route->relation()->inverse() : null;
+src/Descriptors/Schema/Schema.php:            ->relationshipData($route->relation(), $resource, $inverseRelation)
+src/Descriptors/Schema/Schema.php:            ->objectId($objectId)
+src/Descriptors/Schema/Schema.php:            ->title(
+src/Descriptors/Schema/Schema.php:                . ucfirst($route->name(true))
+src/Descriptors/Schema/Schema.php:                . ucfirst($route->relationName())
+src/Descriptors/Schema/Schema.php:        $fields = collect($route->schema()->sortFields())
+src/Descriptors/Schema/Schema.php:            ->merge(collect($route->schema()->sortables())->map(function (Sortable $sortable) {
+src/Descriptors/Schema/Schema.php:                return $sortable->sortField();
+src/Descriptors/Schema/Schema.php:            })->whereNotNull())
+src/Descriptors/Schema/Schema.php:            ->map(function (string $field) {
+src/Descriptors/Schema/Schema.php:                return [$field, '-' . $field];
+src/Descriptors/Schema/Schema.php:            ->flatten()
+src/Descriptors/Schema/Schema.php:            ->toArray();
+src/Descriptors/Schema/Schema.php:        $pagination = $route->schema()->pagination();
+src/Descriptors/Schema/Schema.php:            ->name('sort')
+src/Descriptors/Schema/Schema.php:            ->schema(OASchema::array()->items(OASchema::string()->enum(...$fields)))
+src/Descriptors/Schema/Schema.php:            ->allowEmptyValue(false)
+src/Descriptors/Schema/Schema.php:            ->required(false);
+src/Descriptors/Schema/Schema.php:            $parameter = $parameter->description('Disallowed if using cursor pagination.');
+src/Descriptors/Schema/Schema.php:        $pagination = $route->schema()->pagination();
+src/Descriptors/Schema/Schema.php:                    ->name('page[size]')
+src/Descriptors/Schema/Schema.php:                    ->description('The page size for paginated results')
+src/Descriptors/Schema/Schema.php:                    ->required(false)
+src/Descriptors/Schema/Schema.php:                    ->allowEmptyValue(false)
+src/Descriptors/Schema/Schema.php:                    ->schema(OASchema::integer()),
+src/Descriptors/Schema/Schema.php:                    ->name('page[number]')
+src/Descriptors/Schema/Schema.php:                    ->description('The page number for paginated results')
+src/Descriptors/Schema/Schema.php:                    ->required(false)
+src/Descriptors/Schema/Schema.php:                    ->allowEmptyValue(false)
+src/Descriptors/Schema/Schema.php:                    ->schema(OASchema::integer()),
+src/Descriptors/Schema/Schema.php:                    ->name('page[limit]')
+src/Descriptors/Schema/Schema.php:                    ->description('The page limit for paginated results')
+src/Descriptors/Schema/Schema.php:                    ->required(false)
+src/Descriptors/Schema/Schema.php:                    ->allowEmptyValue(false)
+src/Descriptors/Schema/Schema.php:                    ->schema(OASchema::integer()),
+src/Descriptors/Schema/Schema.php:                    ->name('page[after]')
+src/Descriptors/Schema/Schema.php:                    ->description('The page offset for paginated results')
+src/Descriptors/Schema/Schema.php:                    ->required(false)
+src/Descriptors/Schema/Schema.php:                    ->allowEmptyValue(false)
+src/Descriptors/Schema/Schema.php:                    ->schema(OASchema::string()),
+src/Descriptors/Schema/Schema.php:                    ->name('page[before]')
+src/Descriptors/Schema/Schema.php:                    ->description('The page offset for paginated results')
+src/Descriptors/Schema/Schema.php:                    ->required(false)
+src/Descriptors/Schema/Schema.php:                    ->allowEmptyValue(false)
+src/Descriptors/Schema/Schema.php:                    ->schema(OASchema::string()),
+src/Descriptors/Schema/Schema.php:                    ->name('page[size]')
+src/Descriptors/Schema/Schema.php:                    ->description('The number of items per page.')
+src/Descriptors/Schema/Schema.php:                    ->required(false)
+src/Descriptors/Schema/Schema.php:                    ->allowEmptyValue(false)
+src/Descriptors/Schema/Schema.php:                    ->schema(OASchema::integer()),
+src/Descriptors/Schema/Schema.php:                    ->name('page[number]')
+src/Descriptors/Schema/Schema.php:                    ->description('For standard pagination, the page number. Pass this to use standard pagination.')
+src/Descriptors/Schema/Schema.php:                    ->required(false)
+src/Descriptors/Schema/Schema.php:                    ->allowEmptyValue(false)
+src/Descriptors/Schema/Schema.php:                    ->schema(OASchema::integer()),
+src/Descriptors/Schema/Schema.php:                    ->name('page[after]')
+src/Descriptors/Schema/Schema.php:                    ->description(
+src/Descriptors/Schema/Schema.php:                    ->required(false)
+src/Descriptors/Schema/Schema.php:                    ->allowEmptyValue(false)
+src/Descriptors/Schema/Schema.php:                    ->schema(OASchema::string()),
+src/Descriptors/Schema/Schema.php:                    ->name('page[before]')
+src/Descriptors/Schema/Schema.php:                    ->description(
+src/Descriptors/Schema/Schema.php:                    ->required(false)
+src/Descriptors/Schema/Schema.php:                    ->allowEmptyValue(false)
+src/Descriptors/Schema/Schema.php:                    ->schema(OASchema::string()),
+src/Descriptors/Schema/Schema.php:        return collect($route->schema()->filters())
+src/Descriptors/Schema/Schema.php:            ->map(function (Filter $filterInstance) use ($route) {
+src/Descriptors/Schema/Schema.php:                $descriptor = $this->getDescriptor($filterInstance);
+src/Descriptors/Schema/Schema.php:                $descriptorInstance = new $descriptor($this->generator, $route, $filterInstance);
+src/Descriptors/Schema/Schema.php:                if ($this->hasManualDescription($filterInstance)) {
+src/Descriptors/Schema/Schema.php:                        $this->generator,
+src/Descriptors/Schema/Schema.php:                    )->withDescriptor($descriptorInstance);
+src/Descriptors/Schema/Schema.php:                return $descriptorInstance->filter();
+src/Descriptors/Schema/Schema.php:            ->flatten()
+src/Descriptors/Schema/Schema.php:            ->toArray();
+src/Descriptors/Schema/Schema.php:        return collect($fields)->mapToGroups(function (Field $field) {
+src/Descriptors/Schema/Schema.php:        })->map(function ($fields, $type) use ($resource) {
+src/Descriptors/Schema/Schema.php:                    return $this->attributes($fields, $resource);
+src/Descriptors/Schema/Schema.php:                    return $this->relationships($fields, $resource);
+src/Descriptors/Schema/Schema.php:                    return $this->actions($fields, $resource);
+src/Descriptors/Schema/Schema.php:            ->filter(fn($field) => !$field instanceof ID)
+src/Descriptors/Schema/Schema.php:            ->map(function (Field $field) use ($example) {
+src/Descriptors/Schema/Schema.php:                $fieldId = $field->name();
+src/Descriptors/Schema/Schema.php:                    $field = $descriptionField->attr;
+src/Descriptors/Schema/Schema.php:                $schema = $fieldDataType->title($field->name());
+src/Descriptors/Schema/Schema.php:                $column = $field instanceof EloquentAttribute ? $field->column() : $field->name();
+src/Descriptors/Schema/Schema.php:                    $attributes = $example->attributes(null);
+src/Descriptors/Schema/Schema.php:                        $schema = $schema->example($attributes[$column]);
+src/Descriptors/Schema/Schema.php:                    if ($descriptionField && $descriptionField->getDescription()) {
+src/Descriptors/Schema/Schema.php:                        $schema = $schema->description($descriptionField->getDescription());
+src/Descriptors/Schema/Schema.php:                    if ($descriptionField && $descriptionField->format) {
+src/Descriptors/Schema/Schema.php:                        $schema = $schema->format($descriptionField->format);
+src/Descriptors/Schema/Schema.php:                    if ($descriptionField && !empty($descriptionField->getExample())) {
+src/Descriptors/Schema/Schema.php:                        $example = $descriptionField->getExample();
+src/Descriptors/Schema/Schema.php:                        $schema = $schema->example($example);
+src/Descriptors/Schema/Schema.php:                        $schema = $descriptionField->generateSubSchemaFromExample($schema, $example, $fieldId);
+src/Descriptors/Schema/Schema.php:                        $schema = $schema->example($example[$column]);
+src/Descriptors/Schema/Schema.php:                    if ($field instanceof EloquentAttribute && $field->isReadOnly(null)) {
+src/Descriptors/Schema/Schema.php:                        $schema = $schema->readOnly(true);
+src/Descriptors/Schema/Schema.php:            ->toArray();
+src/Descriptors/Schema/Schema.php:        return $relationships->map(function (RelationContract $relation) use ($example) {
+src/Descriptors/Schema/Schema.php:            return $this->relationship($relation, $example);
+src/Descriptors/Schema/Schema.php:        })->toArray();
+src/Descriptors/Schema/Schema.php:        $fieldId = $relation->name();
+src/Descriptors/Schema/Schema.php:        $type = $relation->inverse();
+src/Descriptors/Schema/Schema.php:        $linkSchema = $this->relationshipLinks($relation, $example);
+src/Descriptors/Schema/Schema.php:        $dataSchema = $this->relationshipData($relation, $example, $type);
+src/Descriptors/Schema/Schema.php:            $dataSchema = OASchema::array('data')->items($dataSchema);
+src/Descriptors/Schema/Schema.php:        $schema = OASchema::object($fieldId)->title($relation->name());
+src/Descriptors/Schema/Schema.php:            return $schema->properties($dataSchema);
+src/Descriptors/Schema/Schema.php:            return $schema->properties($linkSchema);
+src/Descriptors/Schema/Schema.php:                ->title($relation->name())
+src/Descriptors/Schema/Schema.php:                ->required('type', 'id')
+src/Descriptors/Schema/Schema.php:                ->properties(
+src/Descriptors/Schema/Schema.php:                    OASchema::string('type')->title('type')->enum(...$relation->inverseTypes()),
+src/Descriptors/Schema/Schema.php:                    OASchema::string('id')->title('id'),
+src/Descriptors/Schema/Schema.php:                ->title($relation->name())
+src/Descriptors/Schema/Schema.php:                ->required('type', 'id')
+src/Descriptors/Schema/Schema.php:                ->properties(
+src/Descriptors/Schema/Schema.php:                    OASchema::string('type')->title('type')->default($type),
+src/Descriptors/Schema/Schema.php:                    OASchema::string('id')->title('id')->example($example->id()),
+src/Descriptors/Schema/Schema.php:        $name = Str::dasherize(Str::plural(Str::camel($relation->name())));
+src/Descriptors/Schema/Schema.php:        $relatedLink = $this->generator->server()->url([
+src/Descriptors/Schema/Schema.php:            $example->id(),
+src/Descriptors/Schema/Schema.php:        $selfLink = $this->generator->server()->url([
+src/Descriptors/Schema/Schema.php:            $example->id(),
+src/Descriptors/Schema/Schema.php:            ->readOnly(true)
+src/Descriptors/Schema/Schema.php:            ->properties(
+src/Descriptors/Schema/Schema.php:                OASchema::string('related')->title('related')->example($relatedLink),
+src/Descriptors/Schema/Schema.php:                OASchema::string('self')->title('self')->example($selfLink),
+src/Descriptors/Schema/Schema.php:        $url = $this->generator->server()->url([
+src/Descriptors/Schema/Schema.php:            $route->name(),
+src/Descriptors/Schema/Schema.php:            $resource->id(),
+src/Descriptors/Schema/Schema.php:            OASchema::string('self')->title('self')->example($url),
+src/Descriptors/Schema/Schema.php:            $filter = $filter->filter;
+src/Descriptors/Schema/Schema.php:        foreach ($this->filterDescriptors as $filterClass => $descriptor) {
+src/Descriptors/Schema/Schema.php:        $inverseRelation = $route->relation() !== null ? $route->relation()->inverse() : null;
+src/Descriptors/Schema/Schema.php:        $relation = $route->relation();
+src/Descriptors/Schema/Schema.php:        $dataSchema = $this->relationshipData($relation, $resource, $inverseRelation);
+src/Descriptors/Schema/Schema.php:            $dataSchema = OASchema::array('data')->items($dataSchema);
+src/Descriptors/Schema/Filters/DefaultDescriptor.php:                ->name("filter[{$this->filter->key()}]")
+src/Descriptors/Schema/Filters/DefaultDescriptor.php:                ->description($this->description())
+src/Descriptors/Schema/Filters/DefaultDescriptor.php:                ->required(false)
+src/Descriptors/Schema/Filters/DefaultDescriptor.php:                ->allowEmptyValue(false)
+src/Descriptors/Schema/Filters/DefaultDescriptor.php:                ->schema(OASchema::string()),
+src/Descriptors/Actions/Relationship/Fetch.php:        return "Show {$this->route->relationName()} relation";
+tests/Support/JsonApi/V1/Posts/PostSchema.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Posts/PostSchema.php:    protected $defaultSort = '-createdAt';
+tests/Support/JsonApi/V1/Posts/PostSchema.php:        return $this->descriptions[$endpoint] ?? '';
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            HashId::make()->alreadyHashed(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            BelongsTo::make('author')->type('users')->readOnly(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            HasMany::make('comments')->readOnly(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            DateTime::make('createdAt')->sortable()->readOnly(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            SoftDelete::make('deletedAt')->sortable(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            DateTime::make('publishedAt')->sortable(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            BelongsToMany::make('tags')->mustValidate(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            Str::make('title')->sortable(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            DateTime::make('updatedAt')->sortable()->readOnly(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            WhereIdIn::make($this)->delimiter(','),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            Scope::make('published', 'wherePublished')->asBoolean(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:            Where::make('slug')->singular(),
+tests/Support/JsonApi/V1/Posts/PostSchema.php:        return PagePagination::make()->withoutNestedMeta();
+src/Descriptors/Schema/Filters/WhereIn.php:        $examples = collect($this->generator->resources()
+src/Descriptors/Schema/Filters/WhereIn.php:            ->resources($this->route->schema()::model()))
+src/Descriptors/Schema/Filters/WhereIn.php:            ->pluck($this->filter->column())
+src/Descriptors/Schema/Filters/WhereIn.php:            ->filter()
+src/Descriptors/Schema/Filters/WhereIn.php:            ->map(function ($f) {
+src/Descriptors/Schema/Filters/WhereIn.php:                    $f = $f instanceof \BackedEnum ? $f->value : $f->name;
+src/Descriptors/Schema/Filters/WhereIn.php:                return Example::create($f)->value($f);
+src/Descriptors/Schema/Filters/WhereIn.php:            ->toArray();
+src/Descriptors/Schema/Filters/WhereIn.php:                ->name("filter[{$this->filter->key()}][]")
+src/Descriptors/Schema/Filters/WhereIn.php:                ->description($this->description())
+src/Descriptors/Schema/Filters/WhereIn.php:                ->required(false)
+src/Descriptors/Schema/Filters/WhereIn.php:                ->allowEmptyValue(false)
+src/Descriptors/Schema/Filters/WhereIn.php:                ->schema(Schema::array()->items(Schema::string())->default(Example::create('empty')->value([])))
+src/Descriptors/Schema/Filters/WhereIn.php:                ->examples(...$examples)
+src/Descriptors/Schema/Filters/WhereIn.php:                ->style('form')
+src/Descriptors/Schema/Filters/WhereIn.php:                ->explode(true),
+src/Descriptors/Schema/Filters/WhereIn.php:        $key = $this->filter->key();
+src/Descriptors/Schema/Filters/WhereIn.php:        if ($key[-1] != 's') $key .= 's';
+src/Descriptors/Schema/Filters/WhereIn.php:        return $this->filter instanceof WhereNotIn || $this->filter instanceof WherePivotNotIn
+src/Descriptors/Actions/Update.php:        return "Update one {$this->route->name(true)}";
+src/Descriptors/Schema/Filters/WithDescription.php:        $this->descriptor = $descriptor;
+src/Descriptors/Schema/Filters/WithDescription.php:        if (!$this->filter instanceof LaravelJsonApiWithDescription)
+src/Descriptors/Schema/Filters/WithDescription.php:        $parents = $this->descriptor->filter();
+src/Descriptors/Schema/Filters/WithDescription.php:        if ($this->filter->getDescription())
+src/Descriptors/Schema/Filters/WithDescription.php:            $parent = $parent->description($this->filter->getDescription());
+src/Descriptors/Schema/Filters/WithDescription.php:        if ($this->filter->getDefault()) {
+src/Descriptors/Schema/Filters/WithDescription.php:            $schema = $parent->schema;
+src/Descriptors/Schema/Filters/WithDescription.php:            $parent = $parent->schema($schema->default($this->filter->getDefault()));
+src/Descriptors/Schema/Filters/WithDescription.php:        $examples = $this->filter->getExamples();
+src/Descriptors/Schema/Filters/WithDescription.php:            $parent = $parent->examples(...array_map(
+src/Descriptors/Schema/Filters/WithDescription.php:                fn($example, $key) => Example::create(is_string($key) ? $key : $example)->value($example),
+src/Descriptors/Schema/Filters/WithDescription.php:        if ($this->filter->format) $parent = $parent->schema($parent->schema->format($this->filter->format));
+src/Descriptors/Schema/Filters/WithDescription.php:        if ($this->filter instanceof LaravelJsonApiWithDescription) {
+src/Descriptors/Schema/Filters/WithDescription.php:            return $this->filter->getDescription();
+src/Descriptors/Schema/Filters/WithDescription.php:        $out = call_user_func_array([$this->descriptor, $method], $args);
+src/Descriptors/Schema/Filters/BooleanFilter.php:                ->name("filter[{$this->filter->key()}]")
+src/Descriptors/Schema/Filters/BooleanFilter.php:                ->description($this->description())
+src/Descriptors/Schema/Filters/BooleanFilter.php:                ->required(false)
+src/Descriptors/Schema/Filters/BooleanFilter.php:                ->allowEmptyValue(false)
+src/Descriptors/Schema/Filters/BooleanFilter.php:                ->schema(OASchema::boolean()),
+src/Descriptors/Actions/Relationship/Attach.php:        return "Attach {$this->route->relationName()} relation";
+src/Descriptors/Schema/Filters/Scope.php:        return "Applies the {$this->filter->key()} scope.";
+src/Descriptors/Schema/Filters/WithTrashed.php:        return $this->filter instanceof OnlyTrashed ? 'Show only trashed records.' : 'Include trashed records';
+src/Descriptors/Actions/Relationship/Detach.php:        return "Detach {$this->route->relationName()} relation";
+src/Descriptors/Schema/Filters/WhereNull.php:        return $this->filter instanceof WhereNotNull ? "Only includes records where {$this->filter->key()} is not null." : "Only includes records where {$this->filter->key()} is null.";
+tests/Support/JsonApi/V1/Posts/PostRequest.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Posts/PostRequest.php:        if ($post = $this->model()) {
+tests/Support/JsonApi/V1/Posts/PostRequest.php:            $unique->ignore($post);
+tests/Support/JsonApi/V1/Posts/PostRequest.php:            'no_comments' => $post->comments()->doesntExist(),
+src/Descriptors/Schema/Filters/Where.php:        $examples = collect($this->generator->resources()
+src/Descriptors/Schema/Filters/Where.php:            ->resources($this->route->schema()::model()))
+src/Descriptors/Schema/Filters/Where.php:            ->pluck($this->filter->column())
+src/Descriptors/Schema/Filters/Where.php:            ->filter()
+src/Descriptors/Schema/Filters/Where.php:            ->map(function ($f) {
+src/Descriptors/Schema/Filters/Where.php:                    $f = $f instanceof \BackedEnum ? $f->value : $f->name;
+src/Descriptors/Schema/Filters/Where.php:                return Example::create($f)->value($f);
+src/Descriptors/Schema/Filters/Where.php:            ->toArray();
+src/Descriptors/Schema/Filters/Where.php:                ->name("filter[{$this->filter->key()}]")
+src/Descriptors/Schema/Filters/Where.php:                ->description($this->description())
+src/Descriptors/Schema/Filters/Where.php:                ->required(false)
+src/Descriptors/Schema/Filters/Where.php:                ->allowEmptyValue(false)
+src/Descriptors/Schema/Filters/Where.php:                ->schema(OASchema::string()->default(''))
+src/Descriptors/Schema/Filters/Where.php:                ->examples(...$examples),
+tests/Support/JsonApi/V1/Posts/PostQuery.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Posts/PostQuery.php:                JsonApiRule::filter()->forget('id'),
+src/Descriptors/Schema/Filters/Has.php:        return "Only includes records that have {$this->filter->key()}.";
+src/Descriptors/Actions/Relationship/Update.php:        return "Update {$this->route->relationName()} relation";
+src/Descriptors/Schema/Filters/WhereIdIn.php:        $key = $this->filter->key();
+src/Descriptors/Schema/Filters/WhereIdIn.php:        $examples = collect($this->generator->resources()
+src/Descriptors/Schema/Filters/WhereIdIn.php:            ->resources($this->route->schema()::model()))
+src/Descriptors/Schema/Filters/WhereIdIn.php:            ->map(function (JsonApiResource $resource) {
+src/Descriptors/Schema/Filters/WhereIdIn.php:                $id = $resource->id();
+src/Descriptors/Schema/Filters/WhereIdIn.php:                return Example::create($id)->value([$id]);
+src/Descriptors/Schema/Filters/WhereIdIn.php:            ->toArray();
+src/Descriptors/Schema/Filters/WhereIdIn.php:                ->name("filter[{$key}][]")
+src/Descriptors/Schema/Filters/WhereIdIn.php:                ->description($this->description())
+src/Descriptors/Schema/Filters/WhereIdIn.php:                ->required(false)
+src/Descriptors/Schema/Filters/WhereIdIn.php:                ->allowEmptyValue(false)
+src/Descriptors/Schema/Filters/WhereIdIn.php:                ->schema(Schema::array()->items(Schema::string())->default([]))
+src/Descriptors/Schema/Filters/WhereIdIn.php:                ->examples(Example::create('empty')->value([]), ...$examples)
+src/Descriptors/Schema/Filters/WhereIdIn.php:                ->style('form')
+src/Descriptors/Schema/Filters/WhereIdIn.php:                ->explode(true),
+src/Descriptors/Schema/Filters/WhereIdIn.php:        return $this->filter instanceof WhereIdNotIn ?
+tests/TestCase.php:        $app['config']->set('jsonapi.servers', [
+tests/TestCase.php:        $app['config']->set('hashids', [
+tests/TestCase.php:        $router->group(['prefix' => 'api', 'middleware' => 'api', 'namespace' => 'LaravelJsonApi\OpenApiSpec\Tests\Support\Controllers'], function () {
+tests/TestCase.php:            $jsonApiRoute->server('v1')
+tests/TestCase.php:                ->prefix('v1')
+tests/TestCase.php:                ->namespace('Api\V1')
+tests/TestCase.php:                ->resources(function (ResourceRegistrar $server) {
+tests/TestCase.php:                    $server->resource('posts')->relationships(function ($relationships) {
+tests/TestCase.php:                        $relationships->hasOne('author')->readOnly();
+tests/TestCase.php:                        $relationships->hasMany('comments')->readOnly();
+tests/TestCase.php:                        $relationships->hasMany('media');
+tests/TestCase.php:                        $relationships->hasMany('tags');
+tests/TestCase.php:                    })->actions('-actions', function ($actions) {
+tests/TestCase.php:                        $actions->delete('purge');
+tests/TestCase.php:                        $actions->withId()->post('publish');
+tests/TestCase.php:                    $server->resource('videos')->relationships(function ($relationships) {
+tests/TestCase.php:                        $relationships->hasMany('tags');
+tests/TestCase.php:                    $server->resource('sites');
+tests/TestCase.php:        $this->loadMigrationsFrom(__DIR__.'/Support/Database/Migrations');
+tests/Support/JsonApi/V1/Posts/PostCollectionQuery.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Feature/OpenApiSchemaTest.php:        $this->seed(DatabaseSeeder::class);
+tests/Feature/OpenApiSchemaTest.php:        $this->spec = json_decode($output, true);
+tests/Feature/OpenApiSchemaTest.php:        $this->assertEquals('array', $this->spec['components']['schemas']['resources.posts.relationship.tags.update']['type']);
+tests/Feature/OpenApiSchemaTest.php:        $this->assertEquals('array', $this->spec['components']['schemas']['resources.posts.relationship.tags.attach']['type']);
+tests/Feature/OpenApiSchemaTest.php:        $this->assertEquals('array', $this->spec['components']['schemas']['resources.posts.relationship.tags.detach']['type']);
+tests/Feature/OpenApiSchemaTest.php:        $this->assertEquals('This is an example show all description', $this->spec['paths']['/posts']['get']['description']);
+tests/Feature/OpenApiSchemaTest.php:        $this->assertEquals('This is an example show one description', $this->spec['paths']['/posts/{post}']['get']['description']);
+tests/Feature/OpenApiSchemaTest.php:        $this->assertEquals('This is an example show posts author description', $this->spec['paths']['/posts/{post}/author']['get']['description']);
+tests/Feature/OpenApiSchemaTest.php:        $this->assertEquals('', $this->spec['paths']['/videos']['get']['description']);
+tests/Feature/OpenApiSchemaTest.php:        $this->assertEquals('Get all sites', $this->spec['paths']['/sites']['get']['summary']);
+tests/Feature/OpenApiSchemaTest.php:        $this->assertEquals('object', $this->spec['components']['schemas']['resources.sites.resource.fetch']['type']);
+tests/Feature/GenerateTest.php:        $this->seed(DatabaseSeeder::class);
+tests/Feature/GenerateTest.php:        $this->assertEquals('My JSON:API', $spec['info']['title']);
+tests/Feature/GenerateTest.php:        $this->assertEquals('My JSON:API', $spec['info']['title']);
+tests/Feature/GenerateTest.php:        $openapiYaml = Storage::disk(config('openapi.filesystem_disk'))->get('v1_openapi.yaml');
+tests/Feature/GenerateTest.php:        $this->assertEquals('My JSON:API', $spec['info']['title']);
+tests/Feature/GenerateTest.php:        $this->assertArrayHasKey('/posts', $spec['paths'], 'Path to resource is not replaced correctly.');
+tests/Feature/GenerateTest.php:        $this->assertArrayHasKey('/posts/{post}/relationships/author', $spec['paths'], 'Path to resource is not replaced correctly.');
+tests/Feature/GenerateTest.php:        $this->assertEquals('http://localhost/api/v1', $spec['servers'][0]['variables']['serverUrl']['default']);
+tests/Support/Models/Video.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Models/Video.php:            $model->{$model->getKeyName()} = $model->{$model->getKeyName()} ?? Str::uuid()->toString();
+tests/Support/Models/Video.php:        return $this->belongsTo(User::class);
+tests/Support/Models/Video.php:        return $this->morphToMany(Tag::class, 'taggable');
+tests/Support/Models/Post.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Models/Post.php:        return $this->belongsTo(User::class);
+tests/Support/Models/Post.php:        return $this->hasMany(Comment::class);
+tests/Support/Models/Post.php:        return $this->belongsToMany(Image::class);
+tests/Support/Models/Post.php:        return $this->morphToMany(Tag::class, 'taggable');
+tests/Support/Models/Post.php:        return $this->belongsToMany(Video::class);
+tests/Support/Models/Post.php:        $column = $this->qualifyColumn('published_at');
+tests/Support/Models/Post.php:            return $query->whereNotNull($column);
+tests/Support/Models/Post.php:        return $query->whereNull($column);
+tests/Support/Models/Comment.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Models/Comment.php:        return $this->belongsTo(Post::class);
+tests/Support/Models/Comment.php:        return $this->belongsTo(User::class);
+tests/Support/Models/Tag.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Models/Tag.php:        return $this->morphedByMany(Post::class, 'taggable');
+tests/Support/Models/Tag.php:        return $this->morphedByMany(Video::class, 'taggable');
+tests/Support/Policies/VideoPolicy.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Policies/VideoPolicy.php:        return $this->view($user, $video);
+tests/Support/Policies/VideoPolicy.php:        return $this->owner($user, $video);
+tests/Support/Policies/VideoPolicy.php:        $tags->collect()->each(fn (Tag $tag) => $tag);
+tests/Support/Policies/VideoPolicy.php:        return $this->owner($user, $video);
+tests/Support/Policies/VideoPolicy.php:        return $this->updateTags($user, $video, $tags);
+tests/Support/Policies/VideoPolicy.php:        return $this->updateTags($user, $video, $tags);
+tests/Support/Policies/VideoPolicy.php:        return $this->owner($user, $video);
+tests/Support/Policies/VideoPolicy.php:        return $user && $video->owner->is($user);
+tests/Support/Models/User.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Models/User.php:        return $this->email === 'support@example.com';
+tests/Support/Models/Concerns/HashRouteKey.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Models/Concerns/HashRouteKey.php:            $this->getAttribute($this->getRouteKeyName())
+tests/Support/Models/Concerns/HashRouteKey.php:        if (empty($field) || $field === $this->getRouteKeyName()) {
+tests/Support/Models/Concerns/HashRouteKey.php:            return $this->newQuery()->where(
+tests/Support/Models/Concerns/HashRouteKey.php:                $field ?: $this->getRouteKeyName(),
+tests/Support/Models/Concerns/HashRouteKey.php:            )->firstOrFail();
+tests/Support/Models/Concerns/HashRouteKey.php:            ->newQuery()
+tests/Support/Models/Concerns/HashRouteKey.php:            ->where($field, $value)
+tests/Support/Models/Concerns/HashRouteKey.php:            ->firstOrFail();
+tests/Support/JsonApi/V1/Comments/CommentSchema.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Comments/CommentSchema.php:            HashId::make()->alreadyHashed(),
+tests/Support/JsonApi/V1/Comments/CommentSchema.php:            DateTime::make('createdAt')->sortable()->readOnly(),
+tests/Support/JsonApi/V1/Comments/CommentSchema.php:            DateTime::make('updatedAt')->sortable()->readOnly(),
+tests/Support/JsonApi/V1/Comments/CommentSchema.php:            BelongsTo::make('user')->readOnly(),
+tests/Support/JsonApi/V1/Comments/CommentSchema.php:            WhereIdIn::make($this)->delimiter(','),
+tests/Support/Models/Image.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Models/Image.php:            $model->{$model->getKeyName()} = $model->{$model->getKeyName()} ?? Str::uuid()->toString();
+tests/Support/Policies/PostPolicy.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Policies/PostPolicy.php:        if ($post->published_at) {
+tests/Support/Policies/PostPolicy.php:        return $this->author($user, $post);
+tests/Support/Policies/PostPolicy.php:        return $this->view($user, $post);
+tests/Support/Policies/PostPolicy.php:        return $this->view($user, $post);
+tests/Support/Policies/PostPolicy.php:        return $this->view($user, $post);
+tests/Support/Policies/PostPolicy.php:        return $this->view($user, $post);
+tests/Support/Policies/PostPolicy.php:        return $this->author($user, $post);
+tests/Support/Policies/PostPolicy.php:        return $this->author($user, $post);
+tests/Support/Policies/PostPolicy.php:        $tags->collect()->each(fn (Tag $tag) => $tag);
+tests/Support/Policies/PostPolicy.php:        return $this->author($user, $post);
+tests/Support/Policies/PostPolicy.php:        return $this->author($user, $post);
+tests/Support/Policies/PostPolicy.php:        return $this->updateTags($user, $post, $tags);
+tests/Support/Policies/PostPolicy.php:        return $this->author($user, $post);
+tests/Support/Policies/PostPolicy.php:        return $this->updateTags($user, $post, $tags);
+tests/Support/Policies/PostPolicy.php:        return $this->author($user, $post);
+tests/Support/Policies/PostPolicy.php:        return $user && $user->isAdmin();
+tests/Support/Policies/PostPolicy.php:        return $user && $post->author->is($user);
+tests/Support/Database/Seeders/DatabaseSeeder.php:        // \App\Models\User::factory(10)->create();
+tests/Support/Database/Seeders/DatabaseSeeder.php:        Post::factory(10)->create();
+tests/Support/Database/Seeders/DatabaseSeeder.php:        Comment::factory(10)->create();
+tests/Support/Database/Seeders/DatabaseSeeder.php:        Image::factory(10)->create();
+tests/Support/Database/Seeders/DatabaseSeeder.php:        Video::factory(10)->create();
+tests/Support/Database/Seeders/DatabaseSeeder.php:        Tag::factory(10)->create();
+tests/Support/JsonApi/V1/Media/MediaCollectionQuery.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Server.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Server.php:            $post->author()->associate(Auth::user());
+tests/Support/JsonApi/V1/Server.php:            $video->owner()->associate(Auth::user());
+tests/Support/JsonApi/V1/Server.php:        if (! empty($this->baseUri)) {
+tests/Support/JsonApi/V1/Server.php:            return $this->baseUri;
+tests/Support/JsonApi/V1/Users/UserSchema.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Users/UserSchema.php:            HashId::make()->alreadyHashed(),
+tests/Support/JsonApi/V1/Users/UserSchema.php:            DateTime::make('createdAt')->readOnly(),
+tests/Support/JsonApi/V1/Users/UserSchema.php:            DateTime::make('updatedAt')->readOnly(),
+tests/Support/JsonApi/V1/Users/UserSchema.php:            WhereIdIn::make($this)->delimiter(','),
+tests/Support/JsonApi/V1/Users/UserSchema.php:            Where::make('email')->singular(),
+tests/Support/JsonApi/V1/Users/UserQuery.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Users/UserQuery.php:                JsonApiRule::filter()->forget('id'),
+src/Descriptors/Actions/FetchOne.php:        return "Show one {$this->route->name(true)}";
+tests/Support/JsonApi/V1/Sites/SiteRepository.php:        $this->siteStorage = $siteStorage;
+tests/Support/JsonApi/V1/Sites/SiteRepository.php:        return $this->siteStorage->find($resourceId);
+tests/Support/JsonApi/V1/Sites/SiteRepository.php:            ->withServer($this->server())
+tests/Support/JsonApi/V1/Sites/SiteRepository.php:            ->withSchema($this->schema());
+src/Descriptors/Actions/Store.php:        return "Store one {$this->route->name(true)}";
+tests/Support/Database/Factories/PostFactory.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Database/Factories/PostFactory.php:            'content' => $this->faker->text,
+tests/Support/Database/Factories/PostFactory.php:            'published_at' => $this->faker->dateTimeThisMonth,
+tests/Support/Database/Factories/PostFactory.php:            'slug' => $this->faker->unique()->slug,
+tests/Support/Database/Factories/PostFactory.php:            'synopsis' => $this->faker->sentence,
+tests/Support/Database/Factories/PostFactory.php:            'title' => $this->faker->words(3, true),
+tests/Support/JsonApi/V1/Images/ImageSchema.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Images/ImageSchema.php:            ID::make()->uuid(),
+tests/Support/JsonApi/V1/Images/ImageSchema.php:            DateTime::make('createdAt')->sortable()->readOnly(),
+tests/Support/JsonApi/V1/Images/ImageSchema.php:            DateTime::make('updatedAt')->sortable()->readOnly(),
+tests/Support/JsonApi/V1/Images/ImageSchema.php:            WhereIdIn::make($this)->delimiter(','),
+tests/Support/JsonApi/V1/Images/ImageSchema.php:        return PagePagination::make()->withoutNestedMeta();
+src/Descriptors/Actions/ActionDescriptor.php:        $this->parameterBuilder = $parameterBuilder;
+src/Descriptors/Actions/ActionDescriptor.php:        $this->requestBodyBuilder = $requestBodyBuilder;
+src/Descriptors/Actions/ActionDescriptor.php:        $this->responseBuilder = $responseBuilder;
+src/Descriptors/Actions/ActionDescriptor.php:        $this->server = $generator->server();
+src/Descriptors/Actions/ActionDescriptor.php:        $this->route = $route;
+src/Descriptors/Actions/ActionDescriptor.php:        switch ($this->route->method()) {
+src/Descriptors/Actions/ActionDescriptor.php:            ->operationId($this->route->id())
+src/Descriptors/Actions/ActionDescriptor.php:            ->responses(...$this->responses())
+src/Descriptors/Actions/ActionDescriptor.php:            ->parameters(...$this->parameters()) // problem
+src/Descriptors/Actions/ActionDescriptor.php:            ->requestBody($this->requestBody())
+src/Descriptors/Actions/ActionDescriptor.php:            ->description($this->description())
+src/Descriptors/Actions/ActionDescriptor.php:            ->summary($this->summary())
+src/Descriptors/Actions/ActionDescriptor.php:            ->tags(...$this->tags());
+src/Descriptors/Actions/ActionDescriptor.php:        $schema = $this->route->schema();
+src/Descriptors/Actions/ActionDescriptor.php:        return $schema->describeEndpoint($this->route->route()->getName());
+src/Descriptors/Actions/ActionDescriptor.php:        return [ucfirst($this->route->name())];
+src/Descriptors/Actions/ActionDescriptor.php:        return $this->parameterBuilder->build($this->route);
+src/Descriptors/Actions/ActionDescriptor.php:        return $this->responseBuilder->build($this->route);
+src/Descriptors/Actions/ActionDescriptor.php:        return $this->requestBodyBuilder->build($this->route);
+tests/Support/Database/Factories/TagFactory.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Database/Factories/TagFactory.php:            'name' => $this->faker->colorName,
+tests/Support/Database/Factories/ImageFactory.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Database/Factories/ImageFactory.php:            'url' => $this->faker->url,
+tests/Support/Database/Factories/VideoFactory.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Database/Factories/VideoFactory.php:            'title' => $this->faker->words(3, true),
+tests/Support/Database/Factories/VideoFactory.php:            'url' => $this->faker->url,
+tests/Support/Database/Factories/UserFactory.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Database/Factories/UserFactory.php:            'name' => $this->faker->name,
+tests/Support/Database/Factories/UserFactory.php:            'email' => $this->faker->unique()->safeEmail,
+tests/Support/Database/Factories/UserFactory.php:        return $this->state(['email' => 'support@example.com']);
+tests/Support/JsonApi/V1/Sites/SiteResource.php:        return $this->resource->getSlug();
+tests/Support/JsonApi/V1/Sites/SiteResource.php:            'domain' => $this->resource->getDomain(),
+tests/Support/JsonApi/V1/Sites/SiteResource.php:            'name' => $this->resource->getName(),
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:        $this->sites = $sites;
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:        $site->setDomain($validatedData['domain'] ?? null);
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:        $site->setName($validatedData['name'] ?? null);
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:        $this->sites->store($site);
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:        $filters = $this->queryParameters->filter();
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:        if ($filters && $name = $filters->value('name')) {
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:            return Str::contains($site->getName(), $name) ? $site : null;
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:            $site->setDomain($validatedData['domain']);
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:            $site->setName($validatedData['name']);
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:        $this->sites->store($site);
+tests/Support/JsonApi/V1/Sites/Capabilities/CrudSite.php:        $this->sites->remove($site);
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->id();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->string('name');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->string('email')->unique();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->timestamp('email_verified_at')->nullable();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->string('password');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->rememberToken();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->timestamps();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->id();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->timestamps();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->softDeletes();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->unsignedBigInteger('author_id');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->timestamp('published_at')->nullable();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->string('title');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->string('slug');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->string('synopsis');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->text('content');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->foreign('author_id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->references('id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->on('users')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->onDelete('cascade')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->onUpdate('cascade');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->uuid('uuid')->primary();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->timestamps();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->string('url');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->uuid('uuid')->primary();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->timestamps();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->unsignedBigInteger('owner_id');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->string('title');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->string('url');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->foreign('owner_id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->references('id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->on('users')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->onDelete('cascade')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->onUpdate('cascade');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->id();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->timestamps();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->unsignedBigInteger('post_id');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->unsignedBigInteger('user_id');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->text('content');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->foreign('post_id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->references('id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->on('posts')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnDelete()
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnUpdate();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->foreign('user_id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->references('id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->on('users')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnDelete()
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnUpdate();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->id();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->timestamps();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->string('name');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->unsignedBigInteger('tag_id');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->morphs('taggable');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->primary([
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->foreign('tag_id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->references('id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->on('tags')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnUpdate()
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnDelete();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->uuid('image_uuid');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->unsignedBigInteger('post_id');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->primary(['image_uuid', 'post_id']);
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->foreign('image_uuid')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->references('uuid')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->on('images')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnDelete()
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnUpdate();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->foreign('post_id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->references('id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->on('posts')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnDelete()
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnUpdate();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->unsignedBigInteger('post_id');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->uuid('video_uuid');
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->primary(['post_id', 'video_uuid']);
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->foreign('post_id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->references('id')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->on('posts')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnDelete()
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnUpdate();
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:            $table->foreign('video_uuid')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->references('uuid')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->on('videos')
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnDelete()
+tests/Support/Database/Migrations/2020_06_13_143800_create_post_and_video_tables.php:                ->cascadeOnUpdate();
+tests/Support/JsonApi/V1/Sites/SiteSchema.php:            ID::make()->matchAs('.+'),
+tests/Support/JsonApi/V1/Sites/SiteSchema.php:            ->withServer($this->server)
+tests/Support/JsonApi/V1/Sites/SiteSchema.php:            ->withSchema($this);
+tests/Support/JsonApi/V1/Sites/Capabilities/QuerySites.php:        $this->sites = $sites;
+tests/Support/JsonApi/V1/Sites/Capabilities/QuerySites.php:        $sites = collect($this->sites->all());
+tests/Support/JsonApi/V1/Sites/Capabilities/QuerySites.php:        $filters = $this->queryParameters->filter();
+tests/Support/JsonApi/V1/Sites/Capabilities/QuerySites.php:        if ($filters && is_array($slugs = $filters->value('slugs'))) {
+tests/Support/JsonApi/V1/Sites/Capabilities/QuerySites.php:            $sites = $sites->filter(
+tests/Support/JsonApi/V1/Sites/Capabilities/QuerySites.php:                fn (Site $site) => in_array($site->getSlug(), $slugs)
+src/Descriptors/Actions/BasicFetchWithDescription.php:        [$class, $method] = $route->controllerCallable();
+src/Descriptors/Actions/BasicFetchWithDescription.php:        $methodReflection = $reflection->getMethod($method);
+src/Descriptors/Actions/BasicFetchWithDescription.php:        $attrs = $methodReflection->getAttributes(WithDescription::class);
+src/Descriptors/Actions/BasicFetchWithDescription.php:            $this->description = $attrs[0]->newInstance();
+src/Descriptors/Actions/BasicFetchWithDescription.php:        return $this->description->getDescription();
+tests/Support/Database/Factories/CommentFactory.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/Database/Factories/CommentFactory.php:            'content' => $this->faker->text,
+tests/Support/JsonApi/V1/Posts/PostScope.php: * http://www.apache.org/licenses/LICENSE-2.0
+tests/Support/JsonApi/V1/Posts/PostScope.php:            $builder->whereNotNull(
+tests/Support/JsonApi/V1/Posts/PostScope.php:                $model->qualifyColumn('published_at')
+tests/Support/JsonApi/V1/Posts/PostScope.php:        $builder->where(function ($query) use ($model) {
+tests/Support/JsonApi/V1/Posts/PostScope.php:                ->whereNotNull($model->qualifyColumn('published_at'))
+tests/Support/JsonApi/V1/Posts/PostScope.php:                ->orWhere($model->qualifyColumn('author_id'), Auth::id());

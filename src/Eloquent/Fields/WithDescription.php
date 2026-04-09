@@ -7,11 +7,14 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 use Illuminate\Database\Eloquent\Model;
 use LaravelJsonApi\Eloquent\Fields\ArrayList;
 use LaravelJsonApi\Eloquent\Fields\Attribute;
+use LaravelJsonApi\OpenApiSpec\Concerns\HasSchemaProperties;
 use LaravelJsonApi\OpenApiSpec\Helpers\SchemaFromExample;
 
 // WithDescription proxies attributes and adds documentation, used for generating OpenAPI docs.
 class WithDescription extends Attribute
 {
+    use HasSchemaProperties;
+
     /*
      * Generates an array to return from a *Schema::fields() method, given an array of arrays containing a field and optional description and example.
      * @param array<int, array{ field: Attribute, description: string|null, example: mixed|null, format: string|null}|Attribute> $fields
@@ -19,14 +22,24 @@ class WithDescription extends Attribute
      */
     public static function arrayFromFieldList(array $fields): array
     {
-        return array_map(fn(mixed $row) => is_array($row)
-            ? self::make(
+        return array_map(function (mixed $row) {
+            if (!is_array($row))
+                return $row;
+            $desc = self::make(
                 description: $row['description'] ?? $row[1] ?? null,
                 example: $row['example'] ?? $row[2] ?? null,
                 attr: $row['field'] ?? $row[0],
-                format: $row['format'] ?? $row[3] ?? null,
-            )
-            : $row, $fields);
+            );
+            $format = $row['format'] ?? $row[3] ?? null;
+            if ($format)
+                $desc->withFormat($format);
+
+            $enum = $row['enum'] ?? $row[4] ?? null;
+            if ($enum)
+                $desc->withEnum($enum);
+
+            return $desc;
+        }, $fields);
     }
 
     /**
@@ -35,13 +48,11 @@ class WithDescription extends Attribute
      * @param ?string|closure():string $description
      * @param ?mixed $example
      * @param ?Attribute $attr
-     * @param ?string $format "can be OpenAPI format (date(-time),password,byte,binary) or arbitrary."
      */
     public function __construct(
         private ?string $description = null,
         private mixed $example = null,
         public ?Attribute $attr = null,
-        public ?string $format = null,
     ) {}
 
     /**
@@ -50,16 +61,11 @@ class WithDescription extends Attribute
      * @param ?string $description
      * @param ?mixed $example
      * @param ?Attribute $attr
-     * @param ?string $format
      * @return self
      */
-    public static function make(
-        ?string $description = null,
-        mixed $example = null,
-        ?Attribute $attr = null,
-        ?string $format = null,
-    ): self {
-        return new self($description, $example, $attr, $format);
+    public static function make(?string $description = null, mixed $example = null, ?Attribute $attr = null): self
+    {
+        return new self($description, $example, $attr);
     }
 
     /**

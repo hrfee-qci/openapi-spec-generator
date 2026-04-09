@@ -3,11 +3,15 @@
 namespace LaravelJsonApi\OpenApiSpec\Filters;
 
 use Closure;
+use Error;
 use LaravelJsonApi\Eloquent\Contracts\Filter;
+use LaravelJsonApi\OpenApiSpec\Concerns\HasSchemaProperties;
 
 // WithDescription proxies filters and adds documentation, used for generating OpenAPI docs.
 class WithDescription implements Filter
 {
+    use HasSchemaProperties;
+
     /**
      * WithDescription constructor.
      *
@@ -15,14 +19,12 @@ class WithDescription implements Filter
      * @param ?mixed|array<mixed, mixed> $example
      * @param ?mixed $default
      * @param ?Filter $filter
-     * @param ?string $format "can be OpenAPI format (date(-time),password,byte,binary) or arbitrary."
      */
     public function __construct(
         private ?string $description = null,
         private mixed $example = null,
         private mixed $default = null,
         public ?Filter $filter = null,
-        public ?string $format = null,
     ) {}
 
     /**
@@ -32,7 +34,6 @@ class WithDescription implements Filter
      * @param ?mixed|array<mixed, mixed> $example
      * @param ?mixed $default
      * @param ?Filter $filter
-     * @param ?string $format
      * @return self
      */
     public static function make(
@@ -40,9 +41,8 @@ class WithDescription implements Filter
         mixed $example = null,
         mixed $default = null,
         ?Filter $filter = null,
-        ?string $format = null,
     ): self {
-        return new self($description, $example, $default, $filter, $format);
+        return new self($description, $example, $default, $filter);
     }
 
     /**
