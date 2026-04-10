@@ -29,6 +29,10 @@ class SchemaFromExample
                 }
             } else if ($example instanceof \stdClass && empty((array)$example)) {
                 $schema = Schema::object($key)->example(new \stdClass());
+            } else if ($example instanceof Schema) {
+                // Assume they've sorted it all out themselves
+                $schema = $example;
+                return $schema;
             } else {
                 throw new Error('unknown datatype in example: '.$key.' => '.gettype($example));
             }

@@ -32,11 +32,15 @@ class WithDescription extends Attribute
             );
             $format = $row['format'] ?? $row[3] ?? null;
             if ($format)
-                $desc->withFormat($format);
+                $desc = $desc->withFormat($format);
 
             $enum = $row['enum'] ?? $row[4] ?? null;
             if ($enum)
-                $desc->withEnum($enum);
+                $desc = $desc->withEnum($enum);
+
+            $pseudoSchema = $row['schema'] ?? $row[5] ?? null;
+            if ($pseudoSchema)
+                $desc = $desc->withPseudoSchema($pseudoSchema);
 
             return $desc;
         }, $fields);
@@ -80,6 +84,17 @@ class WithDescription extends Attribute
     }
 
     /**
+     * Adds an example.
+     * @param ?mixed $example
+     * @return self
+     */
+    public function withExample(mixed $example): self
+    {
+        $this->example = $example;
+        return $this;
+    }
+
+    /**
      * Get the description as a string, or returns null if none set.
      *
      * @return ?string
@@ -98,8 +113,6 @@ class WithDescription extends Attribute
      */
     public function getExample(): mixed
     {
-        if (!$this->example)
-            return null;
         $example = $this->example;
         if ($this->example instanceof Closure)
             $example = ($this->example)();
@@ -107,17 +120,16 @@ class WithDescription extends Attribute
     }
 
     /**
-     * Attempts to generate a sub-schema for the given schema (e.g. setting types for an array's items).
+     * Attempts to generate a sub-schema for the given schema (e.g. setting types for an array's items), either from an example or a pseudo-schema if either set.
      * @param Schema $schema
-     * @param mixed|null $example "if not passed, $this->getExample will be used."
-     * @return Schema
+     * @param mixed|null $key
+     * @return ?Schema
      */
-    public function generateSubSchemaFromExample(
-        ?Schema $schema = null,
-        mixed $example = null,
-        mixed $key = null,
-    ): Schema {
-        $example ??= $this->getExample();
+    public function generateSubSchema(?Schema $schema = null, mixed $key = null): ?Schema
+    {
+        $example = $this->getPseudoSchema() ?? $this->getExample();
+        if ($example === null)
+            return $schema;
 
         return SchemaFromExample::generate($schema, $example, $key, $this->format);
     }

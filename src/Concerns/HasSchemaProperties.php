@@ -9,6 +9,7 @@ trait HasSchemaProperties
 {
     private ?string $format = null;
     private mixed $enum = null;
+    private mixed $pseudoSchema = null;
 
     /**
      * Sets the schema format string. can be OpenAPI format (date(-time),password,byte,binary) or arbitrary.
@@ -29,6 +30,17 @@ trait HasSchemaProperties
     public function withEnum(array|Closure $enums): self
     {
         $this->enum = $enums;
+        return $this;
+    }
+
+    /**
+     * Sets a pseudo-schema that will be parsed into properties/items for the object. If not set, the "example" value will be used.
+     * @param mixed|closure():mixed $pseudoSchema
+     * @return self
+     */
+    public function withPseudoSchema(mixed $pseudoSchema): self
+    {
+        $this->pseudoSchema = $pseudoSchema;
         return $this;
     }
 
@@ -58,5 +70,20 @@ trait HasSchemaProperties
             throw new Error('Got non-array enum!');
 
         return $enum;
+    }
+
+    /**
+     * Gets the pseudo-schema, or returns null if none set.
+     *
+     * @return mixed|null
+     */
+    public function getPseudoSchema(): mixed
+    {
+        $schema = $this->pseudoSchema;
+
+        if ($schema instanceof Closure)
+            $schema = ($this->pseudoSchema)();
+
+        return $schema;
     }
 }
