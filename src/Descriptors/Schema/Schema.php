@@ -2,6 +2,7 @@
 
 namespace LaravelJsonApi\OpenApiSpec\Descriptors\Schema;
 
+use GoldSpecDigital\ObjectOrientedOAS\Objects\OneOf;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema as OASchema;
 use Illuminate\Support\Arr;
@@ -73,6 +74,41 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
             ->title('Resource/' . ucfirst($name) . '/Fetch')
             ->required('type', 'id', 'attributes')
             ->properties(...$properties);
+    }
+
+    /**
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return array['schema' => OASchema, 'included' => OASchema]
+     */
+    public function fetchWithIncluded(JASchema $schema, string $objectId, string $type, string $name): array
+    {
+        $includedItems = [];
+        $resource = $this->generator->resources()->resource($schema::model());
+
+        $fields = $this->fields($schema->fields(), $resource);
+        $properties = [
+            OASchema::string('type')->title('type')->default($type),
+            OASchema::string('id')->example($resource->id()),
+            OASchema::object('attributes')->properties(...$fields->get('attributes')),
+        ];
+
+        if ($fields->has('relationships')) {
+            $properties[] = OASchema::object('relationships')->properties(...$fields->get('relationships'));
+            $includedItems = array_merge($includedItems, $this->included($schema->fields(), $resource, $type));
+        }
+
+        $oaSchema = OASchema::object($objectId)
+            ->title('Resource/' . ucfirst($name) . '/Fetch')
+            ->required('type', 'id', 'attributes')
+            ->properties(...$properties);
+
+        if (!empty($includedItems))
+            return [
+                'schema' => $oaSchema,
+                'included' => OASchema::array('included')->items(OneOf::create('')->schemas(...$includedItems)),
+            ];
+
+        return ['schema' => $oaSchema];
     }
 
     /**
@@ -448,6 +484,44 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                 return $schema;
             })
             ->toArray();
+    }
+
+    /**
+     * @param Field[] $fields
+     * @param JsonApiResource $example
+     * @param ?string $parentType
+     * @return Collection<OASchema>
+     */
+    protected function included(array $fields, JsonApiResource $example, ?string $parentType = null): array
+    {
+        $out = collect($fields)
+            ->filter(fn(Field $field) => $field instanceof RelationContract)
+            ->map(fn(Field $field) => $this->include($field, $example, $parentType))
+            ->filter()
+            ->toArray();
+        return $out;
+    }
+
+    /** Returns null if the child type is the same as parent type.
+     * @return ?OASchema
+     */
+    protected function include(
+        RelationContract $relation,
+        JsonApiResource $example,
+        ?string $parentType = null,
+    ): ?OASchema {
+        $fieldId = $relation->name();
+        $type = $relation->inverse();
+        // dump($parentType . ' => ' . $type . ': ' . $fieldId);
+        if ($type === $parentType)
+            return null;
+        $schema = $this->generator
+            ->server()
+            ->schemas()
+            ->schemaFor($type);
+        return $this->fetch($schema, "resources.$type.resource.fetch", $type, $fieldId);
+
+        // return OASchema::object($relation->name());
     }
 
     /**

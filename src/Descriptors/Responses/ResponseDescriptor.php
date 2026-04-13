@@ -30,12 +30,8 @@ abstract class ResponseDescriptor extends Descriptor implements ResponseDescript
 
     protected bool $validates = false;
 
-    public function __construct(
-        Generator $generator,
-        Route $route,
-        SchemaBuilder $schemaBuilder,
-        Collection $defaults,
-    ) {
+    public function __construct(Generator $generator, Route $route, SchemaBuilder $schemaBuilder, Collection $defaults)
+    {
         parent::__construct($generator);
         $this->route = $route;
         $this->components = $this->generator->components();
@@ -53,14 +49,11 @@ abstract class ResponseDescriptor extends Descriptor implements ResponseDescript
      */
     protected function ok(): Response
     {
-        return Response::ok()
-            ->description($this->description())
-            ->content(
-                MediaType::create()
-                    ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
-                    ->schema(ResponseBuilder::buildResponse($this->data(),
-                        $this->meta(), $this->links()))
-            );
+        return Response::ok()->description($this->description())->content(
+            MediaType::create()
+                ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
+                ->schema(ResponseBuilder::buildResponse($this->data(), $this->meta(), $this->links(), $this->included())),
+        );
     }
 
     protected function noContent(): Response
@@ -71,10 +64,10 @@ abstract class ResponseDescriptor extends Descriptor implements ResponseDescript
     protected function defaults(): array
     {
         $except = [];
-        if (! $this->hasId) {
+        if (!$this->hasId) {
             $except[] = '404';
         }
-        if (! $this->validates) {
+        if (!$this->validates) {
             $except[] = '422';
         }
 
@@ -83,7 +76,7 @@ abstract class ResponseDescriptor extends Descriptor implements ResponseDescript
 
     protected function description(): string
     {
-        return ucfirst($this->route->action()).' '.$this->route->name();
+        return ucfirst($this->route->action()) . ' ' . $this->route->name();
     }
 
     abstract protected function data(): SchemaContract;
@@ -94,6 +87,11 @@ abstract class ResponseDescriptor extends Descriptor implements ResponseDescript
     }
 
     protected function links(): ?Schema
+    {
+        return null;
+    }
+
+    protected function included(): ?Schema
     {
         return null;
     }

@@ -68,11 +68,11 @@ class ResponseBuilder extends Builder
      *
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      */
-    public static function buildResponse(SchemaContract $data, ?Schema $meta = null, ?Schema $links = null): Schema
+    public static function buildResponse(SchemaContract $data, ?Schema $meta = null, ?Schema $links = null, ?Schema $included = null): Schema
     {
         $jsonapi = Schema::object('jsonapi')->properties(Schema::string('version')->title('version')->example('1.0'));
 
-        $schemas = collect([$jsonapi, $data, $meta, $links])->whereNotNull()->toArray();
+        $schemas = collect([$jsonapi, $data, $meta, $links, $included])->whereNotNull()->toArray();
 
         return Schema::object()->properties(...$schemas)->required('jsonapi', 'data');
     }
