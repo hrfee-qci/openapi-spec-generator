@@ -5,6 +5,7 @@ namespace LaravelJsonApi\OpenApiSpec\Eloquent\Fields;
 use Closure;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use LaravelJsonApi\Eloquent\Fields\ArrayList;
 use LaravelJsonApi\Eloquent\Fields\Attribute;
 use LaravelJsonApi\OpenApiSpec\Concerns\HasSchemaProperties;
@@ -295,5 +296,185 @@ class WithDescription extends Attribute
     private function guessColumn(): string
     {
         return $this->attr->guessColumn();
+    }
+
+    /**
+     * Mark the field as hidden.
+     *
+     * @param Closure|bool $callback
+     * @return $this
+     */
+    public function hidden($callback = true): self
+    {
+        $this->attr->hidden($callback);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isHidden(?Request $request): bool
+    {
+        return $this->attr->isHidden($request);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isNotHidden(?Request $request): bool
+    {
+        return $this->attr->isNotHidden($request);
+    }
+
+    /**
+     * Get the default eager load path for the attribute.
+     *
+     * @return string|string[]|null
+     */
+    public function with()
+    {
+        return $this->attr->with();
+    }
+
+    /**
+     * Set the attribute as existing on a related model.
+     *
+     * @param string $related
+     * @return $this
+     */
+    public function on(string $related): self
+    {
+        $this->attr->on($related);
+
+        return $this;
+    }
+
+    /**
+     * Must the model exist in the database before the attribute is filled?
+     *
+     * @return bool
+     */
+    public function mustExist(): bool
+    {
+        return $this->attr->mustExist();
+    }
+
+    /**
+     * Get the model that the attribute exists on (the "owner" of the attribute).
+     *
+     * @param Model $model
+     * @return Model
+     */
+    protected function owner(Model $model): Model
+    {
+        return $this->attr->owner($model);
+    }
+
+    /**
+     * Mark the field as read-only.
+     *
+     * @param Closure|bool $callback
+     * @return $this
+     */
+    public function readOnly($callback = true): self
+    {
+        $this->attr->readOnly($callback);
+        return $this;
+    }
+
+    /**
+     * Mark the field as read only when the resource is being created.
+     *
+     * @return $this
+     */
+    public function readOnlyOnCreate(): self
+    {
+        $this->attr->readOnlyOnCreate();
+
+        return $this;
+    }
+
+    /**
+     * Mark the field as read only when the resource is being updated.
+     *
+     * @return $this
+     */
+    public function readOnlyOnUpdate(): self
+    {
+        $this->attr->readOnlyOnUpdate();
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isReadOnly(?Request $request): bool
+    {
+        return $this->attr->isReadOnly($request);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isNotReadOnly(?Request $request): bool
+    {
+        return $this->attr->isNotReadOnly($request);
+    }
+
+    /**
+     * Mark the field as sortable.
+     *
+     * @return $this
+     */
+    public function sortable(): self
+    {
+        $this->attr->sortable();
+
+        return $this;
+    }
+
+    /**
+     * Mark the field as not sortable.
+     *
+     * @return $this
+     */
+    public function notSortable(): self
+    {
+        $this->attr->notSortable();
+
+        return $this;
+    }
+
+    /**
+     * Is the field sortable?
+     *
+     * @return bool
+     */
+    public function isSortable(): bool
+    {
+        return $this->attr->isSortable();
+    }
+
+    /**
+     * Mark the field as not allowed in sparse field sets.
+     *
+     * @return $this
+     */
+    public function notSparseField(): self
+    {
+        $this->attr->notSparseField();
+
+        return $this;
+    }
+
+    /**
+     * Can the field be listed in sparse field sets?
+     *
+     * @return bool
+     */
+    public function isSparseField(): bool
+    {
+        return $this->attr->isSparseField();
     }
 }
