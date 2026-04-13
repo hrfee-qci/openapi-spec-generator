@@ -6,6 +6,7 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema as OASchema;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use LaravelJsonApi\Contracts\Resources\JsonApiRelation;
 use LaravelJsonApi\Contracts\Schema\Attribute as AttributeContract;
 use LaravelJsonApi\Contracts\Schema\Field;
 use LaravelJsonApi\Contracts\Schema\Filter;
@@ -14,6 +15,7 @@ use LaravelJsonApi\Contracts\Schema\Relation as RelationContract;
 use LaravelJsonApi\Contracts\Schema\Schema as JASchema;
 use LaravelJsonApi\Contracts\Schema\Sortable;
 use LaravelJsonApi\Core\Resources\JsonApiResource;
+use LaravelJsonApi\Core\Resources\Relation;
 use LaravelJsonApi\Core\Support\Str;
 use LaravelJsonApi\Eloquent;
 use LaravelJsonApi\Eloquent\Fields\ArrayHash;
@@ -454,8 +456,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     protected function relationships(Collection $relationships, JsonApiResource $example): array
     {
         return $relationships->map(function (RelationContract $relation) use ($example) {
-            // @todo: $includeData flag should not be fixed, should somehow come from defaultIncludes on the schema
-            return $this->relationship($relation, $example, true);
+            return $this->relationship($relation, $example);
         })->toArray();
     }
 
@@ -465,9 +466,21 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     protected function relationship(
         RelationContract $relation,
         JsonApiResource $example,
-        bool $includeData = false,
+        ?bool $includeData = null,
     ): OASchema {
         $fieldId = $relation->name();
+        if ($includeData === null) {
+            foreach ($example->relationships(null) as $resourceRelation) {
+                if (!$resourceRelation instanceof Relation)
+                    continue;
+                if ($resourceRelation->fieldName() !== $fieldId)
+                    continue;
+                if ($resourceRelation->showData()) {
+                    $includeData = true;
+                    break;
+                }
+            }
+        }
 
         $type = $relation->inverse();
 
