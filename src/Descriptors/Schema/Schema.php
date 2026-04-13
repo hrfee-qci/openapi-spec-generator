@@ -454,7 +454,8 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     protected function relationships(Collection $relationships, JsonApiResource $example): array
     {
         return $relationships->map(function (RelationContract $relation) use ($example) {
-            return $this->relationship($relation, $example);
+            // @todo: $includeData flag should not be fixed, should somehow come from defaultIncludes on the schema
+            return $this->relationship($relation, $example, true);
         })->toArray();
     }
 
