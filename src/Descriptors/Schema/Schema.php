@@ -519,7 +519,9 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
             ->server()
             ->schemas()
             ->schemaFor($type);
-        return $this->fetch($schema, "resources.$type.resource.fetch", $type, $fieldId);
+        return $this->fetch($schema, "resources.$type.resource.fetch", $type, $fieldId)->description(
+            "May not be present unless \"$fieldId\" is in the \"include\" header. See `.data[].relationships.$fieldId.data` for the lists of IDs which have been included here.",
+        );
 
         // return OASchema::object($relation->name());
     }
@@ -560,12 +562,18 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
 
         $linkSchema = $this->relationshipLinks($relation, $example);
 
-        $dataSchema = $this->relationshipData($relation, $example, $type);
+        $dataSchema = $this->relationshipData($relation, $example, $type)->description(
+            "Related item with type and ID. Add \"$fieldId\" to the \"include\" query parameter to get the full object; results will be found in `.included`.",
+        );
 
         if ($relation instanceof Eloquent\Fields\Relations\ToMany) {
             $dataSchema = OASchema::array('data')->items($dataSchema);
         }
-        $schema = OASchema::object($fieldId)->title($relation->name());
+        $schema = OASchema::object($fieldId)
+            ->title($relation->name())
+            ->description(
+                "May include a list of IDs of relevant items in the `data` field. To retrieve these listed items as well, add \"$fieldId\" to the \"include\" query parameter; results will be found in `.included`.",
+            );
 
         if ($includeData) {
             return $schema->properties($dataSchema);
@@ -579,6 +587,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      */
     protected function relationshipData(RelationContract $relation, JsonApiResource $example, string $type): OASchema
     {
+        $fieldId = $relation->name();
         if ($relation instanceof PolymorphicRelation) {
             // @todo Add examples for each available type
             $dataSchema = OASchema::object('data')
