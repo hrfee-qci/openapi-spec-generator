@@ -21,8 +21,7 @@ class WhereIn extends FilterDescriptor
      */
     public function filter(): array
     {
-        $examples = collect($this->generator->resources()
-            ->resources($this->route->schema()::model()))
+        $examples = collect($this->generator->resources()->resources($this->route->schema()::model()))
             ->pluck($this->filter->column())
             ->filter()
             ->map(function ($f) {
@@ -31,9 +30,10 @@ class WhereIn extends FilterDescriptor
                 }
 
                 // @todo Watch out for ids?
-    if (is_array($f)) {
+                if (is_array($f)) {
                     $f = $f[0];
-                };
+                }
+                ;
                 return Example::create($f)->value($f);
             })
             ->toArray();
@@ -44,8 +44,8 @@ class WhereIn extends FilterDescriptor
                 ->description($this->description())
                 ->required(false)
                 ->allowEmptyValue(false)
-                ->schema(Schema::array()->items(Schema::string())->default(Example::create('empty')->value([])))
-                ->examples(...$examples)
+                ->schema(Schema::array()->items(Schema::string())->default([]))
+                ->examples(Example::create('empty')->value([]), ...$examples)
                 ->style('form')
                 ->explode(true),
         ];
@@ -54,7 +54,8 @@ class WhereIn extends FilterDescriptor
     protected function description(): string
     {
         $key = $this->filter->key();
-        if ($key[-1] != 's') $key .= 's';
+        if ($key[-1] != 's')
+            $key .= 's';
         return $this->filter instanceof WhereNotIn || $this->filter instanceof WherePivotNotIn
             ? "A list of {$key} to exclude by."
             : "A list of {$key} to filter by.";

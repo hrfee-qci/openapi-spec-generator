@@ -5,6 +5,8 @@ namespace LaravelJsonApi\OpenApiSpec\Descriptors\Schema\Filters;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Example;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema as OASchema;
+use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
+use LaravelJsonApi\Eloquent\Filters\WhereIn;
 use LaravelJsonApi\OpenApiSpec\Contracts\Descriptors\FilterDescriptor as FilterDescriptorContract;
 use LaravelJsonApi\OpenApiSpec\Filters\WithDescription as LaravelJsonApiWithDescription;
 
@@ -27,6 +29,7 @@ class WithDescription extends FilterDescriptor
             return [];
 
         $parents = $this->descriptor->filter();
+        $isArrayFilter = $this->filter->filter instanceof WhereIdIn || $this->filter->filter instanceof WhereIn;
         $parent = $parents[0];
         if ($this->filter->getDescription())
             $parent = $parent->description($this->filter->getDescription());
@@ -37,7 +40,14 @@ class WithDescription extends FilterDescriptor
         $examples = $this->filter->getExamples();
         if ($examples && count($examples)) {
             $parent = $parent->examples(...array_map(
-                fn($example, $key) => Example::create(is_string($key) ? $key : $example)->value($example),
+                function ($example, $key) use ($isArrayFilter) {
+                    $objId = is_string($key)
+                        ? $key
+                        : (is_string($example) ? $example : (is_array($example) ? implode('_', $example) : $example));
+                    return Example::create($objId)->value(
+                        $isArrayFilter && !is_array($example) ? [$example] : $example,
+                    );
+                },
                 $examples,
                 array_keys($examples),
             ));

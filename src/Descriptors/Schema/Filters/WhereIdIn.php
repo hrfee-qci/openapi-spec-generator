@@ -16,14 +16,13 @@ class WhereIdIn extends FilterDescriptor
     public function filter(): array
     {
         $key = $this->filter->key();
-        $examples = collect($this->generator->resources()
-            ->resources($this->route->schema()::model()))
-            ->map(function (JsonApiResource $resource) {
-                $id = $resource->id();
+        $examples = collect(
+            $this->generator->resources()->resources($this->route->schema()::model()),
+        )->map(function (JsonApiResource $resource) {
+            $id = $resource->id();
 
-                return Example::create($id)->value([$id]);
-            })
-            ->toArray();
+            return Example::create($id)->value([$id]);
+        })->toArray();
 
         return [
             Parameter::query()
@@ -43,8 +42,6 @@ class WhereIdIn extends FilterDescriptor
      */
     protected function description(): string
     {
-        return $this->filter instanceof WhereIdNotIn ?
-          'A list of ids to exclude by.' :
-          'A list of ids to filter by.';
+        return $this->filter instanceof WhereIdNotIn ? 'A list of ids to exclude by.' : 'A list of ids to filter by.';
     }
 }
