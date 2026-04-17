@@ -132,7 +132,20 @@ class WithDescription extends Attribute
         if ($example === null)
             return $schema;
 
-        return SchemaFromExample::generate($schema, $example, $key, $this->format);
+        $enum = $this->getEnum();
+        $isObject = false;
+        if ($enum && !empty($enum) && is_array($enum[array_key_first($enum)])) {
+            foreach ($enum as $enumItem) {
+                foreach (array_keys($enumItem) as $k) {
+                    if (is_string($k)) {
+                        $isObject = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return SchemaFromExample::generate($schema, $example, $key, $this->format, $isObject ? $enum : null);
     }
 
     public function isSingular(): bool
