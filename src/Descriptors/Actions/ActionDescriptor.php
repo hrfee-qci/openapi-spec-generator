@@ -48,6 +48,8 @@ abstract class ActionDescriptor implements ActionDescriptorContract
      */
     public function action(): Operation
     {
+        // @var Operation $operation
+
         switch ($this->route->method()) {
             case 'POST':
                 $operation = Operation::post();
@@ -65,6 +67,7 @@ abstract class ActionDescriptor implements ActionDescriptorContract
         }
 
         return $operation
+            ->security(...$this->route->securitySchemes())
             ->operationId($this->route->id())
             ->responses(...$this->responses())
             ->parameters(...$this->parameters()) // problem

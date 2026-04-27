@@ -11,8 +11,10 @@ return [
                 'description' => 'JSON:API built using Laravel',
                 'version' => '1.0.0',
             ],
-            'securitySchemes' => [ // optional, identical shape to OpenAPI .components.securitySchemes
+            'securitySchemes' => [ // optional, identical shape to OpenAPI .components.securitySchemes, except two extra parameters:
                 'OAuth2' => [
+                    'middleware' => ['auth:api'], // routes with any of these middleware attached will require this scheme.
+                    'scanForPassportScopes' => true, // Defaults to true. Scans for Passport CheckToken/CheckTokenForAnyScope middleware and uses those scopes.
                     'type' => 'oauth2',
                     'flows' => [
                         'authorizationCode' => [

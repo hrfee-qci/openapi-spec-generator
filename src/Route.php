@@ -2,7 +2,9 @@
 
 namespace LaravelJsonApi\OpenApiSpec;
 
+use GoldSpecDigital\ObjectOrientedOAS\Objects\SecurityRequirement;
 use Illuminate\Routing\Route as IlluminateRoute;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use LaravelJsonApi\Contracts\Schema\PolymorphicRelation;
@@ -45,6 +47,15 @@ class Route
 
     protected ?string $relation = null;
 
+    // Security schemes applied to this route. Scheme application is guessed from which scopes lie within which schemes.
+    // @var SecurityRequirement[] $securitySchemes
+    protected array $securitySchemes = [];
+
+    private const PASSPORT_SCOPE_MIDDLEWARE = [
+        'Laravel\Passport\Http\Middleware\CheckTokenForAnyScope',
+        'Laravel\Passport\Http\Middleware\CheckToken',
+    ];
+
     /**
      * Route constructor.
      */
@@ -53,11 +64,62 @@ class Route
         $this->server = $server;
         $this->route = $route;
 
+        $securitySchemes = config("openapi.servers.{$this->server->name()}.securitySchemes", []);
+        $matchingMiddleware = collect($securitySchemes)->map(fn(array $m) => $m['middleware']);
+        $scopes = [];
+        $appliedSchemes = [];
+        if (!empty($securitySchemes)) {
+            $middlewares = $this->route->gatherMiddleware();
+            foreach ($middlewares as $middleware) {
+                if (!is_string($middleware))
+                    continue;
+
+                foreach ($matchingMiddleware as $securityScheme => $middlewareToMatch) {
+                    if (in_array($middleware, $middlewareToMatch)) {
+                        $appliedSchemes[$securityScheme] =
+                            SecurityRequirement::create($securityScheme)->securityScheme($securityScheme);
+                    }
+                }
+
+                $scopeString = null;
+                foreach (self::PASSPORT_SCOPE_MIDDLEWARE as $passportMiddleware) {
+                    if (str_starts_with($middleware, $passportMiddleware . ':')) {
+                        // @todo: maybe parse like a CSV in case scopes have commas
+                        $scopes = array_merge($scopes, explode(',', substr(
+                            $middleware,
+                            strlen($passportMiddleware) + 1,
+                        )));
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!empty($scopes)) {
+            $matchingSchemes = collect($securitySchemes)
+                ->filter(fn(array $scheme) => ($scheme['scanForPassportScopes'] ?? true) && isset($scheme['flows']))
+                ->map(
+                    fn(array $scheme) => collect($scheme['flows'])
+                        ->map(fn(array $flow) => collect($flow['scopes'] ?? [])->keys())
+                        ->flatten()
+                        ->unique(),
+                )
+                ->map(fn(Collection $schemeScopes) => $schemeScopes->intersect($scopes))
+                ->filter(fn(Collection $overlap) => $overlap->count() > 0);
+
+            foreach ($matchingSchemes as $securityScheme => $overlap) {
+                $requirement = $appliedSchemes[$securityScheme] ?? SecurityRequirement::create(
+                    $securityScheme,
+                )->securityScheme($securityScheme);
+                $requirement = $requirement->scopes(...$overlap->toArray());
+                $appliedSchemes[$securityScheme] = $requirement;
+            }
+        }
+
+        $this->securitySchemes = array_values($appliedSchemes);
+
         $segments = explode('.', $this->route->getName());
-        $segments = array_slice(
-            $segments,
-            array_search($this->server->name(), $segments) + 1
-        );
+        $segments = array_slice($segments, array_search($this->server->name(), $segments) + 1);
 
         $this->operationId = collect($segments)->join('.');
         $relation = null;
@@ -67,7 +129,7 @@ class Route
         } elseif (count($segments) === 3) {
             [$resource, $relation, $action] = $segments;
         } else {
-            throw new \LogicException('Unable to handle action structure '.$route->getName());
+            throw new \LogicException('Unable to handle action structure ' . $route->getName());
         }
 
         $this->resource = $resource;
@@ -94,14 +156,18 @@ class Route
      */
     public function method(): string
     {
-        return collect($this->route->methods())
-            ->filter(fn ($method) => $method !== 'HEAD')
-            ->first();
+        return collect($this->route->methods())->filter(fn($method) => $method !== 'HEAD')->first();
     }
 
     public function schema(): Schema
     {
         return $this->schema;
+    }
+
+    // @return SecurityRequirement[]
+    public function securitySchemes(): array
+    {
+        return $this->securitySchemes;
     }
 
     public function route(): IlluminateRoute
@@ -134,10 +200,9 @@ class Route
 
     public function relation(): ?Relation
     {
-        $relation = $this->relation ? $this->schema()
-            ->relationship($this->relation) : null;
+        $relation = $this->relation ? $this->schema()->relationship($this->relation) : null;
 
-        if ($relation !== null && ! ($relation instanceof Relation)) {
+        if ($relation !== null && !$relation instanceof Relation) {
             throw new \RuntimeException('Unexpected Type');
         }
 
@@ -166,7 +231,8 @@ class Route
                 throw new \LogicException('Method is not allowed for Polymorphic relationships');
             }
 
-            return $this->server->schemas()
+            return $this->server
+                ->schemas()
                 ->schemaFor($this->relation() !== null ? $this->relation()->inverse() : null);
         }
 
@@ -183,12 +249,10 @@ class Route
             $relation = $this->relation();
             if ($relation instanceof PolymorphicRelation) {
                 foreach ($relation->inverseTypes() as $type) {
-                    $schemas[$type] = $this->server->schemas()
-                        ->schemaFor($type);
+                    $schemas[$type] = $this->server->schemas()->schemaFor($type);
                 }
             } else {
-                $schemas[$relation->inverse()] = $this->server->schemas()
-                    ->schemaFor($relation->inverse());
+                $schemas[$relation->inverse()] = $this->server->schemas()->schemaFor($relation->inverse());
             }
         }
 
@@ -227,29 +291,16 @@ class Route
         return $this->action;
     }
 
-    public static function belongsTo(
-        IlluminateRoute $route,
-        Server $server,
-    ): bool {
-        return Str::contains(
-            $route->getName(),
-            $server->name(),
-        );
+    public static function belongsTo(IlluminateRoute $route, Server $server): bool
+    {
+        return Str::contains($route->getName(), $server->name());
     }
 
     protected function setUriForRoute(): void
     {
         $domain = URL::to('/');
-        $serverBasePath = str_replace(
-            $domain,
-            '',
-            $this->server->url(),
-        );
+        $serverBasePath = str_replace($domain, '', $this->server->url());
 
-        $this->uri = str_replace(
-            $serverBasePath,
-            '',
-            '/'.$this->route->uri(),
-        );
+        $this->uri = str_replace($serverBasePath, '', '/' . $this->route->uri());
     }
 }
