@@ -8,6 +8,7 @@ use LaravelJsonApi\Core\Support\AppResolver;
 use LaravelJsonApi\OpenApiSpec\Builders\InfoBuilder;
 use LaravelJsonApi\OpenApiSpec\Builders\PathsBuilder;
 use LaravelJsonApi\OpenApiSpec\Builders\ServerBuilder;
+use LaravelJsonApi\OpenApiSpec\Descriptors\Server as LaravelJsonApiServer;
 
 class Generator
 {
@@ -39,7 +40,7 @@ class Generator
 
         $this->infoBuilder = new InfoBuilder($this);
         $this->serverBuilder = new ServerBuilder($this);
-        $this->components = new ComponentsContainer;
+        $this->components = new ComponentsContainer();
         $this->resources = new ResourceContainer($this->server);
         $this->pathsBuilder = new PathsBuilder($this, $this->components);
     }
@@ -51,7 +52,7 @@ class Generator
             ->info($this->infoBuilder->build())
             ->servers(...$this->serverBuilder->build())
             ->paths(...array_values($this->pathsBuilder->build()))
-            ->components($this->components()->components());
+            ->components($this->components()->components(new LaravelJsonApiServer($this)->securitySchemes()));
     }
 
     public function key(): string

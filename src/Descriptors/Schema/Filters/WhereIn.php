@@ -25,15 +25,15 @@ class WhereIn extends FilterDescriptor
             ->pluck($this->filter->column())
             ->filter()
             ->map(function ($f) {
-                if (function_exists('enum_exists') && $f instanceof \UnitEnum) {
-                    $f = $f instanceof \BackedEnum ? $f->value : $f->name;
-                }
-
                 // @todo Watch out for ids?
                 if (is_array($f)) {
                     $f = $f[0];
                 }
-                ;
+
+                if (function_exists('enum_exists') && $f instanceof \UnitEnum) {
+                    $f = $f instanceof \BackedEnum ? $f->value : $f->name;
+                }
+
                 return Example::create($f)->value($f);
             })
             ->toArray();

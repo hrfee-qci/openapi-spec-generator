@@ -11,6 +11,20 @@ return [
                 'description' => 'JSON:API built using Laravel',
                 'version' => '1.0.0',
             ],
+            'securitySchemes' => [ // optional, identical shape to OpenAPI .components.securitySchemes
+                'OAuth2' => [
+                    'type' => 'oauth2',
+                    'flows' => [
+                        'authorizationCode' => [
+                            'authorizationUrl' => '/oauth/authorize/',
+                            'tokenUrl' => '/oauth/token/',
+                            'scopes' => [
+                                '*' => 'Permission to access anything your account status permits.',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ],
     ],
 

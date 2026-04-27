@@ -65,8 +65,10 @@ class ComponentsContainer
     {
         $this->responses[$response->objectId] = $response;
 
-        return Response::ref('#/components/responses/'.$response->objectId,
-            $response->objectId)->statusCode($response->statusCode);
+        return Response::ref(
+            '#/components/responses/' . $response->objectId,
+            $response->objectId,
+        )->statusCode($response->statusCode);
     }
 
     public function getResponse(string $objectId): ?BaseObject
@@ -74,17 +76,16 @@ class ComponentsContainer
         return $this->responses[$objectId] ?? null;
     }
 
-    public function components(): Components
+    public function components(?array $securitySchemes = []): Components
     {
-        $schemas = collect($this->schemas)
-            ->sortBy(fn (BaseObject $schema) => $schema->objectId)
-            ->toArray();
+        $schemas = collect($this->schemas)->sortBy(fn(BaseObject $schema) => $schema->objectId)->toArray();
 
         return Components::create()
             ->responses(...$this->responses)
             ->parameters(...$this->parameters)
             ->requestBodies(...$this->requestBodies)
-            ->schemas(...array_values($schemas));
+            ->schemas(...array_values($schemas))
+            ->securitySchemes(...$securitySchemes);
     }
 
     /**
@@ -112,7 +113,6 @@ class ComponentsContainer
                 exit(get_class($object));
         }
 
-        return $object::ref($baseRef.$object->objectId,
-            $object->objectId);
+        return $object::ref($baseRef . $object->objectId, $object->objectId);
     }
 }

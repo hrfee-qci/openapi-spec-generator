@@ -19,8 +19,7 @@ class Where extends FilterDescriptor
      */
     public function filter(): array
     {
-        $examples = collect($this->generator->resources()
-            ->resources($this->route->schema()::model()))
+        $examples = collect($this->generator->resources()->resources($this->route->schema()::model()))
             ->pluck($this->filter->column())
             ->filter()
             ->map(function ($f) {
