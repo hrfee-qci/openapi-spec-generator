@@ -1,4 +1,17 @@
-# OpenAPI v3 Spec Generator
+# OpenAPI v3 Spec Generator (Fork)
+
+This fork fixes some features (for a specific codebase/api, may not work nicely with others), and adds some useful features, including:
+* Works with laravel 13 (a change-the-composer.json job, everything seems to work though)
+* Security: currently OAuth2 only, can be applied based on middleware (see config) or by matching scopes (also see config).
+* Limit the default "all" query on the databse for generating examples to 100, so it'll run on a production database.
+* Accomodates MultiPagination/CursorPagination a bit better
+* WithDescription: Wrappers for fields, filters and custom routes for adding custom descriptions, examples, enums, schemas and formats.
+  * Schema is auto-generated if an example is given, but can be overriden with an OAS schema too.
+  * Wrapper improves syntax for declaring lots of fields with these wrappers
+* Some improved default descriptions
+
+The rest of this README has not been updated.
+Examples may be added later.
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
