@@ -79,8 +79,9 @@ class WithDescription implements Filter
         if ($this->example instanceof Closure)
             $example = ($this->example)();
         if (!is_array($example))
-            return [$example];
-        return $example;
+            $example = [$example];
+
+        return array_map(fn(mixed $ex) => $this->formatExample($ex), $example);
     }
 
     /**

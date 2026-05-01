@@ -117,7 +117,7 @@ class WithDescription extends Attribute
         $example = $this->example;
         if ($this->example instanceof Closure)
             $example = ($this->example)();
-        return $example;
+        return $this->formatExample($example);
     }
 
     /**

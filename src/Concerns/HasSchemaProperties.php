@@ -2,8 +2,10 @@
 
 namespace LaravelJsonApi\OpenApiSpec\Concerns;
 
+use Carbon\Carbon;
 use Closure;
 use Error;
+use LaravelJsonApi\OpenApiSpec\Helpers\SchemaFromExample;
 
 trait HasSchemaProperties
 {
@@ -20,6 +22,17 @@ trait HasSchemaProperties
     {
         $this->format = $format;
         return $this;
+    }
+
+    /**
+     * Attempts to format an example if a format is set, and is a standard one (e.g. date/date-time).
+     * If it can't it returns the value.
+     * @param mixed $example
+     * @return string|int|float|mixed
+     */
+    public function formatExample(mixed $example): mixed
+    {
+        return SchemaFromExample::formatExample($example, $this->getFormat());
     }
 
     /**

@@ -38,6 +38,7 @@ use LaravelJsonApi\OpenApiSpec\Descriptors\Descriptor;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Schema\Filters\WithDescription as FilterWithDescriptionDescriptor;
 use LaravelJsonApi\OpenApiSpec\Eloquent\Fields\WithDescription as FieldWithDescription;
 use LaravelJsonApi\OpenApiSpec\Filters\WithDescription as FilterWithDescription;
+use LaravelJsonApi\OpenApiSpec\Helpers\SchemaFromExample;
 use LaravelJsonApi\OpenApiSpec\Route;
 
 class Schema extends Descriptor implements PaginationDescriptor, SchemaDescriptor, SortablesDescriptor
@@ -474,7 +475,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                         if ($example !== '')
                             $schema = $schema->example($example);
                     } else if (isset($example[$column])) {
-                        $schema = $schema->example($example[$column]);
+                        $schema = $schema->example($descriptionField ? $descriptionField->formatExample($example[$column]) : $example[$column]);
                     }
                     if ($field instanceof EloquentAttribute && $field->isReadOnly(null)) {
                         $schema = $schema->readOnly(true);
