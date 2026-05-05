@@ -16,6 +16,7 @@ use LaravelJsonApi\OpenApiSpec\Concerns\ResolvesActionTraitToDescriptor;
 use LaravelJsonApi\OpenApiSpec\Concerns\ResolvesDescriptionAttributeFromRoute;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Responses;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Responses\WithDescriptionAttribute;
+use LaravelJsonApi\OpenApiSpec\Descriptors\Server;
 use LaravelJsonApi\OpenApiSpec\Generator;
 use LaravelJsonApi\OpenApiSpec\Route;
 use Neomerx\JsonApi\Contracts\Http\Headers\MediaTypeInterface;
@@ -68,8 +69,12 @@ class ResponseBuilder extends Builder
      *
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      */
-    public static function buildResponse(SchemaContract $data, ?Schema $meta = null, ?Schema $links = null, ?Schema $included = null): Schema
-    {
+    public static function buildResponse(
+        SchemaContract $data,
+        ?Schema $meta = null,
+        ?Schema $links = null,
+        ?Schema $included = null,
+    ): Schema {
         $jsonapi = Schema::object('jsonapi')->properties(Schema::string('version')->title('version')->example('1.0'));
 
         $schemas = collect([$jsonapi, $data, $meta, $links, $included])->whereNotNull()->toArray();
@@ -170,6 +175,25 @@ class ResponseBuilder extends Builder
                             ],
                         ])),
                 ),
+            Response::forbidden('403')
+                ->description('Access forbidden')
+                ->content(
+                    MediaType::create()
+                        ->mediaType(MediaTypeInterface::JSON_API_MEDIA_TYPE)
+                        ->schema($errorBody)
+                        ->examples(Example::create('invalidScopes')->value([
+                            'jsonapi' => [
+                                'version' => '1.0',
+                            ],
+                            'errors' => [
+                                [
+                                    'title' => 'Forbidden',
+                                    'status' => '403',
+                                    'detail' => 'Invalid scope(s) provided.',
+                                ],
+                            ],
+                        ])),
+                ),
             Response::notFound('404')
                 ->description('Content Not Found')
                 ->content(
@@ -209,7 +233,11 @@ class ResponseBuilder extends Builder
                             ],
                         ])),
                 ),
-        ])->mapWithKeys(function (Response $response) {
+        ])->filter(function (Response $response) {
+            if ($response->statusCode != 403)
+                return true;
+            return !empty(new Server($this->generator)->securitySchemes());
+        })->mapWithKeys(function (Response $response) {
             $ref = $this->components->addResponse($response);
 
             return [$response->objectId => $ref];
