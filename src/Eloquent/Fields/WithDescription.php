@@ -131,6 +131,7 @@ class WithDescription extends Attribute
         $example = $this->getPseudoSchema() ?? $this->getExample();
         if ($example === null)
             return $schema;
+        if ($example instanceof Schema) return $example;
 
         $enum = $this->getEnum();
         $isObject = false;
