@@ -2,6 +2,7 @@
 
 namespace LaravelJsonApi\OpenApiSpec\Descriptors\Schema;
 
+use GoldSpecDigital\ObjectOrientedOAS\Objects\AnyOf;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\OneOf;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema as OASchema;
@@ -106,7 +107,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         if (!empty($includedItems))
             return [
                 'schema' => $oaSchema,
-                'included' => OASchema::array('included')->items(OneOf::create('')->schemas(...$includedItems)),
+                'included' => OASchema::array('included')->items(AnyOf::create('')->schemas(...$includedItems)),
             ];
 
         return ['schema' => $oaSchema];
