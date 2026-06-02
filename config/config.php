@@ -27,6 +27,19 @@ return [
                     ],
                 ],
             ],
+            // Enhanced tags: correspond to JSON:API resource names, capitalized (e.g. user-accounts -> User-accounts)
+            'tags' => [
+                [
+                    'name' => 'User-accounts',
+                    // although OAS 3.2 is not supported, this field will be mapped to x-displayName.
+                    'summary' => 'User Accounts',
+                    'description' => 'Access user accounts.',
+                    'externalDocs' => [
+                        'url' => 'https://www.wikipedia.org/',
+                        'description' => 'More information',
+                    ],
+                ],
+            ],
         ],
     ],
 

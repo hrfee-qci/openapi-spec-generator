@@ -47,12 +47,14 @@ class Generator
 
     public function generate(): OpenApi
     {
+        $server = new LaravelJsonApiServer($this);
         return OpenApi::create()
             ->openapi(OpenApi::OPENAPI_3_0_2)
             ->info($this->infoBuilder->build())
             ->servers(...$this->serverBuilder->build())
             ->paths(...array_values($this->pathsBuilder->build()))
-            ->components($this->components()->components(new LaravelJsonApiServer($this)->securitySchemes()));
+            ->tags(...$server->tags())
+            ->components($this->components()->components($server->securitySchemes()));
     }
 
     public function key(): string

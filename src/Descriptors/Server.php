@@ -3,6 +3,7 @@
 namespace LaravelJsonApi\OpenApiSpec\Descriptors;
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects;
+use Illuminate\Support\Str;
 use LaravelJsonApi\OpenApiSpec\Descriptors\Descriptor as BaseDescriptor;
 
 class Server extends BaseDescriptor
@@ -18,6 +19,50 @@ class Server extends BaseDescriptor
             ->title(config("openapi.servers.{$this->generator->key()}.info.title"))
             ->description(config("openapi.servers.{$this->generator->key()}.info.description"))
             ->version(config("openapi.servers.{$this->generator->key()}.info.version"));
+    }
+
+    // @return Objects\Tags[]
+    public function tags(): array
+    {
+        $tags = config("openapi.servers.{$this->generator->key()}.tags", []);
+        $assert = fn(mixed $assertion, string $error) => $assertion || throw new \Error($error);
+        $assertValidTag = function (array $tag) use ($assert) {
+            $assert($tag['name'] ?? null, 'no tag name given');
+        };
+        foreach ($tags as $tag)
+            $assertValidTag($tag);
+        return array_map(
+            function (array $tag) use ($assert): Objects\Tag {
+                $out = Objects\Tag::create($tag['name'])->name($tag['name']);
+                if (isset($tag['description']))
+                    $out = $out->description($tag['description']);
+                if (isset($tag['externalDocs'])) {
+                    $assert(isset($tag['externalDocs']['url']), 'no external docs URL provided');
+                    $docs = Objects\ExternalDocs::create($tag['name'] . '.externalDocs')->url(
+                        $tag['externalDocs']['url'],
+                    );
+                    if (isset($tag['externalDocs']['description']))
+                        $docs = $docs->description($tag['externalDocs']['description']);
+
+                    $out = $out->externalDocs($docs);
+                }
+
+                // @todo: support OAS 3.2 enhanced tags properly
+                if (isset($tag['summary']) && !isset($tag['x-displayName']))
+                    $tag['x-displayName'] = $tag['summary'];
+
+                foreach (collect($tag)
+                    ->filter(fn($_, string $key) => Str::startsWith($key, 'x-'))
+                    ->mapWithKeys(fn(mixed $value, string $key) => [
+                        Str::substr($key, Str::length('x-')) => $value,
+                    ]) as $k => $v) {
+                    $out = $out->x($k, $v);
+                }
+
+                return $out;
+            },
+            $tags,
+        );
     }
 
     // @return Objects\SecurityScheme[]
