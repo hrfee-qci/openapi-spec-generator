@@ -3,6 +3,7 @@
 namespace LaravelJsonApi\OpenApiSpec;
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects\SecurityRequirement;
+use Illuminate\Routing\Controller;
 use Illuminate\Routing\Route as IlluminateRoute;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
@@ -66,6 +67,33 @@ class Route
 
         $securitySchemes = config("openapi.servers.{$this->server->name()}.securitySchemes", []);
         $matchingMiddleware = collect($securitySchemes)->map(fn(array $m) => $m['middleware']);
+        $matchingControllers = collect($securitySchemes)->map(
+            fn(array $scheme) => $scheme['controllers'] ?? null,
+        )->map(fn(?array $controllers) => function (?string $controller) use ($controllers): bool {
+            // $controller is a controller class-name with '@<method name>' appended.
+            if ($controllers === null)
+                return true;
+
+            $split = explode('@', $controller);
+            if (count($split) < 2)
+                return false;
+
+            foreach ($controllers as $targetClass => $actions) {
+                if (is_int($targetClass) && is_string($actions)) {
+                    // no actions listed so only match class
+                    $targetClass = $actions;
+                    if ($split[0] == $targetClass)
+                        return true;
+                } else {
+                    foreach ($actions as $action) {
+                        if ($split[0] == $targetClass && $split[1] == $action)
+                            return true;
+                    }
+                }
+            }
+            return false;
+        });
+
         $scopes = [];
         $appliedSchemes = [];
         if (!empty($securitySchemes)) {
@@ -76,8 +104,10 @@ class Route
 
                 foreach ($matchingMiddleware as $securityScheme => $middlewareToMatch) {
                     if (in_array($middleware, $middlewareToMatch)) {
-                        $appliedSchemes[$securityScheme] =
-                            SecurityRequirement::create($securityScheme)->securityScheme($securityScheme);
+                        if ($matchingControllers[$securityScheme]($this->route->action['controller'])) {
+                            $appliedSchemes[$securityScheme] =
+                                SecurityRequirement::create($securityScheme)->securityScheme($securityScheme);
+                        }
                     }
                 }
 
