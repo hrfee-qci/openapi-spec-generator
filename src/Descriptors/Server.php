@@ -72,9 +72,12 @@ class Server extends BaseDescriptor
         $assert = fn(bool $assertion, string $error) => $assertion || throw new \Error($error);
         return array_map(
             function (array $scheme, string $name) use ($assert): Objects\SecurityScheme {
+                $supportedTypes = ['oauth2', 'apiKey'];
                 $assert(
-                    isset($scheme['type']) && $scheme['type'] === 'oauth2',
-                    "Only OAuth2 security schemes are currently supported. Please remove any non-oauth2 schemes from the {$this->generator->key()} server in your config.",
+                    isset($scheme['type']) && in_array($scheme['type'], $supportedTypes),
+                    'Only ['
+                    . implode(', ', $supportedTypes)
+                    . "] security schemes are currently supported. Please remove any non-matching schemes from the {$this->generator->key()} server in your config.",
                 );
                 if ($scheme['type'] === 'oauth2') {
                     $assert(
@@ -105,8 +108,21 @@ class Server extends BaseDescriptor
                         array_keys($scheme['flows']),
                     );
                     return Objects\SecurityScheme::oauth2($name)->flows(...$flows);
+                } else if ($scheme['type'] === 'apiKey') {
+                    $assert(
+                        isset($scheme['in']),
+                        "No 'in' key set for {$name} apiKey security scheme in the {$this->generator->key()} server in your config.",
+                    );
+                    $assert(
+                        isset($scheme['name']),
+                        "No 'name' key set for {$name} apiKey security scheme in the {$this->generator->key()} server in your config.",
+                    );
+                    return Objects\SecurityScheme::create($name)
+                        ->type(Objects\SecurityScheme::TYPE_API_KEY)
+                        ->in($scheme['in'])
+                        ->name($scheme['name']);
                 }
-                return Objects\SecurityScheme::create($ref)->type($scheme['type']);
+                return Objects\SecurityScheme::create($name)->type($scheme['type']);
             },
             $schemes,
             array_keys($schemes),
