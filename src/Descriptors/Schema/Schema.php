@@ -273,7 +273,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
             ->name('sort')
             ->schema(OASchema::array()->items(OASchema::string()->enum(...$fields)))
             ->allowEmptyValue(false)
-            ->required(false);
+            ->required(false)->style('form')->explode(false);
 
         if ($pagination instanceof MultiPagination) {
             $parameter = $parameter->description('Disallowed if using cursor pagination.');
