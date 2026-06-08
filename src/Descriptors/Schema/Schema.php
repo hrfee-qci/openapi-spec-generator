@@ -394,6 +394,25 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     }
 
     /**
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter[]
+     */
+    public function sparseFieldsets(Route $route): array
+    {
+        $sparseFields = $route->schema()->sparseFields();
+        $fieldName = 'fields[' . $route->resource() . ']';
+        $mainResource = Parameter::query($route->resource() . '.sparseFields')
+            ->name($fieldName)
+            ->description(
+                'Only return these fields for each resource. Resources will still be returned even if none of these fields are available.',
+            )
+            ->schema(OASchema::array()->items(OASchema::string()->enum(...$sparseFields)))
+            ->allowEmptyValue(false)
+            ->style('form')
+            ->explode(false);
+        return [$mainResource];
+    }
+
+    /**
      * @param  \LaravelJsonApi\Contracts\Schema\Field[]  $fields
      */
     protected function fields(array $fields, JsonApiResource $resource): Collection
