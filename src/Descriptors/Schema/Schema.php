@@ -255,15 +255,21 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      */
     public function sortables($route): array
     {
-        $fields = collect($route->schema()->sortFields())
+        $fieldsWithDescriptions = collect($route->schema()->sortFields())
             ->merge(collect($route->schema()->sortables())->map(function (Sortable $sortable) {
                 return $sortable->sortField();
             })->whereNotNull())
             ->map(function (string $field) {
-                return [$field, '-' . $field];
+                return [
+                    [$field, 'By ' . $field . ', ascending'],
+                    ['-' . $field, 'By ' . $field . ', descending'],
+                ];
             })
-            ->flatten()
+            ->flatten(1)
+            ->mapWithKeys(fn(array $fieldAndDescription) => [$fieldAndDescription[0] => $fieldAndDescription[1]])
             ->toArray();
+
+        $fields = array_keys($fieldsWithDescriptions);
 
         $pagination = $route->schema()->pagination();
         if ($pagination instanceof CursorPagination)
@@ -271,9 +277,13 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
 
         $parameter = Parameter::query('sort')
             ->name('sort')
-            ->schema(OASchema::array()->items(OASchema::string()->enum(...$fields)))
+            ->schema(OASchema::array()->items(OASchema::string()->x('enumDescriptions', $fieldsWithDescriptions)->enum(
+                ...$fields,
+            )))
             ->allowEmptyValue(false)
-            ->required(false)->style('form')->explode(false);
+            ->required(false)
+            ->style('form')
+            ->explode(false);
 
         if ($pagination instanceof MultiPagination) {
             $parameter = $parameter->description('Disallowed if using cursor pagination.');
@@ -476,7 +486,9 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                         if ($example !== '')
                             $schema = $schema->example($example);
                     } else if (isset($example[$column])) {
-                        $schema = $schema->example($descriptionField ? $descriptionField->formatExample($example[$column]) : $example[$column]);
+                        $schema = $schema->example(
+                            $descriptionField ? $descriptionField->formatExample($example[$column]) : $example[$column],
+                        );
                     }
                     if ($field instanceof EloquentAttribute && $field->isReadOnly(null)) {
                         $schema = $schema->readOnly(true);
