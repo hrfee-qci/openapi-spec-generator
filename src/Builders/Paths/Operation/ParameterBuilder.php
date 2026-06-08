@@ -30,6 +30,7 @@ class ParameterBuilder extends Builder
                 ...$schemaDescriptor->sortables($route),
                 ...$schemaDescriptor->filters($route),
                 ...$schemaDescriptor->sparseFieldsets($route),
+                ...$schemaDescriptor->includes($route),
             ];
         }
 

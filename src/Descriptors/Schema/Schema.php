@@ -413,6 +413,23 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     }
 
     /**
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter[]
+     */
+    public function includes(Route $route): array
+    {
+        $includePaths = $route->schema()->includePaths();
+        return [Parameter::query($route->resource() . '.include')
+            ->name('include')
+            ->description(
+                'Additionally fetch these related resources. Each related resources will be placed in the .included key of the root document, and the main resource each relates to will list the related IDs in its "relationships" section.',
+            )
+            ->schema(OASchema::array()->items(OASchema::string()->enum(...$includePaths)))
+            ->allowEmptyValue(false)
+            ->style('form')
+            ->explode(false)];
+    }
+
+    /**
      * @param  \LaravelJsonApi\Contracts\Schema\Field[]  $fields
      */
     protected function fields(array $fields, JsonApiResource $resource): Collection
