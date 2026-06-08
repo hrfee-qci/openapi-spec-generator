@@ -398,18 +398,51 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      */
     public function sparseFieldsets(Route $route): array
     {
-        $sparseFields = $route->schema()->sparseFields();
-        $fieldName = 'fields[' . $route->resource() . ']';
-        $mainResource = Parameter::query($route->resource() . '.sparseFields')
-            ->name($fieldName)
-            ->description(
-                'Only return these fields for each resource. Resources will still be returned even if none of these fields are available.',
-            )
-            ->schema(OASchema::array()->items(OASchema::string()->enum(...$sparseFields)))
-            ->allowEmptyValue(false)
-            ->style('form')
-            ->explode(false);
-        return [$mainResource];
+        $maxDepth = 1;
+        $forSchema = function (JASchema $schema, string $resource, ?array $parents = null) use ($maxDepth): ?Parameter {
+            $sparseFields = iterator_to_array($schema->sparseFields());
+            $fieldName = 'fields[' . $resource . ']';
+            if (count($sparseFields) == 0)
+                return null;
+
+            if ($parents !== null && count($parents) > $maxDepth)
+                return null;
+
+            $parentString = $parents !== null ? implode('.', $parents) . '.' : '';
+            return Parameter::query($parentString . $resource . '.sparseFields')
+                ->name($fieldName)
+                ->description(
+                    'Only return these fields for the "'
+                    . $resource
+                    . '" resource. The .data field will be empty if none of the fields are set on a resource.',
+                )
+                ->schema(OASchema::array()->items(OASchema::string()->enum(...$sparseFields)))
+                ->allowEmptyValue(false)
+                ->style('form')
+                ->explode(false);
+        };
+        $out = [$forSchema($route->schema(), $route->resource())];
+
+        $includePaths = collect($route->schema()->includePaths())
+            ->filter(fn(string $includePath) => substr_count($includePath, '.') < $maxDepth);
+        $resources = [$route->resource() => true];
+        foreach ($includePaths as $includePath) {
+            try {
+                $relation = $route->schema()->relationship($includePath);
+            } catch (\Exception $_) {
+                continue;
+            }
+            $resource = $relation->inverse();
+            if (isset($resources[$resource]))
+                continue;
+            $resources[$resource] = true;
+            $schema = $this->generator
+                ->server()
+                ->schemas()
+                ->schemaFor($resource);
+            $out[] = $forSchema($schema, $resource, [$route->resource()]);
+        }
+        return array_filter($out);
     }
 
     /**
