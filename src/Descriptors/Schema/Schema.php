@@ -52,6 +52,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         Eloquent\Filters\Where::class => Filters\Where::class,
         Eloquent\Filters\WhereNull::class => Filters\WhereNull::class,
         Eloquent\Filters\Has::class => Filters\Has::class,
+        Eloquent\Filters\WhereHas::class => Filters\WhereHas::class,
     ];
 
     /**
@@ -371,11 +372,12 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     }
 
     /**
+     * @param Filter[] $filters
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter[]
      */
-    public function filters($route): array
+    public function filters($route, ?array $filters = null): array
     {
-        return collect($route->schema()->filters())
+        return collect($filters ?? $route->schema()->filters())
             ->map(function (Filter $filterInstance) use ($route) {
                 $descriptor = $this->getDescriptor($filterInstance);
                 $descriptorInstance = new $descriptor($this->generator, $route, $filterInstance);
