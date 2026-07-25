@@ -57,6 +57,8 @@ class GenerateCommand extends Command
         $fileName = $serverKey . '_openapi.' . $format;
         $filePath = str_replace(base_path() . '/', '', $storageDisk->path($fileName));
 
+        $this->reportSkippedRoutes();
+
         $this->line('Complete! ' . $filePath);
         $this->newLine();
         $this->line('Run the following to see your API docs');
@@ -64,5 +66,29 @@ class GenerateCommand extends Command
         $this->newLine();
 
         return 0;
+    }
+
+    /**
+     * List routes that belong to the server but did not make it into the document.
+     *
+     * A route can be undescribable for legitimate reasons, so this does not fail the
+     * run. It is reported because the alternative is silence, and silence is
+     * indistinguishable from a real endpoint having quietly gone missing.
+     */
+    protected function reportSkippedRoutes(): void
+    {
+        $skipped = GeneratorFacade::skippedRoutes();
+
+        if (empty($skipped)) {
+            return;
+        }
+
+        $this->newLine();
+        $this->warn(sprintf('%d route(s) were not described:', count($skipped)));
+
+        foreach ($skipped as $route) {
+            $this->line(sprintf('  %s (%s)', $route['route'], $route['uri']));
+            $this->line(sprintf('    <fg=gray>%s</>', $route['reason']));
+        }
     }
 }

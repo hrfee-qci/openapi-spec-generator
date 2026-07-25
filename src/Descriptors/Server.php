@@ -11,14 +11,25 @@ class Server extends BaseDescriptor
     /**
      * @todo Add contact
      * @todo Add TOS
-     * @todo Add License
      */
     public function info(): Objects\Info
     {
-        return Objects\Info::create()
+        $info = Objects\Info::create()
             ->title(config("openapi.servers.{$this->generator->key()}.info.title"))
             ->description(config("openapi.servers.{$this->generator->key()}.info.description"))
             ->version(config("openapi.servers.{$this->generator->key()}.info.version"));
+
+        $license = config("openapi.servers.{$this->generator->key()}.info.license");
+
+        if (is_array($license) && isset($license['name'])) {
+            $info = $info->license(
+                Objects\License::create()
+                    ->name($license['name'])
+                    ->url($license['url'] ?? null),
+            );
+        }
+
+        return $info;
     }
 
     // @return Objects\Tags[]
@@ -132,16 +143,24 @@ class Server extends BaseDescriptor
     /**
      * @return \LaravelJsonApi\Core\Server\Server[]
      *
-     * @todo Allow Configuration
      * @todo Use for enums?
      * @todo Extract only URI Server Prefix and let domain be set separately
      */
     public function servers(): array
     {
+        /*
+         * Falling back to the server's own URL resolves through the application's
+         * base URL, which ties the generated document to whichever environment
+         * happened to run the generator. Configuring the URL explicitly keeps the
+         * output identical regardless of where it is produced.
+         */
+        $url = config("openapi.servers.{$this->generator->key()}.url")
+            ?? $this->generator->server()->url();
+
         return [
-            Objects\Server::create()->url('{serverUrl}')->variables(Objects\ServerVariable::create(
-                'serverUrl',
-            )->default($this->generator->server()->url())),
+            Objects\Server::create()->url('{serverUrl}')->variables(
+                Objects\ServerVariable::create('serverUrl')->default($url),
+            ),
         ];
     }
 }

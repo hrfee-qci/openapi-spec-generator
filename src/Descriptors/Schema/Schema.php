@@ -40,6 +40,7 @@ use LaravelJsonApi\OpenApiSpec\Descriptors\Schema\Filters\WithDescription as Fil
 use LaravelJsonApi\OpenApiSpec\Eloquent\Fields\WithDescription as FieldWithDescription;
 use LaravelJsonApi\OpenApiSpec\Filters\WithDescription as FilterWithDescription;
 use LaravelJsonApi\OpenApiSpec\Helpers\SchemaFromExample;
+use LaravelJsonApi\OpenApiSpec\ResourceContainer;
 use LaravelJsonApi\OpenApiSpec\Route;
 
 class Schema extends Descriptor implements PaginationDescriptor, SchemaDescriptor, SortablesDescriptor
@@ -56,16 +57,97 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     ];
 
     /**
+     * The page size applied when a client sends none.
+     *
+     * The paginator exposes this only to its own subclasses, so it is read
+     * reflectively. Omitting it leaves clients to guess how many records an
+     * unparameterised request returns.
+     */
+    private static function defaultPerPage(PagePagination $pagination): ?int
+    {
+        $property = new \ReflectionProperty($pagination, 'defaultPerPage');
+
+        $value = $property->getValue($pagination);
+
+        return is_int($value) ? $value : null;
+    }
+
+    /**
+     * Which of a schema's attributes may be null.
+     *
+     * JSON:API schemas do not declare nullability, so it cannot be derived from the
+     * field definitions. A schema may opt in by defining `attributeNullability()`
+     * returning a `['fieldName' => bool]` map. This is duck-typed rather than an
+     * interface so that adopting it never requires changing a schema's parentage.
+     *
+     * Nullability is deliberately not inferred from database columns: computed and
+     * presenter-derived attributes have no column, and a column that merely permits
+     * null is not evidence that the API ever returns it.
+     *
+     * @return array<string, bool>
+     */
+    private static function attributeNullability(?JASchema $schema): array
+    {
+        if ($schema === null || ! method_exists($schema, 'attributeNullability')) {
+            return [];
+        }
+
+        return array_filter($schema->attributeNullability());
+    }
+
+    /**
+     * Read one attribute value for use as an example, or null if unavailable.
+     *
+     * An accessor is arbitrary application code and may throw for reasons that have
+     * nothing to do with documentation. One uncooperative accessor must cost its own
+     * example only, never the whole generation run.
+     */
+    private static function sampleValue(JsonApiResource $example, string $column): mixed
+    {
+        try {
+            return isset($example[$column]) ? $example[$column] : null;
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /**
+     * Read the full attribute list for use as examples, or an empty list if unavailable.
+     *
+     * @return array<string, mixed>
+     */
+    private static function sampleAttributes(JsonApiResource $example): array
+    {
+        try {
+            return collect($example->attributes(null))->all();
+        } catch (\Throwable) {
+            return [];
+        }
+    }
+
+    /**
+     * The `id` property, carrying a sampled example only when one is available.
+     *
+     * @param ?JsonApiResource $resource
+     */
+    protected function idProperty(?JsonApiResource $resource): OASchema
+    {
+        $id = OASchema::string('id');
+
+        return $resource ? $id->example($resource->id()) : $id;
+    }
+
+    /**
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      */
     public function fetch(JASchema $schema, string $objectId, string $type, string $name): OASchema
     {
         $resource = $this->generator->resources()->resource($schema::model());
 
-        $fields = $this->fields($schema->fields(), $resource);
+        $fields = $this->fields($schema->fields(), $resource, $schema);
         $properties = [
             OASchema::string('type')->title('type')->default($type),
-            OASchema::string('id')->example($resource->id()),
+            $this->idProperty($resource),
             OASchema::object('attributes')->properties(...$fields->get('attributes')),
         ];
 
@@ -88,10 +170,10 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         $includedItems = [];
         $resource = $this->generator->resources()->resource($schema::model());
 
-        $fields = $this->fields($schema->fields(), $resource);
+        $fields = $this->fields($schema->fields(), $resource, $schema);
         $properties = [
             OASchema::string('type')->title('type')->default($type),
-            OASchema::string('id')->example($resource->id()),
+            $this->idProperty($resource),
             OASchema::object('attributes')->properties(...$fields->get('attributes')),
         ];
 
@@ -123,7 +205,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
 
         $resource = $this->generator->resources()->resource($route->schema()::model());
 
-        $fields = $this->fields($route->schema()->fields(), $resource);
+        $fields = $this->fields($route->schema()->fields(), $resource, $route->schema());
 
         return OASchema::object($objectId)
             ->title('Resource/' . ucfirst($route->name(true)) . '/Store')
@@ -143,13 +225,13 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         $objectId = SchemaBuilder::objectId($route);
         $resource = $this->generator->resources()->resource($route->schema()::model());
 
-        $fields = $this->fields($route->schema()->fields(), $resource);
+        $fields = $this->fields($route->schema()->fields(), $resource, $route->schema());
 
         return OASchema::object($objectId)
             ->title('Resource/' . ucfirst($route->name(true)) . '/Update')
             ->properties(
                 OASchema::string('type')->title('type')->default($route->name()),
-                OASchema::string('id')->example($resource->id()),
+                $this->idProperty($resource),
                 OASchema::object('attributes')->properties(...$fields->get('attributes')),
                 OASchema::object('relationships')->properties(...$fields->get('relationships') ?: []),
             )
@@ -254,10 +336,12 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      * @param  mixed  $route
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter[]
      */
-    public function sortables($route): array
+    public function sortables($route, ?JASchema $target = null): array
     {
-        $fieldsWithDescriptions = collect($route->schema()->sortFields())
-            ->merge(collect($route->schema()->sortables())->map(function (Sortable $sortable) {
+        $target ??= $route->schema();
+
+        $fieldsWithDescriptions = collect($target->sortFields())
+            ->merge(collect($target->sortables())->map(function (Sortable $sortable) {
                 return $sortable->sortField();
             })->whereNotNull())
             ->map(function (string $field) {
@@ -272,7 +356,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
 
         $fields = array_keys($fieldsWithDescriptions);
 
-        $pagination = $route->schema()->pagination();
+        $pagination = $target->pagination();
         if ($pagination instanceof CursorPagination)
             return [];
 
@@ -292,17 +376,24 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         return [$parameter];
     }
 
-    public function pagination(Route $route): array
+    public function pagination(Route $route, ?JASchema $target = null): array
     {
-        $pagination = $route->schema()->pagination();
+        $pagination = ($target ?? $route->schema())->pagination();
         if ($pagination instanceof PagePagination) {
+            $pageSize = OASchema::integer();
+            $defaultPerPage = self::defaultPerPage($pagination);
+
+            if ($defaultPerPage !== null) {
+                $pageSize = $pageSize->default($defaultPerPage);
+            }
+
             return [
                 Parameter::query('pageSize')
                     ->name('page[size]')
                     ->description('The page size for paginated results')
                     ->required(false)
                     ->allowEmptyValue(false)
-                    ->schema(OASchema::integer()),
+                    ->schema($pageSize),
                 Parameter::query('pageNumber')
                     ->name('page[number]')
                     ->description('The page number for paginated results')
@@ -375,9 +466,9 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      * @param Filter[] $filters
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter[]
      */
-    public function filters($route, ?array $filters = null): array
+    public function filters($route, ?array $filters = null, ?JASchema $target = null): array
     {
-        return collect($filters ?? $route->schema()->filters())
+        return collect($filters ?? ($target ?? $route->schema())->filters())
             ->map(function (Filter $filterInstance) use ($route) {
                 $descriptor = $this->getDescriptor($filterInstance);
                 $descriptorInstance = new $descriptor($this->generator, $route, $filterInstance);
@@ -398,8 +489,10 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     /**
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter[]
      */
-    public function sparseFieldsets(Route $route): array
+    public function sparseFieldsets(Route $route, ?JASchema $target = null, ?string $targetResource = null): array
     {
+        $target ??= $route->schema();
+        $targetResource ??= $route->resource();
         $maxDepth = 1;
         $forSchema = function (JASchema $schema, string $resource, ?array $parents = null) use ($maxDepth): ?Parameter {
             $sparseFields = iterator_to_array($schema->sparseFields());
@@ -423,26 +516,30 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                 ->style('form')
                 ->explode(false);
         };
-        $out = [$forSchema($route->schema(), $route->resource())];
+        $out = [$forSchema($target, $targetResource)];
 
-        $includePaths = collect($route->schema()->includePaths())
+        $includePaths = collect($target->includePaths())
             ->filter(fn(string $includePath) => substr_count($includePath, '.') < $maxDepth);
-        $resources = [$route->resource() => true];
+        $resources = [$targetResource => true];
         foreach ($includePaths as $includePath) {
             try {
-                $relation = $route->schema()->relationship($includePath);
+                $relation = $target->relationship($includePath);
             } catch (\Exception $_) {
                 continue;
             }
             $resource = $relation->inverse();
             if (isset($resources[$resource]))
                 continue;
+            $schemas = $this->generator->server()->schemas();
+            /*
+             * A polymorphic container relation reports its own field name as the
+             * inverse type. That name is not a registered resource type, so it has
+             * no field list to offer as a sparse fieldset.
+             */
+            if (!$schemas->exists($resource))
+                continue;
             $resources[$resource] = true;
-            $schema = $this->generator
-                ->server()
-                ->schemas()
-                ->schemaFor($resource);
-            $out[] = $forSchema($schema, $resource, [$route->resource()]);
+            $out[] = $forSchema($schemas->schemaFor($resource), $resource, [$targetResource]);
         }
         return array_filter($out);
     }
@@ -450,10 +547,10 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     /**
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter[]
      */
-    public function includes(Route $route): array
+    public function includes(Route $route, ?JASchema $target = null, ?string $targetResource = null): array
     {
-        $includePaths = $route->schema()->includePaths();
-        return [Parameter::query($route->resource() . '.include')
+        $includePaths = ($target ?? $route->schema())->includePaths();
+        return [Parameter::query(($targetResource ?? $route->resource()) . '.include')
             ->name('include')
             ->description(
                 'Additionally fetch these related resources. Each related resources will be placed in the .included key of the root document, and the main resource each relates to will list the related IDs in its "relationships" section.',
@@ -467,7 +564,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     /**
      * @param  \LaravelJsonApi\Contracts\Schema\Field[]  $fields
      */
-    protected function fields(array $fields, JsonApiResource $resource): Collection
+    protected function fields(array $fields, ?JsonApiResource $resource, ?JASchema $schema = null): Collection
     {
         return collect($fields)->mapToGroups(function (Field $field) {
             switch (true) {
@@ -482,10 +579,10 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
             }
 
             return [$key => $field];
-        })->map(function ($fields, $type) use ($resource) {
+        })->map(function ($fields, $type) use ($resource, $schema) {
             switch ($type) {
                 case 'attributes':
-                    return $this->attributes($fields, $resource);
+                    return $this->attributes($fields, $resource, $schema);
                 case 'relationships':
                     return $this->relationships($fields, $resource);
                 case 'actions':
@@ -499,11 +596,13 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     /**
      * @return Schema[]
      */
-    protected function attributes(Collection $fields, JsonApiResource $example): array
+    protected function attributes(Collection $fields, ?JsonApiResource $example, ?JASchema $schema = null): array
     {
+        $nullability = self::attributeNullability($schema);
+
         return $fields
             ->filter(fn($field) => !$field instanceof ID)
-            ->map(function (Field $field) use ($example) {
+            ->map(function (Field $field) use ($example, $nullability) {
                 $fieldId = $field->name();
                 $descriptionField = null;
                 if ($field instanceof FieldWithDescription) {
@@ -530,10 +629,26 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
 
                 $schema = $fieldDataType->title($field->name());
 
+                /*
+                 * OpenAPI 3.0 has no null type, so a nullable attribute is expressed
+                 * as a flag alongside its declared type rather than as a union.
+                 */
+                if ($nullability[$fieldId] ?? false) {
+                    $schema = $schema->nullable(true);
+                }
+
                 $column = $field instanceof EloquentAttribute ? $field->column() : $field->name();
 
+                /*
+                 * Attribute values are read off a live resource, so reading them can
+                 * trigger relation lazy-loads. Skip every such read when examples are
+                 * disabled: it is the difference between a generation run that issues
+                 * queries and one that issues none.
+                 */
+                $canSampleValues = $example !== null && ResourceContainer::examplesEnabled();
+
                 if ($field instanceof NonEloquentAttribute) {
-                    $attributes = $example->attributes(null);
+                    $attributes = $canSampleValues ? self::sampleAttributes($example) : [];
                     if (isset($attributes[$column])) {
                         $schema = $schema->example($attributes[$column]);
                     }
@@ -556,9 +671,9 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
                         $example = $descriptionField->getExample();
                         if ($example !== '')
                             $schema = $schema->example($example);
-                    } else if (isset($example[$column])) {
+                    } else if ($canSampleValues && ($sampled = self::sampleValue($example, $column)) !== null) {
                         $schema = $schema->example(
-                            $descriptionField ? $descriptionField->formatExample($example[$column]) : $example[$column],
+                            $descriptionField ? $descriptionField->formatExample($sampled) : $sampled,
                         );
                     }
                     if ($field instanceof EloquentAttribute && $field->isReadOnly(null)) {
@@ -573,11 +688,11 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
 
     /**
      * @param Field[] $fields
-     * @param JsonApiResource $example
+     * @param ?JsonApiResource $example
      * @param ?string $parentType
      * @return Collection<OASchema>
      */
-    protected function included(array $fields, JsonApiResource $example, ?string $parentType = null): array
+    protected function included(array $fields, ?JsonApiResource $example, ?string $parentType = null): array
     {
         $out = collect($fields)
             ->filter(fn(Field $field) => $field instanceof RelationContract)
@@ -592,7 +707,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      */
     protected function include(
         RelationContract $relation,
-        JsonApiResource $example,
+        ?JsonApiResource $example,
         ?string $parentType = null,
     ): ?OASchema {
         $fieldId = $relation->name();
@@ -600,10 +715,15 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         // dump($parentType . ' => ' . $type . ': ' . $fieldId);
         if ($type === $parentType)
             return null;
-        $schema = $this->generator
-            ->server()
-            ->schemas()
-            ->schemaFor($type);
+        $schemas = $this->generator->server()->schemas();
+        /*
+         * A polymorphic container relation reports its own field name as the
+         * inverse type. That name is not a registered resource type, so no single
+         * schema can describe it and it is omitted rather than aborting the run.
+         */
+        if (!$schemas->exists($type))
+            return null;
+        $schema = $schemas->schemaFor($type);
         return $this->fetch($schema, "resources.$type.resource.fetch", $type, $fieldId)->description(
             "May not be present unless \"$fieldId\" is in the \"include\" header. See `.data[].relationships.$fieldId.data` for the lists of IDs which have been included here.",
         );
@@ -614,7 +734,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     /**
      * @todo Fix relation field names
      */
-    protected function relationships(Collection $relationships, JsonApiResource $example): array
+    protected function relationships(Collection $relationships, ?JsonApiResource $example): array
     {
         return $relationships->map(function (RelationContract $relation) use ($example) {
             return $this->relationship($relation, $example);
@@ -626,7 +746,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
      */
     protected function relationship(
         RelationContract $relation,
-        JsonApiResource $example,
+        ?JsonApiResource $example,
         ?bool $includeData = null,
     ): OASchema {
         $fieldId = $relation->name();
@@ -670,7 +790,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     /**
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      */
-    protected function relationshipData(RelationContract $relation, JsonApiResource $example, string $type): OASchema
+    protected function relationshipData(RelationContract $relation, ?JsonApiResource $example, string $type): OASchema
     {
         $fieldId = $relation->name();
         if ($relation instanceof PolymorphicRelation) {
@@ -695,7 +815,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
         return $dataSchema;
     }
 
-    public function relationshipLinks(RelationContract $relation, JsonApiResource $example): OASchema
+    public function relationshipLinks(RelationContract $relation, ?JsonApiResource $example): OASchema
     {
         $name = Str::dasherize(Str::plural(Str::camel($relation->name())));
 
@@ -723,7 +843,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
             );
     }
 
-    protected function links(Route $route, JsonApiResource $resource): array
+    protected function links(Route $route, ?JsonApiResource $resource): array
     {
         $url = $this->generator->server()->url([
             $route->name(),
@@ -760,7 +880,7 @@ class Schema extends Descriptor implements PaginationDescriptor, SchemaDescripto
     /**
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      */
-    protected function getDataSchema(Route $route, JsonApiResource $resource): OASchema
+    protected function getDataSchema(Route $route, ?JsonApiResource $resource): OASchema
     {
         $inverseRelation = $route->relation() !== null ? $route->relation()->inverse() : null;
 

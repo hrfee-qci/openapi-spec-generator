@@ -23,6 +23,7 @@ namespace LaravelJsonApi\OpenApiSpec\Tests\Support\JsonApi\V1\Tags;
 use LaravelJsonApi\Eloquent\Fields\DateTime;
 use LaravelJsonApi\Eloquent\Fields\Relations\BelongsToMany;
 use LaravelJsonApi\Eloquent\Fields\Str;
+use LaravelJsonApi\Eloquent\Filters\Where;
 use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
 use LaravelJsonApi\Eloquent\Schema;
@@ -62,6 +63,7 @@ class TagSchema extends Schema
     {
         return [
             WhereIdIn::make($this)->delimiter(','),
+            Where::make('name'),
         ];
     }
 
@@ -70,6 +72,8 @@ class TagSchema extends Schema
      */
     public function pagination(): PagePagination
     {
-        return PagePagination::make()->withoutNestedMeta();
+        // Declares a default page size, unlike the post schema, so that emitting it
+        // can be distinguished from emitting a hardcoded value.
+        return PagePagination::make()->withoutNestedMeta()->withDefaultPerPage(25);
     }
 }

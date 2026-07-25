@@ -58,6 +58,49 @@ class Route
     ];
 
     /**
+     * Resolves the OAuth scopes a middleware string requires.
+     *
+     * @var null|callable(string): string[]
+     */
+    private static $scopeResolver = null;
+
+    /**
+     * Teach the generator how this application declares required scopes.
+     *
+     * Scope enforcement is not standardized. An application using its own
+     * middleware instead of Passport's is invisible to the default scan, and its
+     * endpoints are then documented as requiring no scope at all, which is worse
+     * than documenting nothing. Registering a resolver is the single point at
+     * which that can be corrected.
+     *
+     * @param null|callable(string): string[] $resolver Receives one middleware
+     *        string and returns the scopes it requires. Null restores the default.
+     */
+    public static function resolveScopesUsing(?callable $resolver): void
+    {
+        self::$scopeResolver = $resolver;
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function scopesFor(string $middleware): array
+    {
+        if (self::$scopeResolver !== null) {
+            return (self::$scopeResolver)($middleware);
+        }
+
+        foreach (self::PASSPORT_SCOPE_MIDDLEWARE as $passportMiddleware) {
+            if (str_starts_with($middleware, $passportMiddleware . ':')) {
+                // TODO maybe parse like a CSV in case scopes have commas
+                return explode(',', substr($middleware, strlen($passportMiddleware) + 1));
+            }
+        }
+
+        return [];
+    }
+
+    /**
      * Route constructor.
      */
     public function __construct(Server $server, IlluminateRoute $route)
@@ -111,17 +154,7 @@ class Route
                     }
                 }
 
-                $scopeString = null;
-                foreach (self::PASSPORT_SCOPE_MIDDLEWARE as $passportMiddleware) {
-                    if (str_starts_with($middleware, $passportMiddleware . ':')) {
-                        // @todo: maybe parse like a CSV in case scopes have commas
-                        $scopes = array_merge($scopes, explode(',', substr(
-                            $middleware,
-                            strlen($passportMiddleware) + 1,
-                        )));
-                        break;
-                    }
-                }
+                $scopes = array_merge($scopes, self::scopesFor($middleware));
             }
         }
 
@@ -321,9 +354,76 @@ class Route
         return $this->action;
     }
 
+    /**
+     * The controller methods supplied by the standard JSON:API action traits.
+     *
+     * A route bound to anything else cannot be described from a schema, because the
+     * generator resolves each operation by which action trait the controller uses.
+     */
+    public const JSON_API_ACTIONS = [
+        'index',
+        'store',
+        'show',
+        'update',
+        'destroy',
+        'showRelated',
+        'showRelationship',
+        'updateRelationship',
+        'attachRelationship',
+        'detachRelationship',
+    ];
+
     public static function belongsTo(IlluminateRoute $route, Server $server): bool
     {
-        return Str::contains($route->getName(), $server->name());
+        return self::rejectionReason($route, $server) === null;
+    }
+
+    /**
+     * Why this route cannot be described, or null if it can be.
+     *
+     * A bare substring test on the route name is not enough. It sweeps in any route
+     * whose name merely contains the server name and hands it to a parser that
+     * assumes a `{server}.{resource}.{action}` shape, which then fails on ordinary
+     * application routes registered under the same prefix.
+     *
+     * Callers report the reason rather than discarding it, so that a route dropped
+     * from the document is always visible to whoever runs the generator.
+     */
+    public static function rejectionReason(IlluminateRoute $route, Server $server): ?string
+    {
+        $name = $route->getName();
+
+        if ($name === null || ! Str::startsWith($name, $server->name() . '.')) {
+            return 'name is not prefixed with the server name';
+        }
+
+        $segments = explode('.', Str::after($name, $server->name() . '.'));
+
+        if (count($segments) < 2 || count($segments) > 3) {
+            return sprintf('name has %d segment(s) after the server prefix, expected 2 or 3', count($segments));
+        }
+
+        $action = $route->getActionName();
+
+        /*
+         * An invokable controller has no method segment at all. Left alone it fails
+         * later as an undefined array index rather than as a skipped route.
+         */
+        if (! Str::contains($action, '@')) {
+            return 'route is bound to an invokable controller or a closure';
+        }
+
+        $method = Str::afterLast($action, '@');
+
+        if (! in_array($method, self::JSON_API_ACTIONS, true)) {
+            return sprintf('controller method [%s] is not a JSON:API action', $method);
+        }
+
+        if (! $server->schemas()->exists($segments[0])) {
+            return sprintf('no schema is registered for resource type [%s]', $segments[0]);
+        }
+
+        return null;
     }
 
     protected function setUriForRoute(): void

@@ -1,4 +1,16 @@
-# OpenAPI v3 Spec Generator (Fork)
+# OpenAPI v3 Spec Generator (RetroAchievements fork)
+
+Composer package: `retroachievements/openapi-spec-generator`.
+
+## About this fork
+
+This is the RetroAchievements fork of [hrfee-qci/openapi-spec-generator](https://github.com/hrfee-qci/openapi-spec-generator), which is itself a fork of the dead `neondigital` original. It was branched at `6b74f500` with zero divergence.
+
+It exists to generate the OpenAPI document for the RetroAchievements V2 JSON:API, and it is tuned for that codebase. Changes here are not upstreamed. Divergence from `hrfee-qci` is deliberate and permanent, so do not open pull requests against upstream and do not expect upstream to accept these behaviors. Anyone else is welcome to use it, but the compatibility target is RetroAchievements.
+
+The most significant intentional difference is that example generation defaults to off. Sampling examples from a live database makes output nondeterministic and leaks production data, and RetroAchievements needs byte-reproducible output so that spec drift can be detected mechanically in CI.
+
+## Inherited from hrfee-qci
 
 This fork fixes some features (for a specific codebase/api, may not work nicely with others), and adds some useful features, including:
 * Works with laravel 13 (a change-the-composer.json job, everything seems to work though)

@@ -88,7 +88,15 @@ class PostSchema extends Schema implements DescribesEndpoints
             DateTime::make('publishedAt')->sortable(),
             Str::make('slug'),
             Str::make('synopsis'),
-            BelongsToMany::make('tags')->mustValidate(),
+            /*
+             * `createdAt` is scoped to this relation only. `name` deliberately
+             * collides with a filter the tag schema already declares, so that
+             * duplicate emission is detectable.
+             */
+            BelongsToMany::make('tags')->mustValidate()->withFilters(
+                Where::make('createdAt', 'created_at'),
+                Where::make('name'),
+            ),
             Str::make('title')->sortable(),
             DateTime::make('updatedAt')->sortable()->readOnly(),
         ];

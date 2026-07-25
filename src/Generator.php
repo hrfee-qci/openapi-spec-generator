@@ -57,6 +57,18 @@ class Generator
             ->components($this->components()->components($server->securitySchemes()));
     }
 
+    /**
+     * Routes belonging to this server that are absent from the generated document.
+     *
+     * Only meaningful after `generate()` has run.
+     *
+     * @return array<int, array{route: string, uri: string, reason: string}>
+     */
+    public function skippedRoutes(): array
+    {
+        return $this->pathsBuilder->skipped();
+    }
+
     public function key(): string
     {
         return $this->key;

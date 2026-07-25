@@ -74,9 +74,25 @@ abstract class ResponseDescriptor extends Descriptor implements ResponseDescript
         return $this->defaults->except($except)->toArray();
     }
 
+    /**
+     * Describe the response in terms of the resource it actually returns.
+     *
+     * A relationship response is named after the parent resource by default, so an
+     * endpoint returning player games is described as returning users. Describing a
+     * response as the wrong resource type is worse than leaving it undescribed.
+     */
     protected function description(): string
     {
-        return ucfirst($this->route->action()) . ' ' . $this->route->name();
+        if (! $this->route->isRelation()) {
+            return ucfirst($this->route->action()) . ' ' . $this->route->name();
+        }
+
+        $parent = $this->route->name(true);
+        $inverse = $this->route->inverseName() ?? $this->route->relationName();
+
+        return $this->route->action() === 'showRelated'
+            ? sprintf('The %s related to a %s', $inverse, $parent)
+            : sprintf('Identifiers of the %s related to a %s', $inverse, $parent);
     }
 
     abstract protected function data(): SchemaContract;

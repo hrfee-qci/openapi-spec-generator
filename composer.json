@@ -1,5 +1,5 @@
 {
-    "name": "hrfee-qci/openapi-spec-generator",
+    "name": "retroachievements/openapi-spec-generator",
     "type": "library",
     "description": "Creates Open API spec for a Laravel JSON:API",
     "keywords": [
@@ -11,7 +11,7 @@
         "laravel",
         "json-api"
     ],
-    "homepage": "https://github.com/hrfee-qci/openapi-spec-generator",
+    "homepage": "https://github.com/RetroAchievements/openapi-spec-generator",
     "license": "Apache-2.0",
     "authors": [
         {
@@ -44,11 +44,13 @@
     },
     "require-dev": {
         "ext-json": "*",
+        "laravel-json-api/hashids": "^3.2",
         "laravel-json-api/laravel": "^2.0|^3.0|^4.0|^5.0",
         "laravel-json-api/non-eloquent": "^2.0|^3.0|^v4.0",
         "laravel/pint": "^1.20",
         "nesbot/carbon": "^2.63|^3.0",
-        "laravel-json-api/hashids": "^3.2"
+        "orchestra/testbench": "^11.1",
+        "phpunit/phpunit": "^12.0"
     },
     "autoload": {
         "psr-4": {

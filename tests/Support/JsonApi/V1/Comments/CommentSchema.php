@@ -52,6 +52,20 @@ class CommentSchema extends Schema
     }
 
     /**
+     * Opt in to nullability documentation.
+     *
+     * @return array<string, bool>
+     */
+    public function attributeNullability(): array
+    {
+        return [
+            'content' => true,
+            'createdAt' => false,
+            'updatedAt' => false,
+        ];
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function filters(): array
